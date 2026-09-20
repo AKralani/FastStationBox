@@ -1,0 +1,826 @@
+/* Original PlayStation-inspired presentation. Shared launcher behavior remains in app.js. */
+
+html[data-theme="ps1"][data-ui-size="monitor"] { --ui-scale: 0.9; }
+html[data-theme="ps1"][data-ui-size="large"] { --ui-scale: 1; }
+html[data-theme="ps1"][data-ui-size="tv"] { --ui-scale: 1.08; }
+
+html[data-theme="ps1"] body,
+html[data-theme="ps1"] button,
+html[data-theme="ps1"] input,
+html[data-theme="ps1"] select,
+html[data-theme="ps1"] textarea {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+html[data-theme="ps1"] .ambient {
+  background-color: #07062d;
+  background-image: url("background-1.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+html[data-theme="ps1"][data-current-view="settings"] .ambient,
+html[data-theme="ps1"][data-current-view="profile"] .ambient {
+  background-image: url("background-2.jpg");
+}
+
+html[data-theme="ps1"] .ambient::before {
+  display: block;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 20, 0.68), transparent 17%, transparent 83%, rgba(0, 0, 20, 0.68)),
+    linear-gradient(180deg, rgba(0, 0, 18, 0.2), transparent 35%, rgba(0, 0, 20, 0.2));
+}
+
+html[data-theme="ps1"] .ambient::after {
+  display: block;
+  opacity: 0.08;
+  background-size: 3px 3px;
+}
+
+html[data-theme="ps1"] .ambient-orb,
+html[data-theme="ps1"] .mesh,
+html[data-theme="ps1"] .ambient-video {
+  display: none !important;
+}
+
+html[data-theme="ps1"] .app-shell {
+  min-height: 100%;
+  padding: 0;
+}
+
+html[data-theme="ps1"] .ps2-home,
+html[data-theme="ps1"] .ps2-system-meta {
+  display: none !important;
+}
+
+/* Bottom console navigation */
+html[data-theme="ps1"] .topbar {
+  position: fixed;
+  z-index: 18;
+  right: 0;
+  bottom: 58px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 118px;
+  gap: 28px;
+  padding: 13px 0 10px;
+  border: 0;
+  background: rgba(26, 24, 98, 0.58);
+  backdrop-filter: none;
+}
+
+html[data-theme="ps1"][data-current-view="settings"] .topbar,
+html[data-theme="ps1"][data-current-view="profile"] .topbar {
+  display: none;
+}
+
+html[data-theme="ps1"] .brand,
+html[data-theme="ps1"] .primary-nav,
+html[data-theme="ps1"] .top-actions {
+  margin: 0;
+}
+
+html[data-theme="ps1"] .brand,
+html[data-theme="ps1"] .nav-item,
+html[data-theme="ps1"] #settingsButton {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 72px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  background: rgba(173, 169, 221, 0.22);
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+html[data-theme="ps1"] .brand::before,
+html[data-theme="ps1"] .nav-item::before,
+html[data-theme="ps1"] #settingsButton::before {
+  color: #fff;
+  font-size: 36px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.35));
+}
+
+html[data-theme="ps1"] .brand::before { content: "●"; }
+html[data-theme="ps1"] .nav-item::before { content: "▰"; font-size: 42px; }
+html[data-theme="ps1"] #settingsButton::before { content: "▣"; font-size: 42px; }
+
+html[data-theme="ps1"] .brand::before,
+html[data-theme="ps1"] .nav-item::before,
+html[data-theme="ps1"] #settingsButton::before {
+  content: "";
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+html[data-theme="ps1"] .brand::before {
+  width: 48px;
+  height: 48px;
+  background-image: url("user.png");
+}
+
+html[data-theme="ps1"] .nav-item::before {
+  width: 44px;
+  height: 44px;
+  background-image: url("controller.svg");
+}
+
+html[data-theme="ps1"] #settingsButton::before {
+  width: 38px;
+  height: 38px;
+  background-image: url("settings.png");
+}
+
+html[data-theme="ps1"] .brand::after,
+html[data-theme="ps1"] .nav-item::after,
+html[data-theme="ps1"] #settingsButton::after {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 50%;
+  width: 140px;
+  height: auto;
+  bottom: auto;
+  border-radius: 0;
+  background: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+html[data-theme="ps1"] .brand::after { content: "Profile"; }
+html[data-theme="ps1"] .nav-item::after { content: "Games"; }
+html[data-theme="ps1"] #settingsButton::after { content: "Settings"; }
+
+html[data-theme="ps1"] .brand:hover,
+html[data-theme="ps1"] .brand:focus,
+html[data-theme="ps1"] .nav-item:hover,
+html[data-theme="ps1"] .nav-item:focus,
+html[data-theme="ps1"] #settingsButton:hover,
+html[data-theme="ps1"] #settingsButton:focus {
+  border-color: rgba(255, 255, 255, 0.95);
+  outline: 0;
+  background: rgba(173, 169, 221, 0.3);
+  box-shadow:
+    0 0 0 2px rgba(25, 20, 117, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+html[data-theme="ps1"] .brand.active,
+html[data-theme="ps1"] .nav-item.active,
+html[data-theme="ps1"] #settingsButton.active {
+  border-color: #fff;
+  outline: 0;
+  background: linear-gradient(90deg, #3f38c4, #756df0, #302b9c);
+  box-shadow: 0 0 0 2px rgba(25, 20, 117, 0.9);
+}
+
+html[data-theme="ps1"] .brand-logo,
+html[data-theme="ps1"] .brand-text,
+html[data-theme="ps1"] .nav-item {
+  font-size: 0;
+}
+
+html[data-theme="ps1"] .brand-logo {
+  display: none !important;
+}
+
+html[data-theme="ps1"] .top-actions {
+  display: contents;
+}
+
+html[data-theme="ps1"] #searchButton,
+html[data-theme="ps1"] .clock,
+html[data-theme="ps1"] .profile {
+  display: none;
+}
+
+html[data-theme="ps1"] #settingsButton svg {
+  display: none;
+}
+
+/* Games */
+html[data-theme="ps1"] .library-view {
+  position: fixed;
+  inset: 0 0 58px;
+  margin: 0;
+  overflow: hidden;
+}
+
+html[data-theme="ps1"] .library-heading {
+  display: none;
+}
+
+html[data-theme="ps1"] .game-rail-wrap {
+  position: absolute;
+  z-index: 5;
+  top: 36px;
+  right: 0;
+  left: 0;
+  height: 180px;
+  margin: 0;
+  overflow: hidden;
+}
+
+html[data-theme="ps1"] .game-rail {
+  align-items: flex-start;
+  justify-content: center;
+  height: 180px;
+  gap: 24px;
+  padding: 16px 40px 24px;
+  overflow-x: auto;
+}
+
+html[data-theme="ps1"] .game-card {
+  flex: 0 0 86px;
+  width: 86px;
+  height: 86px;
+  border: 0;
+  border-radius: 0;
+  background: #15134a;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.48);
+  transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+}
+
+html[data-theme="ps1"] .game-card:nth-child(even) {
+  margin-top: 22px;
+}
+
+html[data-theme="ps1"] .game-card.selected {
+  transform: translateY(5px) scale(1.28);
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.65);
+}
+
+html[data-theme="ps1"] .game-card-copy,
+html[data-theme="ps1"] .game-card-start {
+  display: none;
+}
+
+html[data-theme="ps1"] .hero {
+  position: absolute;
+  inset: 190px 0 176px;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-theme="ps1"] .hero-art {
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  left: 43%;
+  width: clamp(190px, 20vw, 300px);
+  aspect-ratio: 1 / 1.18;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background-color: #17154d;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.62);
+  transform: translate(-50%, -50%);
+}
+
+html[data-theme="ps1"] .hero-art.has-cover::after {
+  display: none;
+}
+
+html[data-theme="ps1"] .hero-overlay {
+  display: none;
+}
+
+html[data-theme="ps1"] .hero-content {
+  top: 50%;
+  left: calc(43% + clamp(125px, 13vw, 190px));
+  width: min(340px, 25vw);
+  transform: translateY(-50%);
+}
+
+html[data-theme="ps1"] .platform-pill {
+  display: none;
+}
+
+html[data-theme="ps1"] .hero h2 {
+  margin: 0 0 12px;
+  font-size: clamp(25px, 2.5vw, 40px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 5px #19165c;
+}
+
+html[data-theme="ps1"] .hero-content > p {
+  max-width: 330px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+html[data-theme="ps1"] .hero-meta {
+  display: grid;
+  gap: 4px;
+  margin: 14px 0 18px;
+  color: #fff;
+  font-size: 12px;
+}
+
+html[data-theme="ps1"] .hero-meta i {
+  display: none;
+}
+
+html[data-theme="ps1"] .hero-actions {
+  position: absolute;
+  top: calc(50% + clamp(138px, 14vw, 193px));
+  left: calc(clamp(125px, 13vw, 190px) * -1);
+  width: clamp(190px, 20vw, 300px);
+  justify-content: center;
+}
+
+html[data-theme="ps1"] .play-button {
+  min-width: 150px;
+  height: 48px;
+  padding: 0 32px;
+  border: 3px solid #fff;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #3c31d6, #e13aca 48%, #2046ef);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #171044;
+  box-shadow: 0 0 0 3px #2c2596;
+}
+
+html[data-theme="ps1"] .play-button svg,
+html[data-theme="ps1"] .more-button,
+html[data-theme="ps1"] .hero-index {
+  display: none;
+}
+
+html[data-theme="ps1"] .more-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 126px;
+  width: auto;
+  padding: 0 18px;
+  border: 3px solid #fff;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #18174e, #3c31d6 58%, #1d2378);
+  color: transparent;
+  font-size: 0;
+  font-weight: 900;
+  box-shadow: 0 0 0 3px #232063;
+}
+
+html[data-theme="ps1"] .more-button::before {
+  content: "Options";
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #171044;
+}
+
+html[data-theme="ps1"] .more-button:hover,
+html[data-theme="ps1"] .more-button:focus-visible,
+html[data-theme="ps1"] .more-button.controller-focus {
+  background: linear-gradient(90deg, #2c2a79, #4f42f2 58%, #2a31a6);
+}
+
+/* Full-page PS1 settings */
+html[data-theme="ps1"] .settings-panel.view-active,
+html[data-theme="ps1"][data-current-view="settings"] .settings-panel {
+  position: fixed;
+  z-index: 25;
+  inset: 0 0 58px;
+  display: block;
+  width: auto;
+  height: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  transform: none;
+  backdrop-filter: none;
+}
+
+html[data-theme="ps1"] .settings-panel > .modal-header {
+  position: absolute;
+  z-index: 3;
+  top: 48px;
+  left: 50%;
+  display: block;
+  width: min(430px, 50vw);
+  height: 64px;
+  padding: 8px;
+  border: 2px solid #2d35ff;
+  background: rgba(0, 0, 18, 0.9);
+  text-align: center;
+  transform: translateX(-50%);
+  box-shadow: inset 0 0 18px rgba(54, 67, 255, 0.5);
+}
+
+html[data-theme="ps1"] .settings-panel > .modal-header .eyebrow,
+html[data-theme="ps1"] .settings-panel > .modal-header .modal-close {
+  display: none;
+}
+
+html[data-theme="ps1"] .settings-panel > .modal-header h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 44px;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0 #30309f;
+}
+
+html[data-theme="ps1"] .settings-content {
+  position: absolute;
+  top: 142px;
+  right: 16%;
+  bottom: 24px;
+  left: 16%;
+  display: grid;
+  grid-auto-rows: minmax(58px, 1fr);
+  align-content: stretch;
+  padding-right: 48%;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="ps1"] .settings-content .settings-group {
+  min-height: 0;
+  margin: 0;
+}
+
+html[data-theme="ps1"] .settings-group-header {
+  height: 100%;
+  min-height: 58px;
+  margin: 0;
+  padding: 8px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  outline: 0;
+}
+
+html[data-theme="ps1"] .settings-group-header::before {
+  content: "";
+  flex: 0 0 10px;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #8d87ff, #151178 65%, #05032f);
+  box-shadow: 0 1px 2px #000;
+}
+
+html[data-theme="ps1"] .settings-group.active .settings-group-header,
+html[data-theme="ps1"] .settings-group-header:hover,
+html[data-theme="ps1"] .settings-group-header:focus {
+  border: 2px solid #fff;
+  background: linear-gradient(90deg, rgba(82, 69, 222, 0.95), rgba(90, 83, 224, 0.5));
+  box-shadow: 0 0 0 2px rgba(32, 24, 132, 0.9);
+}
+
+html[data-theme="ps1"] .settings-group-icon {
+  display: none;
+}
+
+html[data-theme="ps1"] .settings-group-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+html[data-theme="ps1"] .settings-group-header p {
+  display: none;
+}
+
+html[data-theme="ps1"] .settings-group.active > :not(.settings-group-header),
+html[data-theme="ps1"] .settings-group:focus-within > :not(.settings-group-header) {
+  position: absolute;
+  z-index: 5;
+  top: 28px;
+  right: 0;
+  width: 46%;
+  max-height: calc(100% - 44px);
+  margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html[data-theme="ps1"] .theme-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+html[data-theme="ps1"] .theme-card,
+html[data-theme="ps1"] .interface-size,
+html[data-theme="ps1"] .toggle-row,
+html[data-theme="ps1"] .desktop-status,
+html[data-theme="ps1"] .system-action-button {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-radius: 0;
+  background: rgba(15, 12, 81, 0.5);
+}
+
+html[data-theme="ps1"] .interface-size,
+html[data-theme="ps1"] .desktop-status,
+html[data-theme="ps1"] .setting-rows {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+html[data-theme="ps1"] .interface-size {
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+html[data-theme="ps1"] .interface-size strong,
+html[data-theme="ps1"] .toggle-row strong,
+html[data-theme="ps1"] .desktop-status strong {
+  color: #fff;
+  font-size: 15px;
+}
+
+html[data-theme="ps1"] .interface-size small,
+html[data-theme="ps1"] .toggle-row small,
+html[data-theme="ps1"] .desktop-status p {
+  color: #cbc9ee;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+html[data-theme="ps1"] .size-options {
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(11, 10, 58, 0.72);
+}
+
+html[data-theme="ps1"] .size-options button {
+  min-width: 0;
+  padding: 10px 8px;
+  color: #d5d4f6;
+  font-size: 14px;
+}
+
+html[data-theme="ps1"] .size-options button.active {
+  background: #f3f4fa;
+  color: #111328;
+}
+
+html[data-theme="ps1"] .setting-rows {
+  overflow-x: hidden;
+}
+
+html[data-theme="ps1"] .toggle-row {
+  min-height: 72px;
+  padding: 12px 14px;
+}
+
+html[data-theme="ps1"] .toggle-row span {
+  max-width: calc(100% - 62px);
+}
+
+html[data-theme="ps1"] .toggle-row > i {
+  flex: 0 0 38px;
+}
+
+html[data-theme="ps1"] .desktop-status {
+  min-height: 92px;
+  padding: 14px 16px;
+  gap: 14px;
+}
+
+html[data-theme="ps1"] .status-icon {
+  font-size: 0;
+}
+
+html[data-theme="ps1"] .status-icon::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border: 1px solid #d3d8ff;
+  transform: rotate(45deg);
+}
+
+html[data-theme="ps1"] .system-action-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  border-top: 0;
+  background: transparent;
+}
+
+html[data-theme="ps1"] .system-action-button {
+  margin-top: 0;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Profile */
+html[data-theme="ps1"] .profile-panel.view-active {
+  position: fixed;
+  z-index: 26;
+  inset: 0 0 58px;
+  width: auto;
+  padding: 46px 22% 24px;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  backdrop-filter: none;
+}
+
+html[data-theme="ps1"] .profile-panel-header {
+  justify-content: center;
+  min-height: 66px;
+  margin: 0 auto 48px;
+  padding: 9px 24px;
+  border: 2px solid #2d35ff;
+  background: rgba(0, 0, 18, 0.88);
+  text-align: left;
+  box-shadow: inset 0 0 18px rgba(54, 67, 255, 0.5);
+}
+
+html[data-theme="ps1"] .profile-panel-avatar {
+  border-radius: 3px;
+  background: linear-gradient(145deg, #6f67e7, #29237f);
+}
+
+html[data-theme="ps1"] .profile-panel-header .eyebrow {
+  display: none;
+}
+
+html[data-theme="ps1"] .profile-panel-header h2 {
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0 #30309f;
+}
+
+html[data-theme="ps1"] .profile-panel-copy {
+  color: #d7d5f5;
+}
+
+html[data-theme="ps1"] .profile-panel-actions {
+  gap: 0;
+  max-width: 760px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="ps1"] .profile-name-editor,
+html[data-theme="ps1"] .profile-action {
+  min-height: 68px;
+  margin: 0;
+  padding: 12px 22px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  background: rgba(10, 9, 65, 0.25);
+}
+
+html[data-theme="ps1"] .profile-action:hover,
+html[data-theme="ps1"] .profile-action:focus {
+  outline: 2px solid #fff;
+  background: linear-gradient(90deg, rgba(82, 69, 222, 0.95), rgba(90, 83, 224, 0.45));
+}
+
+html[data-theme="ps1"] .profile-action span {
+  font-size: 18px;
+}
+
+html[data-theme="ps1"] .profile-action small {
+  color: #d0cee9;
+  font-size: 11px;
+}
+
+/* White console help bar */
+html[data-theme="ps1"] .controller-hints {
+  position: fixed;
+  z-index: 40;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  height: 58px;
+  margin: 0;
+  padding: 0 22px;
+  gap: 52px;
+  border: 0;
+  background: linear-gradient(180deg, #fff, #e8e8e8);
+  color: #313136;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.3);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+html[data-theme="ps1"] .controller-key {
+  width: 25px;
+  height: 25px;
+  border: 0;
+  background: #3c3d43;
+  color: #fff;
+  border-radius: 5px;
+}
+
+html[data-theme="ps1"] #controllerSelectKey svg,
+html[data-theme="ps1"] #controllerSelectKey img {
+  stroke: #586cff;
+}
+
+html[data-theme="ps1"] #controllerBackKey svg,
+html[data-theme="ps1"] #controllerBackKey img {
+  stroke: #ff4c92;
+}
+
+html[data-theme="ps1"] #controllerOptionsKey {
+  width: 30px;
+  height: 24px;
+  border: 1px solid #202126;
+  background: linear-gradient(180deg, #4f5058, #2d2f35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+html[data-theme="ps1"] #controllerOptionsKey svg,
+html[data-theme="ps1"] #controllerOptionsKey img {
+  width: 13px;
+  height: 13px;
+}
+
+html[data-theme="ps1"] #controllerOptionsKey svg {
+  stroke: #f4f4f6;
+  stroke-width: 2.4;
+}
+
+html[data-theme="ps1"] #controllerOptionsKey img {
+  width: 18px;
+  height: auto;
+}
+
+html[data-theme="ps1"] .connection {
+  display: none;
+}
+
+html[data-theme="ps1"] .focusable:focus-visible,
+html[data-theme="ps1"] .controller-focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+html[data-theme="ps1"] .search-panel,
+html[data-theme="ps1"] .modal,
+html[data-theme="ps1"] .context-menu,
+html[data-theme="ps1"] .toast {
+  border-radius: 2px;
+  background: rgba(8, 7, 55, 0.97);
+}
+
+@media (max-width: 900px) {
+  html[data-theme="ps1"] .game-rail { justify-content: flex-start; }
+  html[data-theme="ps1"] .hero-art { left: 36%; }
+  html[data-theme="ps1"] .hero-content { left: 58%; width: 36%; }
+  html[data-theme="ps1"] .settings-content { right: 7%; left: 7%; }
+  html[data-theme="ps1"] .settings-group.active > :not(.settings-group-header) { width: 46%; }
+  html[data-theme="ps1"] .profile-panel.view-active { padding-right: 12%; padding-left: 12%; }
+}
+
+@media (max-height: 720px) {
+  html[data-theme="ps1"] .game-rail-wrap { top: 12px; }
+  html[data-theme="ps1"] .hero { top: 150px; }
+  html[data-theme="ps1"] .topbar { height: 100px; }
+  html[data-theme="ps1"] .brand,
+  html[data-theme="ps1"] .nav-item,
+  html[data-theme="ps1"] #settingsButton { height: 58px; }
+}

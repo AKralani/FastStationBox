@@ -1,0 +1,768 @@
+/* Hide scrollbar */
+html[data-theme="stadia"] .ui-root {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+html[data-theme="stadia"] .ui-root::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+.stadia-nav,
+.stadia-utility,
+.stadia-library-controls {
+  display: none;
+}
+
+.theme-stadia {
+  background:
+    radial-gradient(circle at 26% 30%, rgba(255, 87, 42, 0.72), transparent 26%),
+    linear-gradient(135deg, #ff4c1d 0%, #c42148 48%, #73005d 100%);
+}
+
+.theme-stadia i {
+  display: none;
+}
+
+.theme-stadia::after {
+  background-image: url("logo.svg");
+  filter: brightness(0) invert(1);
+}
+
+html[data-theme="stadia"] {
+  --bg: #0f0f0f;
+  --panel: rgba(27, 27, 27, 0.96);
+  --panel-solid: #1c1c1c;
+  --text: #f5f5f5;
+  --muted: #a6a6aa;
+  --line: rgba(255, 255, 255, 0.12);
+  --blue: #ff6840;
+  --focus: #ff7249;
+}
+
+html[data-theme="stadia"] body {
+  background: #0f0f0f;
+  font-family: "Google Sans", "Segoe UI Variable", "Segoe UI", sans-serif;
+}
+
+html[data-theme="stadia"] .ambient {
+  background: #0f0f0f;
+  background-image: none;
+}
+
+html[data-theme="stadia"] .ambient::before {
+  background:
+    radial-gradient(circle at 87% 12%, rgba(255, 76, 29, 0.035), transparent 26%),
+    linear-gradient(#0f0f0f, #101010);
+}
+
+html[data-theme="stadia"] .ambient::after,
+html[data-theme="stadia"] .ambient-orb,
+html[data-theme="stadia"] .mesh {
+  display: none;
+}
+
+html[data-theme="stadia"] .app-shell {
+  min-height: calc(100vh / var(--ui-scale));
+  padding: 0 clamp(28px, 3.4vw, 58px) 34px;
+}
+
+html[data-theme="stadia"] .topbar {
+  height: 76px;
+  gap: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+}
+
+html[data-theme="stadia"] .brand {
+  min-width: 46px;
+  height: 52px;
+}
+
+html[data-theme="stadia"] .brand-logo {
+  width: 43px;
+  height: 30px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+html[data-theme="stadia"] .brand-text {
+  font-size: 0;
+}
+
+html[data-theme="stadia"] .brand-text::after {
+  content: "S";
+  display: block;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+html[data-theme="stadia"] .primary-nav {
+  display: none;
+}
+
+html[data-theme="stadia"] .stadia-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+html[data-theme="stadia"] .stadia-nav-item {
+  min-width: 78px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 28px;
+  background: transparent;
+  color: #f1f1f1;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+html[data-theme="stadia"] .stadia-nav-item:hover,
+html[data-theme="stadia"] .stadia-nav-item.active {
+  background: #262626;
+}
+
+html[data-theme="stadia"] .stadia-nav-item.active {
+  color: #ff7147;
+}
+
+html[data-theme="stadia"] .top-actions {
+  gap: 5px;
+}
+
+html[data-theme="stadia"] .top-actions .icon-button,
+html[data-theme="stadia"] .stadia-utility {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #efefef;
+  cursor: pointer;
+}
+
+html[data-theme="stadia"] .top-actions .icon-button:hover,
+html[data-theme="stadia"] .stadia-utility:hover {
+  background: #262626;
+}
+
+html[data-theme="stadia"] .top-actions .icon-button svg,
+html[data-theme="stadia"] .stadia-utility svg {
+  width: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-theme="stadia"] #searchButton {
+  display: flex;
+  width: clamp(210px, 22vw, 360px);
+  height: 43px;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 18px;
+  border-radius: 3px;
+  background: #090909;
+  color: #a5a5a8;
+}
+
+html[data-theme="stadia"] #searchButton::after {
+  content: "Search your library";
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-theme="stadia"] #searchButton.active {
+  opacity: 0;
+  pointer-events: none;
+}
+
+html[data-theme="stadia"] #settingsButton {
+  order: 2;
+}
+
+html[data-theme="stadia"] #settingsButton svg {
+  opacity: 0;
+}
+
+html[data-theme="stadia"] #settingsButton::before {
+  content: "☰";
+  position: absolute;
+  font-size: 22px;
+  line-height: 1;
+}
+
+html[data-theme="stadia"] #stadiaControllerButton {
+  order: 3;
+}
+
+html[data-theme="stadia"] .clock {
+  display: none;
+}
+
+html[data-theme="stadia"] .profile {
+  order: 5;
+  width: 38px;
+  height: 38px;
+  margin-left: 5px;
+  border: 2px solid #d3d3d3;
+  background: linear-gradient(145deg, #ff8c68, #8b1559);
+  box-shadow: inset 0 0 0 2px #121212;
+}
+
+html[data-theme="stadia"] .search-panel {
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 3px;
+  background: #090909;
+  box-shadow: none;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.98);
+  backdrop-filter: none;
+}
+
+html[data-theme="stadia"] .search-panel.open {
+  transform: translateX(-50%) scale(1);
+}
+
+html[data-theme="stadia"] .search-panel input::placeholder {
+  color: #a5a5a8;
+}
+
+html[data-theme="stadia"] .search-panel kbd {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="stadia"] .library-view {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "hero"
+    "heading"
+    "rail";
+  gap: 18px 22px;
+  margin-top: 14px;
+}
+
+html[data-theme="stadia"] .hero {
+  grid-area: hero;
+  height: min(41vh, 610px);
+  min-height: 410px;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #050505;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.34);
+}
+
+html[data-theme="stadia"] .hero-art {
+  background-position: center;
+  transform: scale(1.001);
+}
+
+html[data-theme="stadia"] .hero-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.34), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.34)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.55), transparent 44%);
+}
+
+html[data-theme="stadia"] .hero-art.has-cover::after {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.62), transparent 42%);
+}
+
+html[data-theme="stadia"] .hero-overlay {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.28), transparent 40%);
+}
+
+html[data-theme="stadia"] .hero-content {
+  top: auto;
+  right: 30px;
+  bottom: 36px;
+  left: 30px;
+  width: auto;
+  text-align: center;
+  transform: none;
+}
+
+html[data-theme="stadia"] .hero-content.is-changing {
+  animation: stadia-copy 0.3s ease;
+}
+
+@keyframes stadia-copy {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+html[data-theme="stadia"] .platform-pill,
+html[data-theme="stadia"] .hero-content > p,
+html[data-theme="stadia"] .hero-meta,
+html[data-theme="stadia"] .hero-index {
+  display: none;
+}
+
+html[data-theme="stadia"] .hero h2 {
+  max-width: 760px;
+  margin: 0 auto 18px;
+  font-size: clamp(30px, 3.4vw, 58px);
+  font-weight: 760;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-shadow: 0 4px 24px #000;
+}
+
+html[data-theme="stadia"] .hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: center;
+  margin: 0;
+}
+
+html[data-theme="stadia"] .play-button {
+  width: 74px;
+  min-width: 74px;
+  height: 74px;
+  gap: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ff7248, #cf2854 58%, #8b085f);
+  color: #fff;
+  font-size: 0;
+  box-shadow: 0 7px 24px rgba(220, 42, 74, 0.34);
+}
+
+html[data-theme="stadia"] .play-button svg {
+  width: 34px;
+}
+
+html[data-theme="stadia"] .more-button {
+  display: none;
+}
+
+html[data-theme="stadia"] .library-heading {
+  grid-area: heading;
+  align-items: center;
+  margin: 18px 0 0;
+}
+
+html[data-theme="stadia"] .library-heading .eyebrow {
+  display: none;
+}
+
+html[data-theme="stadia"] .library-heading h1 {
+  font-size: 0;
+}
+
+html[data-theme="stadia"] .library-heading h1::before {
+  content: "Your library";
+  font-size: 25px;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+}
+
+html[data-theme="stadia"] .library-heading h1 span {
+  display: none;
+}
+
+html[data-theme="stadia"] .library-actions {
+  display: none;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .library-actions {
+  display: flex;
+  margin-left: auto;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .sort-button,
+html[data-theme="stadia"][data-stadia-screen="library"] .ps4-side-card {
+  display: none;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 112, 70, 0.45);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 112, 70, 0.16), rgba(255, 112, 70, 0.08));
+  color: #f5f5f5;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .add-button:hover,
+html[data-theme="stadia"][data-stadia-screen="library"] .add-button:focus-visible {
+  border-color: #ff7046;
+  background: linear-gradient(180deg, rgba(255, 112, 70, 0.24), rgba(255, 112, 70, 0.12));
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .add-button span {
+  font-size: 20px;
+  line-height: 0;
+}
+
+html[data-theme="stadia"] .game-rail-wrap {
+  grid-area: rail;
+  margin: -4px 0 0;
+}
+
+html[data-theme="stadia"] .game-card-shell {
+  position: relative;
+  flex: 0 0 auto;
+  width: 186px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card-options {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(12, 12, 12, 0.68);
+  color: rgba(245, 245, 245, 0.94);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card-options:hover,
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card-options:focus-visible {
+  border-color: rgba(255, 112, 70, 0.5);
+  background: rgba(24, 24, 24, 0.88);
+  color: #fff;
+}
+
+html[data-theme="stadia"] .game-rail {
+  gap: 14px;
+  padding: 10px 2px 20px;
+}
+
+html[data-theme="stadia"] .game-card {
+  flex-basis: 186px;
+  width: 186px;
+  height: 126px;
+  border: 3px solid transparent;
+  border-radius: 7px;
+  background: #202020;
+}
+
+html[data-theme="stadia"] .game-card.selected {
+  border-color: #ff7046;
+  box-shadow: 0 0 0 1px #ff7046, 0 10px 26px rgba(0, 0, 0, 0.42);
+  transform: translateY(-2px);
+}
+
+html[data-theme="stadia"] .game-card-copy {
+  inset: auto 11px 10px;
+}
+
+html[data-theme="stadia"] .game-card-title {
+  font-size: 13px;
+}
+
+html[data-theme="stadia"] .game-card-platform {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html[data-theme="stadia"] .game-card[data-game-id="nebula-protocol"] {
+  --generated-opacity: 0 !important;
+}
+
+html[data-theme="stadia"] .game-card[data-game-id="nebula-protocol"]::before {
+  background-image:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.68), transparent 55%),
+    url("hero-red-orbit.png");
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .library-view {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "heading"
+    "filters"
+    "rail";
+  gap: 14px;
+  margin-top: 56px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .hero {
+  display: none;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .library-heading {
+  align-items: center;
+  margin: 0 0 34px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .library-heading h1::before {
+  content: "Your library  " attr(data-count);
+  font-size: 27px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .stadia-library-controls {
+  display: grid;
+  grid-area: filters;
+  grid-template-columns: minmax(300px, 1fr) auto 245px;
+  gap: 16px;
+  align-items: center;
+}
+
+html[data-theme="stadia"] .stadia-alphabet,
+html[data-theme="stadia"] .stadia-filter {
+  height: 52px;
+  border: 0;
+  border-radius: 4px;
+  background: #1f1f1f;
+  color: #f1f1f1;
+}
+
+html[data-theme="stadia"] .stadia-alphabet {
+  display: none;
+}
+
+html[data-theme="stadia"] .stadia-filter {
+  min-width: 150px;
+  padding: 0 20px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+html[data-theme="stadia"] .stadia-filter span {
+  float: right;
+  margin-left: 20px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-rail-wrap {
+  overflow: visible;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  overflow: visible;
+  padding: 0 0 40px;
+  cursor: default;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card-shell {
+  width: 100%;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-width: 3px;
+  border-radius: 6px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card-copy {
+  inset: auto 15px 14px;
+}
+
+html[data-theme="stadia"][data-stadia-screen="library"] .game-card-title {
+  font-size: 16px;
+}
+
+html[data-theme="stadia"] .settings-panel,
+html[data-theme="stadia"] .profile-panel,
+html[data-theme="stadia"] .modal,
+html[data-theme="stadia"] .context-menu,
+html[data-theme="stadia"] .toast {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #202020;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.58);
+}
+
+html[data-theme="stadia"] .primary-button,
+html[data-theme="stadia"] .play-button {
+  background-color: #ff5f3b;
+}
+
+html[data-theme="stadia"] .theme-card.active {
+  border-color: #ff7046;
+  box-shadow: 0 0 0 2px rgba(255, 112, 70, 0.24);
+}
+
+html[data-theme="stadia"] .boot {
+  background: #0d0d0d;
+}
+
+html[data-theme="stadia"] .boot-mark {
+  filter: drop-shadow(0 0 20px rgba(255, 75, 43, 0.48));
+}
+
+html[data-theme="stadia"] .boot-mark span {
+  background: linear-gradient(180deg, #ff6d3e, #a00061);
+}
+
+html[data-theme="stadia"] .boot-fallback > p {
+  background: linear-gradient(90deg, #ff5f2e, #a00064);
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.28em;
+}
+
+html[data-theme="stadia"] .controller-hints {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  html[data-theme="stadia"] #searchButton {
+    width: 180px;
+  }
+
+  html[data-theme="stadia"] .stadia-nav-item {
+    min-width: auto;
+    padding-inline: 13px;
+  }
+
+  html[data-theme="stadia"] .library-view {
+    grid-template-columns: minmax(0, 2.35fr) minmax(225px, 1fr);
+  }
+
+  html[data-theme="stadia"] .stadia-library-controls {
+    grid-template-columns: minmax(270px, 1fr) auto 205px;
+  }
+}
+
+@media (max-width: 820px) {
+  html[data-theme="stadia"] .app-shell {
+    padding-inline: 18px;
+  }
+
+  html[data-theme="stadia"] .topbar {
+    gap: 10px;
+  }
+
+  html[data-theme="stadia"] .stadia-nav-item:not(.active),
+  html[data-theme="stadia"] #stadiaControllerButton {
+    display: none;
+  }
+
+  html[data-theme="stadia"] #searchButton {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  html[data-theme="stadia"] #searchButton::after {
+    display: none;
+  }
+
+  html[data-theme="stadia"] .library-view {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "hero"
+      "heading"
+      "rail";
+  }
+
+  html[data-theme="stadia"] .hero {
+    height: 52vh;
+  }
+
+  html[data-theme="stadia"] .hero-actions {
+    gap: 10px;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .game-card-options {
+    min-width: 36px;
+    height: 36px;
+    padding-inline: 9px;
+    font-size: 17px;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .stadia-library-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .add-button {
+    padding-inline: 15px;
+  }
+
+  html[data-theme="stadia"] .stadia-alphabet {
+    display: none;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .game-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  html[data-theme="stadia"] .brand {
+    min-width: 38px;
+  }
+
+  html[data-theme="stadia"] #settingsButton {
+    display: none;
+  }
+
+  html[data-theme="stadia"] .hero h2 {
+    font-size: 31px;
+  }
+
+  html[data-theme="stadia"] .hero-actions {
+    gap: 8px;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .game-card-options {
+    min-width: 34px;
+    height: 34px;
+    padding-inline: 8px;
+    font-size: 16px;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .library-view {
+    margin-top: 28px;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .stadia-library-controls {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .library-heading {
+    gap: 14px;
+  }
+
+  html[data-theme="stadia"][data-stadia-screen="library"] .add-button {
+    height: 40px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
+
+  html[data-theme="stadia"] #stadiaGenreFilter {
+    display: none;
+  }
+}

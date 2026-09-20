@@ -1,0 +1,722 @@
+/* FastStationBox — first-party blue/green launcher theme */
+
+html[data-theme="fsb"] {
+  --bg: #030910;
+  --panel: rgba(7, 16, 27, 0.9);
+  --panel-solid: #08131f;
+  --text: #f4faff;
+  --muted: #8195aa;
+  --line: rgba(123, 174, 218, 0.18);
+  --blue: #078cff;
+  --focus: #9bf729;
+  --fsb-blue: #078cff;
+  --fsb-green: #83ee00;
+  --fsb-cyan: #19c8ff;
+  --fsb-panel: rgba(5, 15, 25, 0.76);
+  --fsb-edge: rgba(68, 148, 215, 0.25);
+}
+
+html[data-theme="fsb"] body {
+  background: #02070d;
+  font-family: "SST", "Segoe UI Variable", "Segoe UI", sans-serif;
+}
+
+html[data-theme="fsb"] .ambient {
+  background-color: #02070d;
+  background-position: center;
+  background-size: cover;
+}
+
+html[data-theme="fsb"] .ambient::before {
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(2, 8, 15, 0.9) 0%, rgba(3, 12, 22, 0.62) 38%, rgba(3, 12, 14, 0.48) 100%),
+    linear-gradient(180deg, rgba(1, 6, 12, 0.36), rgba(1, 6, 10, 0.78));
+}
+
+html[data-theme="fsb"] .ambient::after {
+  z-index: 2;
+  opacity: 0.22;
+  background:
+    linear-gradient(90deg, transparent 0 49.9%, rgba(17, 142, 255, 0.12) 50%, transparent 50.1%) 0 0 / 84px 84px,
+    linear-gradient(transparent 0 49.9%, rgba(131, 238, 0, 0.09) 50%, transparent 50.1%) 0 0 / 84px 84px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.5), transparent 58%);
+}
+
+html[data-theme="fsb"] .ambient-orb {
+  z-index: 2;
+  border: 0;
+  filter: blur(55px);
+}
+
+html[data-theme="fsb"] .orb-one {
+  top: -28vw;
+  left: -12vw;
+  background: rgba(0, 112, 255, 0.13);
+  box-shadow: none;
+}
+
+html[data-theme="fsb"] .orb-two {
+  right: -14vw;
+  bottom: -22vw;
+  background: rgba(106, 232, 0, 0.1);
+}
+
+html[data-theme="fsb"] .mesh {
+  z-index: 2;
+  opacity: 0.08;
+  background-size: 44px 44px;
+  background-image:
+    linear-gradient(rgba(33, 129, 204, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 129, 204, 0.28) 1px, transparent 1px);
+  mask-image: linear-gradient(110deg, #000, transparent 55%);
+}
+
+html[data-theme="fsb"] .app-shell {
+  min-height: 100%;
+  padding: 24px clamp(24px, 3.7vw, 68px) 10px;
+}
+
+html[data-theme="fsb"] .topbar {
+  position: relative;
+  height: 62px;
+  gap: clamp(25px, 3vw, 48px);
+  padding: 0 12px 0 18px;
+  border: 1px solid rgba(73, 142, 196, 0.22);
+  border-radius: 17px;
+  background:
+    linear-gradient(100deg, rgba(7, 22, 37, 0.94), rgba(5, 15, 24, 0.64)),
+    linear-gradient(90deg, rgba(0, 139, 255, 0.12), rgba(128, 238, 0, 0.08));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.035),
+    0 20px 48px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(22px);
+}
+
+html[data-theme="fsb"] .topbar::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: -1px;
+  left: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--fsb-blue), transparent 45%, var(--fsb-green));
+  opacity: 0.78;
+  pointer-events: none;
+}
+
+html[data-theme="fsb"] .brand {
+  gap: 0;
+}
+
+html[data-theme="fsb"] .brand-logo {
+  width: 228px;
+  max-width: 228px;
+  max-height: 48px;
+}
+
+html[data-theme="fsb"] .brand-text {
+  color: var(--fsb-cyan);
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 18px rgba(4, 148, 255, 0.48);
+}
+
+html[data-theme="fsb"] .primary-nav {
+  gap: 12px;
+}
+
+html[data-theme="fsb"] .nav-item {
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #72879a;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-theme="fsb"] .nav-item.active {
+  border-color: rgba(21, 155, 255, 0.35);
+  background: linear-gradient(100deg, rgba(6, 124, 220, 0.25), rgba(120, 230, 0, 0.08));
+  color: #f5fbff;
+  box-shadow: inset 3px 0 var(--fsb-blue);
+}
+
+html[data-theme="fsb"] .nav-item.active::after {
+  display: none;
+}
+
+html[data-theme="fsb"] .top-actions {
+  gap: 7px;
+}
+
+html[data-theme="fsb"] .icon-button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(117, 170, 210, 0.13);
+  border-radius: 10px;
+  background: rgba(151, 194, 227, 0.035);
+  color: #a6bbcc;
+}
+
+html[data-theme="fsb"] .icon-button:hover,
+html[data-theme="fsb"] .icon-button.active {
+  border-color: rgba(14, 151, 255, 0.52);
+  background: rgba(0, 130, 232, 0.18);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0, 132, 255, 0.12);
+}
+
+html[data-theme="fsb"] .clock {
+  margin: 0 9px;
+  color: #a9bbc9;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+}
+
+html[data-theme="fsb"] .profile,
+html[data-theme="fsb"] .profile-panel-avatar {
+  border: 1px solid rgba(115, 219, 30, 0.8);
+  background: linear-gradient(145deg, #173552, #0b1823);
+  box-shadow:
+    inset 0 0 0 2px #07111b,
+    0 0 16px rgba(123, 237, 0, 0.18);
+  color: var(--fsb-green);
+}
+
+html[data-theme="fsb"] .profile {
+  width: 38px;
+  height: 38px;
+}
+
+html[data-theme="fsb"] .library-view {
+  margin-top: clamp(28px, 4.5vh, 52px);
+}
+
+html[data-theme="fsb"] .library-heading {
+  align-items: end;
+  margin-bottom: 13px;
+}
+
+html[data-theme="fsb"] .eyebrow {
+  margin-bottom: 5px;
+  color: var(--fsb-green);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-shadow: 0 0 13px rgba(131, 238, 0, 0.28);
+}
+
+html[data-theme="fsb"] h1 {
+  font-size: clamp(27px, 2.4vw, 39px);
+  font-weight: 300;
+}
+
+html[data-theme="fsb"] h1 span {
+  background: linear-gradient(90deg, #fff, #abf85c);
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+html[data-theme="fsb"] .library-actions {
+  gap: 9px;
+}
+
+html[data-theme="fsb"] .sort-button,
+html[data-theme="fsb"] .add-button {
+  min-height: 43px;
+  border: 1px solid rgba(89, 154, 202, 0.25);
+  border-radius: 10px;
+  background: rgba(6, 18, 29, 0.74);
+  backdrop-filter: blur(16px);
+}
+
+html[data-theme="fsb"] .sort-button {
+  min-width: 166px;
+  padding: 7px 14px;
+}
+
+html[data-theme="fsb"] .sort-button-label {
+  color: #6d879c;
+  font-size: 8px;
+}
+
+html[data-theme="fsb"] .sort-button strong {
+  font-size: 11px;
+}
+
+html[data-theme="fsb"] .add-button {
+  padding: 9px 15px;
+  color: #dfffc1;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+html[data-theme="fsb"] .add-button:hover {
+  border-color: rgba(131, 238, 0, 0.55);
+  background: rgba(88, 173, 0, 0.13);
+}
+
+html[data-theme="fsb"] .game-rail-wrap {
+  position: relative;
+}
+
+html[data-theme="fsb"] .game-rail {
+  gap: 14px;
+  /* Keep the scaled selected card, including its top border, inside the rail's clip area. */
+  padding-top: 13px;
+  padding-bottom: 18px;
+}
+
+html[data-theme="fsb"] .game-card {
+  flex-basis: 162px;
+  width: 162px;
+  height: 102px;
+  border: 1px solid rgba(87, 146, 191, 0.26);
+  border-radius: 12px;
+  background: #0a1724;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transform-origin: center bottom;
+}
+
+html[data-theme="fsb"] .game-card::before {
+  filter: saturate(0.88) brightness(0.74);
+}
+
+html[data-theme="fsb"] .game-card::after {
+  background:
+    linear-gradient(0deg, rgba(2, 8, 14, 0.97), transparent 70%),
+    radial-gradient(circle at 85% 18%, color-mix(in srgb, var(--accent) 36%, transparent), transparent 44%);
+}
+
+html[data-theme="fsb"] .game-card.selected {
+  z-index: 2;
+  border-color: var(--fsb-green);
+  transform: translateY(-4px) scale(1.055);
+  box-shadow:
+    0 13px 30px rgba(0, 0, 0, 0.44),
+    0 0 0 1px rgba(131, 238, 0, 0.23),
+    0 0 22px rgba(111, 221, 0, 0.16);
+}
+
+html[data-theme="fsb"] .game-card.selected::after {
+  box-shadow: inset 3px 0 var(--fsb-green);
+}
+
+html[data-theme="fsb"] .game-card-copy {
+  inset: auto 11px 9px;
+}
+
+html[data-theme="fsb"] .game-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+html[data-theme="fsb"] .game-card-platform {
+  margin-top: 2px;
+  color: #80a4be;
+  font-size: 7px;
+  letter-spacing: 0.2em;
+}
+
+html[data-theme="fsb"] .hero {
+  height: clamp(320px, 37vh, 440px);
+  min-height: 320px;
+  margin-top: 2px;
+  border: 1px solid var(--fsb-edge);
+  border-radius: 18px;
+  background: rgba(4, 13, 22, 0.76);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.035),
+    0 30px 70px rgba(0, 0, 0, 0.3);
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+}
+
+html[data-theme="fsb"] .hero::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 24px;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--fsb-blue), transparent 55%, var(--fsb-green));
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+html[data-theme="fsb"] .hero::after {
+  content: "FSB // READY";
+  position: absolute;
+  z-index: 3;
+  top: 17px;
+  right: 25px;
+  color: rgba(132, 238, 0, 0.68);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+}
+
+html[data-theme="fsb"] .hero-art {
+  background:
+    linear-gradient(90deg, rgba(2, 9, 16, 0.98) 0%, rgba(3, 12, 20, 0.82) 42%, transparent 78%),
+    radial-gradient(circle at 79% 42%, color-mix(in srgb, var(--hero-accent, #078cff) 67%, transparent), transparent 26%),
+    linear-gradient(105deg, #05111c, color-mix(in srgb, var(--hero-accent, #078cff) 18%, #07131e));
+  filter: saturate(0.9);
+}
+
+html[data-theme="fsb"] .hero-art.has-cover::after {
+  background: linear-gradient(90deg, rgba(2, 9, 16, 0.98) 0%, rgba(3, 10, 17, 0.72) 48%, rgba(2, 8, 13, 0.18) 84%);
+}
+
+html[data-theme="fsb"] .hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(1, 7, 12, 0.74), transparent 70%),
+    linear-gradient(0deg, rgba(1, 7, 12, 0.82), transparent 60%);
+}
+
+html[data-theme="fsb"] .hero-content {
+  left: clamp(28px, 4vw, 64px);
+  width: min(590px, 58%);
+}
+
+html[data-theme="fsb"] .platform-pill {
+  padding: 5px 9px;
+  border: 1px solid rgba(20, 153, 255, 0.4);
+  border-radius: 5px;
+  background: rgba(1, 105, 190, 0.14);
+  color: #85ccff;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+}
+
+html[data-theme="fsb"] .hero h2 {
+  max-width: 620px;
+  margin: 13px 0 9px;
+  font-size: clamp(36px, 4.2vw, 66px);
+  font-style: italic;
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 0.93;
+  text-transform: uppercase;
+}
+
+html[data-theme="fsb"] .hero-content > p {
+  color: #91a5b6;
+  font-size: clamp(12px, 1vw, 15px);
+  line-height: 1.5;
+}
+
+html[data-theme="fsb"] .hero-actions {
+  margin-top: 20px;
+}
+
+html[data-theme="fsb"] .play-button {
+  min-width: 142px;
+  height: 45px;
+  border: 1px solid rgba(155, 248, 55, 0.45);
+  border-radius: 8px;
+  background: linear-gradient(100deg, #087fe2, #0998ee 58%, #71d600);
+  box-shadow: 0 10px 28px rgba(2, 118, 217, 0.26);
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+html[data-theme="fsb"] .play-button:hover {
+  box-shadow:
+    0 10px 28px rgba(2, 118, 217, 0.3),
+    0 0 24px rgba(115, 219, 0, 0.18);
+}
+
+html[data-theme="fsb"] .more-button {
+  width: 45px;
+  height: 45px;
+  border-color: rgba(83, 151, 201, 0.35);
+  border-radius: 8px;
+  background: rgba(5, 20, 32, 0.72);
+}
+
+html[data-theme="fsb"] .hero-index {
+  right: 26px;
+  bottom: 20px;
+  color: rgba(122, 158, 183, 0.55);
+  font-size: 9px;
+}
+
+html[data-theme="fsb"] .hero-index span:first-child {
+  color: var(--fsb-green);
+}
+
+html[data-theme="fsb"] .controller-hints {
+  gap: 18px;
+  margin-top: 11px;
+  color: #647d91;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+html[data-theme="fsb"] .controller-key {
+  width: 18px;
+  height: 18px;
+  border-color: rgba(86, 155, 209, 0.4);
+  border-radius: 5px;
+  background: rgba(5, 22, 35, 0.74);
+  color: #b7d0e4;
+  font-size: 8px;
+}
+
+html[data-theme="fsb"] .connection {
+  margin-left: auto;
+}
+
+html[data-theme="fsb"] .connection i {
+  background: #637486;
+}
+
+html[data-theme="fsb"] .connection.connected i {
+  background: var(--fsb-green);
+  box-shadow: 0 0 10px rgba(131, 238, 0, 0.65);
+}
+
+html[data-theme="fsb"] .search-panel,
+html[data-theme="fsb"] .modal,
+html[data-theme="fsb"] .settings-panel,
+html[data-theme="fsb"] .profile-panel,
+html[data-theme="fsb"] .context-menu {
+  border-color: rgba(57, 137, 197, 0.32);
+  background:
+    linear-gradient(140deg, rgba(8, 24, 38, 0.98), rgba(3, 12, 20, 0.98));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.04),
+    0 30px 90px rgba(0, 0, 0, 0.56);
+  backdrop-filter: blur(28px);
+}
+
+html[data-theme="fsb"] .search-panel {
+  border-radius: 12px;
+}
+
+html[data-theme="fsb"] .modal,
+html[data-theme="fsb"] .profile-panel {
+  border-radius: 16px;
+}
+
+html[data-theme="fsb"] .settings-panel {
+  border-left: 1px solid rgba(67, 149, 209, 0.3);
+}
+
+html[data-theme="fsb"] .settings-panel::before,
+html[data-theme="fsb"] .profile-panel::before,
+html[data-theme="fsb"] .modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--fsb-blue), transparent 58%, var(--fsb-green));
+  pointer-events: none;
+}
+
+html[data-theme="fsb"] .theme-card,
+html[data-theme="fsb"] .profile-action,
+html[data-theme="fsb"] .desktop-status,
+html[data-theme="fsb"] .size-options {
+  border-color: rgba(72, 144, 199, 0.2);
+  border-radius: 10px;
+  background: rgba(92, 155, 201, 0.045);
+}
+
+html[data-theme="fsb"] .theme-card.active {
+  border-color: rgba(131, 238, 0, 0.72);
+  box-shadow: inset 3px 0 var(--fsb-green);
+}
+
+.theme-fsb {
+  background:
+    linear-gradient(105deg, rgba(2, 13, 24, 0.3), rgba(1, 22, 11, 0.12)),
+    url("../../wallpaper.png") center / cover;
+}
+
+.theme-fsb i {
+  display: none;
+}
+
+.theme-fsb::after {
+  inset: 6px;
+  background-image: url("logo.svg");
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.7));
+}
+
+html[data-theme="fsb"] .size-options button.active,
+html[data-theme="fsb"] .primary-button {
+  background: linear-gradient(100deg, #0787ed, #69c900);
+  color: #fff;
+}
+
+html[data-theme="fsb"] .toggle-row input:checked + i {
+  background: linear-gradient(90deg, #087fe2, #72d900);
+}
+
+html[data-theme="fsb"] .status-icon {
+  background: rgba(0, 132, 236, 0.16);
+  color: #55b6ff;
+}
+
+html[data-theme="fsb"] .toast {
+  border-color: rgba(116, 222, 23, 0.38);
+  border-radius: 9px;
+  background: rgba(4, 17, 27, 0.96);
+  color: #e8ffd3;
+}
+
+html[data-theme="fsb"] .boot {
+  background:
+    linear-gradient(90deg, rgba(2, 8, 14, 0.9), rgba(3, 11, 16, 0.65)),
+    var(--theme-background-image) center / cover no-repeat,
+    #02070d;
+}
+
+html[data-theme="fsb"] .boot::before {
+  opacity: 0.7;
+  background: radial-gradient(circle at center, rgba(0, 130, 255, 0.2), transparent 32%);
+}
+
+html[data-theme="fsb"] .boot::after {
+  background: radial-gradient(circle at 58% 54%, rgba(125, 238, 0, 0.12), transparent 20%);
+}
+
+html[data-theme="fsb"] .boot-mark {
+  gap: 4px;
+  transform: skew(-16deg);
+}
+
+html[data-theme="fsb"] .boot-mark span {
+  border-radius: 1px;
+  background: linear-gradient(180deg, #1bb7ff, #0e58ed 56%, #8bed00 57%);
+  box-shadow: 0 0 18px rgba(8, 135, 255, 0.25);
+}
+
+html[data-theme="fsb"] .boot-fallback > p {
+  color: #f3faff;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-shadow:
+    0 0 20px rgba(0, 132, 255, 0.34),
+    0 0 28px rgba(110, 219, 0, 0.18);
+}
+
+html[data-theme="fsb"] .focusable:focus-visible,
+html[data-theme="fsb"] .controller-focus {
+  outline: 2px solid var(--fsb-green) !important;
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  html[data-theme="fsb"] .brand-logo {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  html[data-theme="fsb"] .hero-content {
+    width: 66%;
+  }
+}
+
+@media (max-width: 680px) {
+  html[data-theme="fsb"] .app-shell {
+    padding: 15px 14px 18px;
+  }
+
+  html[data-theme="fsb"] .topbar {
+    height: 54px;
+    gap: 8px;
+    padding-inline: 9px;
+  }
+
+  html[data-theme="fsb"] .brand-logo {
+    width: 52px;
+    max-width: 52px;
+  }
+
+  html[data-theme="fsb"] .nav-item {
+    padding-inline: 11px;
+    font-size: 11px;
+  }
+
+  html[data-theme="fsb"] .top-actions {
+    gap: 3px;
+  }
+
+  html[data-theme="fsb"] .icon-button,
+  html[data-theme="fsb"] .profile {
+    width: 34px;
+    height: 34px;
+  }
+
+  html[data-theme="fsb"] .library-view {
+    margin-top: 24px;
+  }
+
+  html[data-theme="fsb"] .library-heading {
+    gap: 14px;
+  }
+
+  html[data-theme="fsb"] .library-actions {
+    flex-direction: row;
+  }
+
+  html[data-theme="fsb"] .sort-button {
+    flex: 1;
+    min-width: 0;
+  }
+
+  html[data-theme="fsb"] .game-rail-wrap {
+    margin-inline: -14px;
+  }
+
+  html[data-theme="fsb"] .game-rail {
+    padding-inline: 14px;
+  }
+
+  html[data-theme="fsb"] .game-card {
+    flex-basis: 125px;
+    width: 125px;
+    height: 82px;
+    border-radius: 9px;
+  }
+
+  html[data-theme="fsb"] .hero {
+    height: 400px;
+    min-height: 400px;
+    border-radius: 14px;
+  }
+
+  html[data-theme="fsb"] .hero-content {
+    right: 23px;
+    bottom: 30px;
+    left: 23px;
+    width: auto;
+  }
+
+  html[data-theme="fsb"] .hero h2 {
+    font-size: 37px;
+  }
+
+  html[data-theme="fsb"] .hero-index {
+    top: 39px;
+    right: 23px;
+    bottom: auto;
+  }
+}

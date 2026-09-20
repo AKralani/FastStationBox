@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" id="themeColor" content="#070a10" />
+    <title>FastStationBox</title>
+    <link rel="icon" href="assets/icon.ico" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="assets/themes/ps4/theme.css" />
+    <link rel="stylesheet" href="assets/themes/ps2/theme.css" />
+    <link rel="stylesheet" href="assets/themes/ps1/theme.css" />
+    <link rel="stylesheet" href="assets/themes/fsb/theme.css" />
+    <link rel="stylesheet" href="assets/themes/xbox-classic/theme.css" />
+    <link rel="stylesheet" href="assets/themes/xbox360/theme.css" />
+    <link rel="stylesheet" href="assets/themes/wii/theme.css" />
+    <link rel="stylesheet" href="assets/themes/stadia/theme.css" />
+  </head>
+  <body>
+    <div class="boot visible" id="boot" aria-hidden="true">
+      <video
+        class="boot-video"
+        id="bootVideo"
+        preload="auto"
+        playsinline
+      ></video>
+      <div class="boot-fallback" id="bootFallback" hidden>
+        <div class="boot-glow"></div>
+        <div class="boot-mark">
+          <span></span><span></span><span></span>
+        </div>
+        <p id="bootWordmark">PLAYSTATION 5</p>
+      </div>
+      <small class="boot-skip">Press any button to skip</small>
+    </div>
+
+    <div class="ambient" aria-hidden="true">
+      <video
+        class="ambient-video"
+        id="ambientVideo"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+      ></video>
+      <div class="ambient-orb orb-one"></div>
+      <div class="ambient-orb orb-two"></div>
+      <div class="mesh"></div>
+    </div>
+
+    <div class="ui-root" id="uiRoot">
+    <main class="app-shell" id="appShell">
+      <header class="topbar">
+        <a href="#" class="brand focusable" data-focus aria-label="FastStationBox home">
+          <img class="brand-logo" id="brandLogo" alt="" hidden />
+          <span class="brand-text" id="brandText">PS5</span>
+        </a>
+
+        <nav class="primary-nav" aria-label="Main navigation">
+          <button class="nav-item active focusable" data-focus data-view="games">Games</button>
+        </nav>
+
+        <nav class="xbox360-tabs" aria-label="Xbox 360 pages">
+          <button
+            class="xbox360-tab active focusable"
+            data-focus
+            data-xbox360-page="games"
+            type="button"
+            aria-current="page"
+          >
+            games
+          </button>
+          <button
+            class="xbox360-tab focusable"
+            data-focus
+            data-xbox360-page="settings"
+            type="button"
+          >
+            settings
+          </button>
+        </nav>
+
+        <div class="xbox360-user-status" aria-label="Current profile">
+          <span class="xbox360-gamertag" id="xbox360Gamertag">Player</span>
+          <i aria-hidden="true"></i>
+        </div>
+
+        <nav class="stadia-nav" aria-label="Stadia navigation">
+          <button class="stadia-nav-item active focusable" data-focus data-stadia-screen="home" data-stadia-route="home" type="button">Home</button>
+          <button class="stadia-nav-item focusable" data-focus data-stadia-screen="library" data-stadia-route="library" type="button">Library</button>
+        </nav>
+
+        <div class="top-actions">
+          <button class="icon-button focusable" data-focus id="searchButton" aria-label="Search your library">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.8"></circle><path d="m16 16 4.2 4.2"></path></svg>
+          </button>
+          <button class="icon-button focusable" data-focus id="settingsButton" aria-label="Open settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 8.95 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 8.95a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15.05 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9 1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"></path></svg>
+          </button>
+          <button class="stadia-utility focusable" data-focus id="stadiaControllerButton" type="button" aria-label="Controller status">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 8.3h9.6a4.2 4.2 0 0 1 4 5.3l-1.1 4a2.2 2.2 0 0 1-3.5 1.1l-2.2-1.8h-4l-2.2 1.8a2.2 2.2 0 0 1-3.5-1.1l-1.1-4a4.2 4.2 0 0 1 4-5.3Z"></path><path d="M7.8 11.2v4M5.8 13.2h4M16.8 11.8h.1M18.6 14h.1"></path></svg>
+          </button>
+          <div class="clock" id="clock">12:48</div>
+          <button class="profile focusable" data-focus id="profileButton" aria-label="Open profile menu">P</button>
+        </div>
+      </header>
+
+      <div class="ps2-system-meta" aria-hidden="true">
+        <time id="ps2SystemDate">2000/03/04</time>
+        <span class="ps2-daylight"></span>
+        <time id="ps2SystemClock">00:00:00</time>
+      </div>
+
+      <section class="ps2-home" id="ps2Home" aria-label="PlayStation 2 main menu" hidden>
+        <nav class="ps2-root-menu" aria-label="PlayStation 2 menu">
+          <button class="ps2-root-item focusable" data-focus data-ps2-action="profile" type="button">
+            Profile
+          </button>
+          <button class="ps2-root-item focusable" data-focus data-ps2-action="games" type="button">
+            Games
+          </button>
+          <button class="ps2-root-item focusable" data-focus data-ps2-action="settings" type="button">
+            Settings
+          </button>
+        </nav>
+        <div class="ps2-home-hints" aria-hidden="true">
+          <span><b class="ps2-cross">×</b> Enter</span>
+          <span><b class="ps2-triangle">△</b> Version</span>
+        </div>
+      </section>
+
+      <section class="xbox-home" id="xboxHome" aria-label="Xbox main menu" hidden>
+        <nav class="xbox-root-menu" aria-label="Xbox menu">
+          <button class="xbox-root-item focusable" data-focus data-xbox-action="profile" type="button">
+            Profile
+          </button>
+          <button class="xbox-root-item focusable" data-focus data-xbox-action="games" type="button">
+            Games
+          </button>
+          <button class="xbox-root-item focusable" data-focus data-xbox-action="settings" type="button">
+            Settings
+          </button>
+        </nav>
+      </section>
+
+      <section class="search-panel" id="searchPanel" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.8"></circle><path d="m16 16 4.2 4.2"></path></svg>
+        <input id="searchInput" type="search" placeholder="Search your library" autocomplete="off" />
+        <kbd>ESC</kbd>
+      </section>
+
+      <section class="library-view" id="libraryView">
+        <div class="xbox-stage" aria-hidden="true">
+          <div class="xbox-orbit xbox-orbit-one"></div>
+          <div class="xbox-orbit xbox-orbit-two"></div>
+          <div class="xbox-menu-spine">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="ps4-stage-backdrop" aria-hidden="true">
+          <div class="ps4-stage-glow"></div>
+          <div class="ps4-title-ghost" id="ps4TitleGhost">Nebula Protocol</div>
+        </div>
+
+        <div class="library-heading">
+          <div>
+            <p class="eyebrow">YOUR LIBRARY</p>
+            <h1>Good evening, <span id="greetingName">Player</span></h1>
+          </div>
+          <div class="library-actions">
+            <button
+              class="sort-button focusable"
+              data-focus
+              id="sortButton"
+              type="button"
+              aria-label="Change game sort order"
+            >
+              <span class="sort-button-label">Sort</span>
+              <strong id="sortButtonValue">Library order</strong>
+            </button>
+            <button class="add-button focusable" data-focus id="addGameButton" type="button">
+              <span aria-hidden="true"></span> Add game
+            </button>
+            <div class="ps4-side-card" aria-hidden="true">
+              <span class="ps4-side-label">Selected game</span>
+              <div class="ps4-side-art" id="ps4SideArt"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stadia-library-controls" aria-label="Library filters">
+          <div class="stadia-alphabet" aria-hidden="true">A&nbsp; B&nbsp; C&nbsp; D&nbsp; E&nbsp; F&nbsp; G&nbsp; H&nbsp; I&nbsp; J&nbsp; K&nbsp; L&nbsp; M&nbsp; N&nbsp; O&nbsp; P&nbsp; Q&nbsp; R&nbsp; S&nbsp; T&nbsp; U&nbsp; V&nbsp; W&nbsp; X&nbsp; Y&nbsp; Z</div>
+          <button class="stadia-filter focusable" data-focus id="stadiaGenreFilter" type="button">All stores <span>▾</span></button>
+          <button class="stadia-filter focusable" data-focus id="stadiaRecentFilter" type="button">Recently played <span>▾</span></button>
+        </div>
+
+        <div class="xbox360-library-chrome" id="xbox360LibraryChrome" aria-hidden="true">
+          <button
+            class="xbox360-library-back focusable"
+            data-focus
+            id="xbox360LibraryBack"
+            type="button"
+            aria-label="Back to the games dashboard"
+          >
+            <span aria-hidden="true">&#x2039;</span> games
+          </button>
+          <div class="xbox360-library-filters">
+            <button class="focusable" data-focus id="xbox360LibraryFilter" type="button">
+              <small>&#x2304; show me</small>
+              <strong id="xbox360LibraryFilterValue">all games</strong>
+            </button>
+            <button class="focusable" data-focus id="xbox360LibrarySort" type="button">
+              <small>&#x2304; sort</small>
+              <strong id="xbox360LibrarySortValue">library order</strong>
+            </button>
+          </div>
+          <div class="xbox360-library-summary" aria-live="polite">
+            <h2>My Games</h2>
+            <p id="xbox360LibraryCount">0 titles</p>
+          </div>
+        </div>
+
+        <div class="game-rail-wrap">
+          <div class="game-rail" id="gameRail" role="list" aria-label="Your games"></div>
+        </div>
+
+        <section class="hero" id="hero" aria-live="polite">
+          <div class="hero-art" id="heroArt"></div>
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <div class="platform-pill" id="heroPlatform">STEAM</div>
+            <h2 id="heroTitle">Nebula Protocol</h2>
+            <p id="heroDescription">Venture beyond the frontier. Your library, your universe.</p>
+            <div class="hero-meta">
+            </div>
+            <div class="hero-actions">
+              <button class="play-button focusable" data-focus id="playButton">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"></path></svg>
+                Play
+              </button>
+              <button class="more-button focusable" data-focus id="moreButton" aria-label="Game options">•••</button>
+            </div>
+          </div>
+          <div class="hero-index"><span id="heroIndex">01</span> / <span id="heroTotal">06</span></div>
+        </section>
+
+        <nav class="xbox360-utility-tiles" aria-label="Xbox 360 quick actions">
+          <button class="xbox360-utility-tile xbox360-library-tile focusable" data-focus id="xbox360LibraryTile" type="button">
+            <img src="assets/themes/xbox360/my-games.png" alt="" />
+            <span>My games</span>
+          </button>
+          <button class="xbox360-utility-tile xbox360-search-tile focusable" data-focus id="xbox360SearchTile" type="button">
+            <i aria-hidden="true"></i>
+            <span>Search</span>
+          </button>
+          <button class="xbox360-utility-tile xbox360-add-game-tile focusable" data-focus id="xbox360AddGameTile" type="button">
+            <img src="assets/themes/xbox360/add-game.png" alt="" />
+            <span>Add game</span>
+          </button>
+          <button class="xbox360-utility-tile xbox360-profile-tile focusable" data-focus id="xbox360ProfileTile" type="button">
+            <img src="assets/themes/xbox360/settings/profile.png" alt="" />
+            <span>Profile</span>
+          </button>
+          <button class="xbox360-utility-tile xbox360-settings-tile focusable" data-focus id="xbox360SettingsTile" type="button">
+            <i aria-hidden="true"></i>
+            <span>Settings</span>
+          </button>
+          <button class="xbox360-utility-tile xbox360-options-tile focusable" data-focus id="xbox360OptionsTile" type="button">
+            <i aria-hidden="true">•••</i>
+            <span>Game options</span>
+          </button>
+        </nav>
+
+        <button
+          class="xbox360-adjacent-preview xbox360-settings-preview"
+          id="xbox360SettingsPreview"
+          type="button"
+          aria-label="Open Settings"
+        >
+          <span>System</span>
+          <span>Themes</span>
+          <span>Display</span>
+        </button>
+      </section>
+
+      <section
+        class="xbox360-settings-page"
+        id="xbox360SettingsPage"
+        aria-label="Xbox 360 Settings"
+        aria-hidden="true"
+        inert
+      >
+        <button
+          class="xbox360-adjacent-preview xbox360-games-preview"
+          id="xbox360GamesPreview"
+          type="button"
+          aria-label="Return to Games"
+        >
+          <span>My games</span>
+          <span>Add game</span>
+          <span>Search</span>
+        </button>
+
+        <div class="xbox360-settings-grid" id="xbox360SettingsGrid">
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="system"
+            type="button"
+          >
+            <img src="assets/themes/xbox360/settings/system.png" alt="" />
+            <span>System</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-action="profile"
+            type="button"
+          >
+            <img src="assets/themes/xbox360/settings/profile.png" alt="" />
+            <span>Profile</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="theme"
+            type="button"
+          >
+            <i class="xbox360-settings-list-icon" aria-hidden="true"></i>
+            <span>Themes</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="controller"
+            type="button"
+          >
+            <img src="assets/themes/xbox360/settings/controller.png" alt="" />
+            <span>Controller</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="startup"
+            type="button"
+          >
+            <img src="assets/themes/xbox360/settings/startup.png" alt="" />
+            <span>Startup</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="display"
+            type="button"
+          >
+            <i class="xbox360-settings-display-icon" aria-hidden="true"></i>
+            <span>Display</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="sound"
+            type="button"
+          >
+            <img src="assets/themes/xbox360/settings/sound.png" alt="" />
+            <span>Sound</span>
+          </button>
+          <button
+            class="xbox360-settings-hub-tile focusable"
+            data-focus
+            data-xbox360-settings-group="desktop"
+            type="button"
+          >
+            <i class="xbox360-settings-desktop-icon" aria-hidden="true"></i>
+            <span>Desktop</span>
+          </button>
+        </div>
+      </section>
+
+      <footer class="controller-hints">
+        <div><span class="controller-key key-a" id="controllerSelectKey">A</span> <span id="controllerSelectLabel">Select</span></div>
+        <div><span class="controller-key key-b" id="controllerBackKey">B</span> <span id="controllerBackLabel">Back</span></div>
+        <div><span class="controller-key" id="controllerOptionsKey">OPT</span> <span id="controllerOptionsLabel">Options</span></div>
+        <div class="connection" id="controllerStatus"><i></i> Controller not connected</div>
+      </footer>
+    </main>
+
+    <div class="modal-backdrop" id="modalBackdrop" hidden></div>
+
+    <section class="modal" id="gameModal" role="dialog" aria-modal="true" aria-labelledby="gameModalTitle" hidden>
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">LIBRARY</p>
+          <h2 id="gameModalTitle">Add a game</h2>
+        </div>
+        <button class="modal-close focusable" data-focus data-close-modal data-ui-sound="back" aria-label="Close">×</button>
+      </div>
+      <form id="gameForm">
+        <input type="hidden" id="gameId" />
+        <label>
+          Game title
+          <input class="focusable" data-focus id="gameTitle" required maxlength="80" placeholder="Game title" />
+        </label>
+        <div class="form-row">
+          <label>
+            Platform
+            <select class="focusable" data-focus id="gamePlatform">
+              <option>Steam</option>
+              <option>Xbox</option>
+              <option>Epic</option>
+              <option>Ubisoft</option>
+              <option>EA</option>
+              <option>GOG</option>
+              <option>Emulation</option>
+              <option>Standalone</option>
+            </select>
+          </label>
+          <label>
+            Accent
+            <input class="color-input focusable" data-focus id="gameAccent" type="color" value="#4f78ff" />
+          </label>
+        </div>
+        <label>
+          Executable or shortcut
+          <div class="path-field">
+            <input class="focusable" data-focus id="gamePath" placeholder="C:\Games\My Game\game.exe" />
+            <button type="button" class="browse-button focusable" data-focus id="browseExecutable">Browse</button>
+          </div>
+          <small id="desktopHint">Desktop app required to browse and launch local files.</small>
+        </label>
+        <label>
+          Description
+          <textarea class="focusable" data-focus id="gameDescription" rows="2" maxlength="180" placeholder="A short description"></textarea>
+        </label>
+        <label>
+          Cover image URL
+          <div class="path-field">
+            <input class="focusable" data-focus id="gameCover" type="url" placeholder="https://… or choose a local image" />
+            <button type="button" class="browse-button focusable" data-focus id="browseCover">Choose</button>
+          </div>
+        </label>
+        <label>
+          Background image URL
+          <div class="path-field">
+            <input class="focusable" data-focus id="gameBackground" type="url" placeholder="https://… or choose a local image" />
+            <button type="button" class="browse-button focusable" data-focus id="browseBackground">Choose</button>
+          </div>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="secondary-button focusable" data-focus data-close-modal data-ui-sound="back">Cancel</button>
+          <button type="submit" class="primary-button focusable" data-focus>Save game</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="modal modal-compact" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" hidden>
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">LIBRARY</p>
+          <h2 id="deleteModalTitle">Remove game</h2>
+        </div>
+        <button class="modal-close focusable" data-focus data-close-modal data-ui-sound="back" aria-label="Close">×</button>
+      </div>
+      <p class="modal-copy" id="deleteModalCopy">Remove this game from your library?</p>
+      <div class="modal-actions">
+        <button type="button" class="secondary-button focusable" data-focus data-close-modal data-ui-sound="back">Cancel</button>
+        <button type="button" class="primary-button danger focusable" data-focus id="confirmDeleteButton">Delete game</button>
+      </div>
+    </section>
+
+    <aside class="settings-panel" id="settingsPanel" aria-labelledby="settingsTitle" aria-hidden="true" inert>
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">SYSTEM</p>
+          <h2 id="settingsTitle">Settings</h2>
+          <div class="settings-panel-badge" id="settingsPanelBadge">Settings</div>
+        </div>
+        <button class="modal-close focusable" data-focus id="closeSettings" data-ui-sound="back" aria-label="Close settings">×</button>
+      </div>
+
+      <div class="settings-content">
+        <section class="settings-group settings-group-theme" data-settings-group="theme">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>Theme</h3>
+              <p>Choose your launcher system theme.</p>
+            </div>
+          </div>
+          <div class="theme-grid">
+            <button class="theme-card focusable" data-focus data-theme="fsb" type="button" aria-pressed="false">
+              <span class="theme-preview theme-fsb"><i></i></span>
+              <strong>FastStationBox</strong>
+              <small>Current theme</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="ps5" type="button" aria-pressed="false">
+              <span class="theme-preview theme-ps5"><i></i></span>
+              <strong>PlayStation 5</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="ps4" type="button" aria-pressed="false">
+              <span class="theme-preview theme-ps4"><i></i></span>
+              <strong>PlayStation 4</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="ps3" type="button" aria-pressed="false">
+              <span class="theme-preview theme-ps3"><i></i></span>
+              <strong>PlayStation 3</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="ps2" type="button" aria-pressed="false">
+              <span class="theme-preview theme-ps2"><i></i></span>
+              <strong>PlayStation 2</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="ps1" type="button" aria-pressed="false">
+              <span class="theme-preview theme-ps1"><i></i></span>
+              <strong>PlayStation</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="xbox-classic" type="button" aria-pressed="false">
+              <span class="theme-preview theme-xbox"><i></i></span>
+              <strong>Xbox</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="xbox360" type="button" aria-pressed="false">
+              <span class="theme-preview theme-xbox360"><i></i></span>
+              <strong>Xbox 360</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="wii" type="button" aria-pressed="false">
+              <span class="theme-preview theme-wii"><i></i></span>
+              <strong>Nintendo Wii</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="stadia" type="button" aria-pressed="false">
+              <span class="theme-preview theme-stadia"><i></i></span>
+              <strong>Google Stadia</strong>
+              <small>Available now</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="settings-group settings-group-display" data-settings-group="display">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>Display Settings</h3>
+              <p>Adjust your display and interface size.</p>
+            </div>
+          </div>
+          <div class="interface-size">
+            <div>
+              <strong>Interface size</strong>
+              <small>Adjust for your screen and viewing distance</small>
+            </div>
+            <div class="size-options" role="group" aria-label="Interface size">
+              <button class="focusable" data-focus type="button" data-ui-size="monitor">Monitor</button>
+              <button class="focusable active" data-focus type="button" data-ui-size="large">Large</button>
+              <button class="focusable" data-focus type="button" data-ui-size="tv">TV</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-group settings-group-startup" data-settings-group="startup">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>Startup Settings</h3>
+              <p>Control the opening experience.</p>
+            </div>
+          </div>
+          <div class="setting-rows">
+            <label class="toggle-row focusable" data-focus tabindex="0">
+              <span><strong>Startup animation</strong><small>Play when FastStationBox opens</small></span>
+              <input type="checkbox" id="bootToggle" checked />
+              <i></i>
+            </label>
+            <label class="toggle-row focusable" data-focus tabindex="0" id="autoStartRow">
+              <span><strong>Start with system</strong><small id="autoStartHelp">Launch FastStationBox when you sign in</small></span>
+              <input type="checkbox" id="autoStartToggle" />
+              <i></i>
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-group settings-group-controller" data-settings-group="controller">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>Controller Settings</h3>
+              <p>Gamepad input and on-screen button prompts.</p>
+            </div>
+          </div>
+          <div class="setting-rows">
+          <label class="toggle-row focusable" data-focus tabindex="0">
+            <span><strong>Controller navigation</strong><small>Gamepads and controller input</small></span>
+            <input type="checkbox" id="gamepadToggle" checked />
+            <i></i>
+          </label>
+          <div class="interface-size">
+            <div>
+              <strong>Controller prompts</strong>
+              <small>Auto, Xbox, or PlayStation button hints</small>
+            </div>
+            <div class="size-options" role="group" aria-label="Controller prompts">
+              <button class="focusable active" data-focus type="button" data-prompt-style="auto">Auto</button>
+              <button class="focusable" data-focus type="button" data-prompt-style="xbox">Xbox</button>
+              <button class="focusable" data-focus type="button" data-prompt-style="playstation">PlayStation</button>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        <section class="settings-group settings-group-sound" data-settings-group="sound">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>Sound Settings</h3>
+              <p>Manage interface audio feedback.</p>
+            </div>
+          </div>
+          <div class="setting-rows">
+            <label class="toggle-row focusable" data-focus tabindex="0">
+              <span><strong>Interface sounds</strong><small>Subtle navigation feedback</small></span>
+              <input type="checkbox" id="soundToggle" />
+              <i></i>
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-group settings-group-desktop" data-settings-group="desktop">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>Desktop Mode</h3>
+              <p>Local browsing and game launching status.</p>
+            </div>
+          </div>
+          <section class="desktop-status">
+          <span class="status-icon" id="desktopStatusIcon">◈</span>
+          <div>
+            <strong id="desktopStatusTitle">Web mode</strong>
+            <p id="desktopStatusText">Install and run the Electron version to browse and launch local games.</p>
+          </div>
+          </section>
+        </section>
+        <section class="settings-group settings-group-system system-actions" data-settings-group="system">
+          <div class="settings-group-header focusable" data-focus tabindex="0">
+            <span class="settings-group-icon" aria-hidden="true"></span>
+            <div>
+              <h3>System Settings</h3>
+              <p>Library backups, fullscreen and launcher power options.</p>
+            </div>
+          </div>
+          <div class="setting-rows system-action-list">
+            <p class="library-backup-help" id="libraryBackupHelp">Save all game entries, details and artwork references. Loading adds missing games and updates matching entries, keeping other games. Game installations and local artwork files are not copied.</p>
+            <button class="secondary-button system-action-button focusable" data-focus id="backupLibraryButton" type="button" aria-describedby="libraryBackupHelp">Back up library</button>
+            <button class="secondary-button system-action-button focusable" data-focus id="loadLibraryButton" type="button" aria-describedby="libraryBackupHelp">Load backup</button>
+            <button
+              class="secondary-button system-action-button focusable"
+              data-focus
+              id="settingsFullscreenButton"
+              type="button"
+            >
+              <span id="settingsFullscreenLabel">Exit fullscreen</span>
+            </button>
+            <button
+              class="secondary-button system-action-button danger focusable"
+              data-focus
+              id="closeAppButton"
+              data-ui-sound="back"
+              type="button"
+            >
+              Close app
+            </button>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <aside class="profile-panel" id="profilePanel" aria-labelledby="profileTitle" aria-hidden="true" hidden>
+      <div class="profile-panel-header">
+        <div>
+          <h2 id="profileTitle" hidden>Profile</h2>
+          <div class="profile-panel-badge">Profile</div>
+        </div>
+        <time class="xbox360-profile-clock" id="xbox360ProfileClock"></time>
+        <button
+          class="xbox360-profile-back focusable"
+          data-focus
+          id="xbox360ProfileBack"
+          type="button"
+        >
+          Back
+        </button>
+      </div>
+
+      <div class="profile-panel-actions">
+        <button
+          class="xbox360-profile-edit focusable"
+          data-focus
+          id="xbox360ProfileEdit"
+          type="button"
+        >
+          Edit profile
+        </button>
+        <div class="profile-name-editor">
+          <div class="xbox360-profile-summary">
+            <strong id="xbox360ProfileName">Player</strong>
+            <small>Local launcher profile</small>
+          </div>
+          <label class="profile-name-label" for="profileNameInput">Rename profile</label>
+          <div class="settings-field-row">
+            <input
+              class="settings-text-input"
+              id="profileNameInput"
+              type="text"
+              maxlength="24"
+              placeholder="Player"
+              autocomplete="off"
+            />
+            <button class="secondary-button focusable" data-focus id="saveProfileNameButton" type="button">
+              Save
+            </button>
+          </div>
+        </div>
+
+        <button class="profile-action focusable" data-focus id="profileSettingsButton" type="button">
+          <span>Launcher settings</span>
+          <small>Theme, interface size, startup, controller</small>
+        </button>
+        <button class="profile-action focusable" data-focus id="profileShortcutButton" type="button">
+          <span>Desktop shortcut</span>
+          <small>Use the FastStationBox icon on your desktop</small>
+        </button>
+        <button class="profile-action focusable" data-focus id="profileSoundButton" type="button">
+          <span id="profileSoundLabel">Interface sounds: On</span>
+          <small>Toggle background and navigation audio</small>
+        </button>
+        <button class="profile-action danger focusable" data-focus id="profileCloseButton" type="button">
+          <span>Close app</span>
+          <small>Exit the launcher window</small>
+        </button>
+      </div>
+    </aside>
+
+    <div class="context-menu" id="contextMenu" hidden>
+      <button id="editGameButton" class="focusable" data-focus type="button">Edit game</button>
+      <button id="removeGameButton" class="danger focusable" data-focus type="button">Remove from library</button>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <input id="libraryBackupInput" type="file" accept=".json,application/json" hidden />
+    <script src="library-backup.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

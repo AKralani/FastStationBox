@@ -1,0 +1,713 @@
+/* PlayStation 2 Browser-inspired presentation. Shared behavior remains in app.js. */
+
+html[data-theme="ps2"][data-ui-size="monitor"] { --ui-scale: 0.9; }
+html[data-theme="ps2"][data-ui-size="large"] { --ui-scale: 1; }
+html[data-theme="ps2"][data-ui-size="tv"] { --ui-scale: 1.1; }
+
+html[data-theme="ps2"] body,
+html[data-theme="ps2"] button,
+html[data-theme="ps2"] input,
+html[data-theme="ps2"] select,
+html[data-theme="ps2"] textarea {
+  font-family: "Arial", "Helvetica Neue", sans-serif;
+  font-weight: 300;
+}
+
+html[data-theme="ps2"] .ambient {
+  background: #000;
+}
+
+html[data-theme="ps2"] .ambient::before,
+html[data-theme="ps2"] .ambient::after,
+html[data-theme="ps2"] .ambient-orb,
+html[data-theme="ps2"] .mesh {
+  display: none !important;
+}
+
+html[data-theme="ps2"] .ambient-video {
+  display: block;
+  opacity: 1;
+  filter: none;
+  object-fit: cover;
+}
+
+html[data-theme="ps2"] .app-shell {
+  min-height: 100%;
+  padding: 0;
+}
+
+html[data-theme="ps2"] .topbar {
+  display: none;
+}
+
+html[data-theme="ps2"] .ps2-system-meta {
+  position: fixed;
+  z-index: 8;
+  top: 5.4vh;
+  right: 4.2vw;
+  left: 4.2vw;
+  display: none;
+  align-items: center;
+  color: rgba(232, 231, 218, 0.78);
+  font-size: clamp(22px, 3.2vw, 58px);
+  letter-spacing: 0.12em;
+  text-shadow: 0 2px 5px #000;
+  pointer-events: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="games"] .ps2-system-meta,
+html[data-theme="ps2"][data-ps2-screen="profile"] .ps2-system-meta,
+html[data-theme="ps2"][data-ps2-screen="settings"] .ps2-system-meta {
+  display: flex;
+}
+
+html[data-theme="ps2"] #ps2SystemDate {
+  margin-right: auto;
+}
+
+html[data-theme="ps2"] .ps2-daylight {
+  position: relative;
+  width: 0.62em;
+  height: 0.62em;
+  margin-right: 0.6em;
+  border: 0.09em dotted rgba(237, 235, 216, 0.8);
+  border-radius: 50%;
+}
+
+html[data-theme="ps2"] .ps2-daylight::after {
+  content: "";
+  position: absolute;
+  inset: 24%;
+  border-radius: 50%;
+  background: rgba(237, 235, 216, 0.78);
+}
+
+html[data-theme="ps2"] .ps2-home {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.08), transparent 35%, rgba(0, 0, 0, 0.16));
+}
+
+html[data-theme="ps2"] .ps2-root-menu {
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 50vw;
+  transform: translateY(-50%);
+}
+
+html[data-theme="ps2"] .ps2-root-item {
+  position: relative;
+  width: auto;
+  padding: 0;
+  border: 0;
+  outline: 0 !important;
+  background: transparent;
+  color: rgba(152, 151, 155, 0.52);
+  cursor: pointer;
+  font-size: clamp(34px, 5vw, 82px);
+  font-weight: 300;
+  letter-spacing: 0.025em;
+  line-height: 1.24;
+  text-align: left;
+  text-shadow: 0 2px 6px #000;
+  transition: color 120ms ease, filter 120ms ease, transform 120ms ease;
+}
+
+html[data-theme="ps2"] .ps2-root-item:focus,
+html[data-theme="ps2"] .ps2-root-item.controller-focus,
+html[data-theme="ps2"] .ps2-root-menu:not(:focus-within):hover .ps2-root-item:hover:not(:focus):not(.controller-focus) {
+  z-index: 2;
+  color: #00baff;
+  filter: drop-shadow(0 0 5px rgba(0, 174, 255, 0.58));
+  transform: translateX(0.08em);
+}
+
+html[data-theme="ps2"] .ps2-root-item:focus::before,
+html[data-theme="ps2"] .ps2-root-item.controller-focus::before,
+html[data-theme="ps2"] .ps2-root-menu:not(:focus-within):hover .ps2-root-item:hover:not(:focus):not(.controller-focus)::before {
+  content: "";
+  position: absolute;
+  top: 51%;
+  right: calc(100% + 0.35em);
+  width: 0.16em;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 7px #fff, 0 0 18px #47c9ff;
+  transform: translateY(-50%);
+}
+
+html[data-theme="ps2"] .ps2-home-hints {
+  position: absolute;
+  right: 6vw;
+  bottom: 6vh;
+  left: 8vw;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(246, 244, 244, 0.88);
+  font-size: clamp(16px, 2.35vw, 40px);
+  letter-spacing: 0.025em;
+  text-shadow: 0 2px 6px #000;
+}
+
+html[data-theme="ps2"] .ps2-home-hints b {
+  display: inline-grid;
+  place-items: center;
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.18em;
+  border-radius: 50%;
+  background: rgba(45, 45, 50, 0.78);
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+}
+
+html[data-theme="ps2"] .ps2-cross { color: #8caeff; }
+html[data-theme="ps2"] .ps2-triangle {
+  position: relative;
+  color: transparent;
+  font-size: 1em;
+  line-height: 1;
+}
+
+html[data-theme="ps2"] .ps2-triangle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.82em;
+  height: 0.74em;
+  background:
+    center / contain no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90'%3E%3Cpath d='M50 9 L88 79 H12 Z' fill='none' stroke='%2300dca2' stroke-width='7' stroke-linejoin='round'/%3E%3C/svg%3E");
+  transform: translate(-50%, -54%);
+}
+
+html[data-theme="ps2"] .library-view {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(12, 3, 30, 0.05), rgba(12, 3, 30, 0.08));
+}
+
+html[data-theme="ps2"] .ps4-stage-backdrop,
+html[data-theme="ps2"] .hero {
+  display: none;
+}
+
+html[data-theme="ps2"] .library-heading {
+  position: fixed;
+  z-index: 10;
+  bottom: 4.2vh;
+  left: 4.4vw;
+  display: block;
+  margin: 0;
+}
+
+html[data-theme="ps2"] .library-heading > div:first-child,
+html[data-theme="ps2"] .sort-button,
+html[data-theme="ps2"] .ps4-side-card {
+  display: none;
+}
+
+html[data-theme="ps2"] .library-actions {
+  display: block;
+}
+
+html[data-theme="ps2"] .add-button {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(238, 235, 233, 0.83);
+  font-size: clamp(19px, 2.7vw, 46px);
+  font-weight: 300;
+  text-shadow: 0 2px 5px #000;
+}
+
+html[data-theme="ps2"] .add-button span {
+  display: inline-grid;
+  place-items: center;
+  width: 0.78em;
+  height: 0.78em;
+  margin-right: 0.22em;
+  border: 0.08em solid #ff7fb7;
+  background: rgba(255, 127, 183, 0.06);
+  box-shadow: inset 0 0 0 0.04em rgba(255, 127, 183, 0.12);
+  color: #ff7fb7;
+  font-size: 0;
+  line-height: 0;
+}
+
+html[data-theme="ps2"] .game-rail-wrap {
+  position: absolute;
+  z-index: 4;
+  top: 24%;
+  right: 5%;
+  width: min(61vw, 1100px);
+  height: 58%;
+  margin: 0;
+  overflow: hidden;
+}
+
+html[data-theme="ps2"] .game-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0 4.5vw 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  cursor: default;
+}
+
+html[data-theme="ps2"] .game-card {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  min-height: clamp(48px, 7.2vh, 90px);
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  outline: 0 !important;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  filter: none;
+  isolation: auto;
+  transform: none;
+  transition: color 120ms ease, filter 120ms ease, transform 120ms ease;
+}
+
+html[data-theme="ps2"] .game-card::before,
+html[data-theme="ps2"] .game-card::after {
+  display: none;
+}
+
+html[data-theme="ps2"] .game-card-copy {
+  position: static;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+html[data-theme="ps2"] .game-card-title {
+  display: block;
+  overflow: hidden;
+  color: rgba(32, 189, 244, 0.78);
+  font-size: clamp(28px, 4.25vw, 70px);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+
+html[data-theme="ps2"] .game-card-platform,
+html[data-theme="ps2"] .game-card-start {
+  display: none;
+}
+
+html[data-theme="ps2"] .game-card:hover,
+html[data-theme="ps2"] .game-card:focus,
+html[data-theme="ps2"] .game-card.selected {
+  z-index: 2;
+  border: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 0 5px rgba(231, 237, 0, 0.42));
+  transform: translateX(0.06em);
+}
+
+html[data-theme="ps2"] .game-card:hover .game-card-title,
+html[data-theme="ps2"] .game-card:focus .game-card-title,
+html[data-theme="ps2"] .game-card.selected .game-card-title {
+  color: #e8ed00;
+}
+
+html[data-theme="ps2"] .game-card.selected::marker {
+  color: #fff;
+}
+
+html[data-theme="ps2"] .controller-hints {
+  position: fixed;
+  z-index: 9;
+  right: 5vw;
+  bottom: 4.5vh;
+  left: 23vw;
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3.2vw, 56px);
+  margin: 0;
+  color: rgba(238, 235, 233, 0.83);
+  font-size: clamp(19px, 2.7vw, 46px);
+  letter-spacing: 0;
+  text-shadow: 0 2px 5px #000;
+}
+
+html[data-theme="ps2"][data-ps2-screen="home"] .controller-hints {
+  display: none;
+}
+
+html[data-theme="ps2"] .controller-hints > div {
+  display: flex;
+  align-items: center;
+  gap: 0.16em;
+}
+
+html[data-theme="ps2"] .controller-key {
+  display: inline-grid;
+  place-items: center;
+  width: 0.92em;
+  height: 0.92em;
+  border: 0;
+  background: transparent !important;
+  font-size: 0.92em;
+  line-height: 1;
+}
+
+html[data-theme="ps2"] .controller-key svg,
+html[data-theme="ps2"] .controller-key img {
+  width: 0.92em;
+  height: 0.92em;
+}
+
+html[data-theme="ps2"] .controller-key svg {
+  stroke-width: 2.4;
+}
+
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerSelectKey svg,
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerBackKey svg,
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerOptionsKey svg,
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerSelectKey img,
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerBackKey img,
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerOptionsKey img {
+  width: 1em;
+  height: 1em;
+}
+
+html[data-theme="ps2"] .key-a { color: #789eff; }
+html[data-theme="ps2"] .key-b { color: #ff503e; }
+html[data-theme="ps2"] #controllerOptionsKey {
+  color: #ff7fb7;
+  font-size: 0.72em;
+}
+
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerOptionsKey {
+  font-size: 0.72em;
+}
+
+html[data-theme="ps2"][data-controller-prompts="playstation"] #controllerOptionsKey img {
+  width: 1.18em;
+  height: auto;
+}
+
+html[data-theme="ps2"] .controller-hints .connection {
+  display: none;
+}
+
+html[data-theme="ps2"] .search-panel,
+html[data-theme="ps2"] .modal,
+html[data-theme="ps2"] .settings-panel,
+html[data-theme="ps2"] .profile-panel,
+html[data-theme="ps2"] .context-menu,
+html[data-theme="ps2"] .toast {
+  border: 0;
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: none;
+  color: rgba(244, 244, 246, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme="ps2"] .settings-panel {
+  width: min(620px, 100vw);
+  border-left: 1px solid rgba(34, 188, 245, 0.5);
+}
+
+html[data-theme="ps2"] .profile-panel {
+  top: 18vh;
+  right: 8vw;
+  width: min(520px, calc(100vw - 36px));
+  border-left: 1px solid rgba(34, 188, 245, 0.5);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-panel,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  padding: 15vh 5vw 9vh 52vw;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-panel {
+  transform: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .modal-header,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-content,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel-header,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel-actions {
+  width: min(40vw, 760px);
+  max-width: 100%;
+  min-width: 0;
+  margin-left: auto;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-panel::-webkit-scrollbar,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .modal-header,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel-header {
+  margin-bottom: 2.2vh;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .eyebrow,
+html[data-theme="ps2"][data-ps2-screen="settings"] .modal-close,
+html[data-theme="ps2"][data-ps2-screen="profile"] .eyebrow,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel-avatar {
+  display: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .modal-header h2,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel-header h2 {
+  margin: 0;
+  color: #e8ed00;
+  font-size: clamp(34px, 5vw, 82px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-panel-copy {
+  margin: 0.45em 0 0;
+  color: rgba(32, 189, 244, 0.72);
+  font-size: clamp(14px, 1.6vw, 24px);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-name-editor,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-action {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group {
+  position: relative;
+  margin-bottom: 1.6vh;
+  padding: 0.55vh 0 0.8vh 1.3vw;
+  transition: opacity 120ms ease, transform 120ms ease, filter 120ms ease, background 120ms ease;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group::before {
+  content: "";
+  position: absolute;
+  top: 0.4vh;
+  bottom: 0.4vh;
+  left: 0;
+  width: 0.24vw;
+  min-width: 2px;
+  background: transparent;
+  box-shadow: none;
+  transition: background 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-content:focus-within .settings-group:not(.active) {
+  opacity: 0.56;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group.active,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group:focus-within {
+  opacity: 1;
+  transform: translateX(0.18vw);
+  background: linear-gradient(90deg, rgba(16, 93, 143, 0.14), rgba(16, 93, 143, 0.05) 52%, transparent 100%);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group.active::before,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group:focus-within::before {
+  background: #e8ed00;
+  box-shadow: 0 0 12px rgba(232, 237, 0, 0.45);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-header {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-icon {
+  display: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-header h3,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-action span {
+  margin: 0;
+  color: rgba(32, 189, 244, 0.78);
+  font-size: clamp(28px, 4.25vw, 70px);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+  transition: color 120ms ease, transform 120ms ease, filter 120ms ease;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-header p,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-action small,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-name-label {
+  margin: 0.18em 0 0;
+  color: rgba(238, 235, 233, 0.55);
+  font-size: clamp(12px, 1.1vw, 18px);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-header:hover h3,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-header:focus h3,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group-header:focus-visible h3,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group.active .settings-group-header h3,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group:focus-within .settings-group-header h3,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-action:hover span,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-action:focus span,
+html[data-theme="ps2"][data-ps2-screen="profile"] .profile-action:focus-visible span {
+  color: #e8ed00;
+  filter: drop-shadow(0 0 5px rgba(231, 237, 0, 0.42));
+  transform: translateX(0.06em);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group.active .settings-group-header p,
+html[data-theme="ps2"][data-ps2-screen="settings"] .settings-group:focus-within .settings-group-header p {
+  color: rgba(232, 237, 0, 0.72);
+}
+
+html[data-theme="ps2"] .settings-content h3,
+html[data-theme="ps2"] .profile-panel-header h2,
+html[data-theme="ps2"] .modal h2 {
+  color: #20bdf4;
+  font-weight: 300;
+}
+
+html[data-theme="ps2"] .theme-card,
+html[data-theme="ps2"] .interface-size,
+html[data-theme="ps2"] .toggle-row,
+html[data-theme="ps2"] .desktop-status,
+html[data-theme="ps2"] .profile-action,
+html[data-theme="ps2"] .settings-text-input,
+html[data-theme="ps2"] input,
+html[data-theme="ps2"] select,
+html[data-theme="ps2"] textarea,
+html[data-theme="ps2"] .primary-button,
+html[data-theme="ps2"] .secondary-button,
+html[data-theme="ps2"] .browse-button,
+html[data-theme="ps2"] .modal-close {
+  border-radius: 0;
+}
+
+html[data-theme="ps2"] .theme-card.active,
+html[data-theme="ps2"] .profile-action:hover,
+html[data-theme="ps2"] .secondary-button:hover {
+  border-color: #20bdf4;
+  background: rgba(0, 137, 214, 0.14);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .theme-card:focus-visible,
+html[data-theme="ps2"][data-ps2-screen="settings"] .theme-card.controller-focus,
+html[data-theme="ps2"][data-ps2-screen="settings"] .size-options button:focus-visible,
+html[data-theme="ps2"][data-ps2-screen="settings"] .size-options button.controller-focus,
+html[data-theme="ps2"][data-ps2-screen="settings"] .toggle-row:focus-within,
+html[data-theme="ps2"][data-ps2-screen="settings"] .system-action-button:focus-visible,
+html[data-theme="ps2"][data-ps2-screen="settings"] .system-action-button.controller-focus {
+  border-color: #e8ed00 !important;
+  background: rgba(232, 237, 0, 0.14) !important;
+  box-shadow: 0 0 0 1px rgba(232, 237, 0, 0.22), 0 0 16px rgba(232, 237, 0, 0.16);
+}
+
+html[data-theme="ps2"][data-ps2-screen="settings"] .toggle-row:focus-within strong,
+html[data-theme="ps2"][data-ps2-screen="settings"] .toggle-row:focus-within small,
+html[data-theme="ps2"][data-ps2-screen="settings"] .theme-card:focus-visible strong,
+html[data-theme="ps2"][data-ps2-screen="settings"] .theme-card:focus-visible small,
+html[data-theme="ps2"][data-ps2-screen="settings"] .system-action-button:focus-visible,
+html[data-theme="ps2"][data-ps2-screen="settings"] .size-options button:focus-visible {
+  color: #f4f7b1;
+}
+
+html[data-theme="ps2"] .primary-button {
+  background: #20bdf4;
+  color: #00131c;
+}
+
+html[data-theme="ps2"] .boot {
+  background: #000;
+}
+
+html[data-theme="ps2"] .boot::before,
+html[data-theme="ps2"] .boot::after {
+  display: none;
+}
+
+html[data-theme="ps2"] .boot-fallback > p {
+  color: #20bdf4;
+  font-weight: 300;
+}
+
+html[data-theme="ps2"] .focusable:focus-visible,
+html[data-theme="ps2"] .controller-focus {
+  outline: 0 !important;
+  outline-offset: 0;
+}
+
+@media (max-width: 760px) {
+  html[data-theme="ps2"] .ps2-root-menu {
+    left: 48%;
+  }
+
+  html[data-theme="ps2"] .game-rail-wrap {
+    top: 23%;
+    right: 4%;
+    width: 75vw;
+  }
+
+  html[data-theme="ps2"] .controller-hints > div:nth-child(3) {
+    display: none;
+  }
+
+  html[data-theme="ps2"] .settings-panel {
+    padding: 28px 22px;
+  }
+}

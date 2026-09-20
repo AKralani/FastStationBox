@@ -1,0 +1,4148 @@
+:root {
+  --bg: #07090e;
+  --panel: rgba(17, 21, 31, 0.78);
+  --panel-solid: #11151f;
+  --text: #f8f9ff;
+  --muted: #999fab;
+  --line: rgba(255, 255, 255, 0.13);
+  --blue: #5b7fff;
+  --focus: #fff;
+  --ease: cubic-bezier(0.22, 0.8, 0.22, 1);
+  --ui-scale: 1.18;
+  --theme-background-image: none;
+}
+
+@font-face {
+  font-family: "SST";
+  src: url("assets/themes/ps4/sst.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 300 800;
+}
+
+html[data-theme="ps4"] {
+  --bg: #04132c;
+  --panel: rgba(10, 20, 43, 0.82);
+  --panel-solid: #0a1834;
+  --text: #f3f7ff;
+  --muted: #90a0bf;
+  --line: rgba(147, 194, 255, 0.18);
+  --blue: #4aa3ff;
+  --focus: #d7ecff;
+}
+
+html[data-theme="ps3"] {
+  --bg: #07051f;
+  --panel: rgba(15, 12, 55, 0.82);
+  --panel-solid: #12103c;
+  --text: #f4f4f7;
+  --muted: #c0bfd0;
+  --line: rgba(255, 255, 255, 0.3);
+  --blue: #8982ff;
+  --focus: #fff;
+}
+
+html[data-theme="ps2"] {
+  --bg: #02040b;
+  --panel: rgba(3, 7, 19, 0.92);
+  --panel-solid: #050918;
+  --text: #eef4ff;
+  --muted: #8491b0;
+  --line: rgba(114, 160, 255, 0.24);
+  --blue: #4b77ff;
+  --focus: #b8d6ff;
+}
+
+html[data-theme="ps1"] {
+  --bg: #05052a;
+  --panel: rgba(13, 12, 77, 0.88);
+  --panel-solid: #0a093e;
+  --text: #fff;
+  --muted: #c6c5e2;
+  --line: rgba(255, 255, 255, 0.3);
+  --blue: #5750de;
+  --focus: #fff;
+}
+
+html[data-ui-size="monitor"] {
+  --ui-scale: 1;
+}
+
+html[data-ui-size="large"] {
+  --ui-scale: 1.18;
+}
+
+html[data-ui-size="tv"] {
+  --ui-scale: 1.35;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, "Segoe UI Variable", "Segoe UI", sans-serif;
+}
+
+body {
+  overflow: hidden;
+}
+
+html.app-inactive *,
+html.app-inactive *::before,
+html.app-inactive *::after {
+  animation-play-state: paused !important;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #07090e center / cover no-repeat;
+  background-image: var(--theme-background-image);
+}
+
+.ambient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(77, 95, 167, 0.08), transparent 30%),
+    linear-gradient(145deg, rgba(8, 11, 18, 0.16), rgba(5, 7, 11, 0.34));
+}
+
+.ambient-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  object-fit: cover;
+  filter: brightness(0.72) saturate(0.88);
+}
+
+body.theme-transition-active {
+  overflow: hidden;
+}
+
+body.theme-transition-active .ui-root,
+body.theme-transition-active .app-shell,
+body.theme-transition-active .ambient::before,
+body.theme-transition-active .ambient::after,
+body.theme-transition-active .ambient-orb,
+body.theme-transition-active .mesh {
+  display: none !important;
+}
+
+body.theme-transition-active .ambient {
+  z-index: 10;
+}
+
+body.theme-transition-active .ambient-video {
+  display: block;
+  z-index: 20;
+}
+
+html.ambient-video-active .ambient {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+html.ambient-video-active .ambient::before,
+html.ambient-video-active .ambient::after,
+html.ambient-video-active .ambient-orb,
+html.ambient-video-active .mesh {
+  display: none !important;
+}
+
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.ambient-orb {
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.orb-one {
+  width: 55vw;
+  height: 55vw;
+  top: -38vw;
+  left: 5vw;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 100px rgba(91, 127, 255, 0.06);
+}
+
+.orb-two {
+  width: 38vw;
+  height: 38vw;
+  right: -20vw;
+  bottom: -20vw;
+  background: rgba(65, 89, 171, 0.06);
+}
+
+.mesh {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  opacity: 0.025;
+  background-size: 54px 54px;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, black, transparent 70%);
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  padding: 34px clamp(28px, 4.2vw, 76px) 8px;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.ui-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: calc(100vw / var(--ui-scale));
+  height: calc(100vh / var(--ui-scale));
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transform: scale(var(--ui-scale));
+  transform-origin: top left;
+}
+
+/* Hide scrollbar chrome without disabling focus-driven or manual scrolling. */
+.modal,
+.settings-panel,
+.profile-panel {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ui-root::-webkit-scrollbar,
+.modal::-webkit-scrollbar,
+.settings-panel::-webkit-scrollbar,
+.profile-panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+body.booting .app-shell {
+  opacity: 0;
+  transition: none;
+}
+
+.topbar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+}
+
+.ps2-system-meta {
+  display: none;
+}
+
+html.desktop-app .topbar {
+  padding-right: 0;
+}
+
+html.desktop-app .topbar .brand,
+html.desktop-app .topbar button,
+html.desktop-app .topbar a,
+html.desktop-app .topbar input,
+html.desktop-app .topbar .clock {
+  -webkit-app-region: no-drag;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+}
+
+.brand-logo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 132px;
+  max-height: 31px;
+}
+
+.brand-text {
+  display: block;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+html[data-theme="ps5"] .brand-logo {
+  width: 132px;
+  height: auto;
+}
+
+.brand-mark,
+.boot-mark {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 31px;
+  height: 27px;
+  transform: skew(-10deg);
+}
+
+.brand-mark i,
+.boot-mark span {
+  display: block;
+  width: 7px;
+  border-radius: 5px 1px;
+  background: linear-gradient(180deg, #fff, #aabcfb);
+}
+
+.brand-mark i:nth-child(1),
+.boot-mark span:nth-child(1) { height: 18px; }
+.brand-mark i:nth-child(2),
+.boot-mark span:nth-child(2) { height: 27px; }
+.brand-mark i:nth-child(3),
+.boot-mark span:nth-child(3) { height: 13px; }
+
+.primary-nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+
+.nav-item {
+  position: relative;
+  padding: 11px 0;
+  border: 0;
+  background: none;
+  color: #858b96;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-item.active {
+  color: #fff;
+  font-weight: 650;
+}
+
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translateX(-50%);
+}
+
+.top-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-button,
+.profile,
+.modal-close {
+  display: grid;
+  place-items: center;
+  border: 0;
+  cursor: pointer;
+}
+
+.icon-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.icon-button.active {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.icon-button svg,
+.search-panel svg {
+  width: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.clock {
+  margin: 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.profile {
+  width: 41px;
+  height: 41px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #6c8bff, #26335e);
+  box-shadow: inset 0 0 0 2px #101522;
+  font-weight: 750;
+}
+
+.library-view {
+  position: relative;
+  margin-top: clamp(48px, 8vh, 86px);
+}
+
+.ps4-stage-backdrop,
+.ps4-side-card {
+  display: none;
+}
+
+.ps4-stage-backdrop {
+  pointer-events: none;
+}
+
+.ps4-side-label {
+  display: block;
+}
+
+.ps4-side-art {
+  min-height: 0;
+}
+
+.library-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 26px;
+}
+
+.library-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #858c99;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.2em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 2.5vw, 42px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+
+h1 span {
+  font-weight: 650;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.055);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.sort-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 172px;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.055);
+  cursor: pointer;
+  text-align: left;
+}
+
+.sort-button-label {
+  color: #858c99;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.sort-button strong {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.add-button span {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 0;
+}
+
+.game-rail-wrap {
+  margin: 0 calc(clamp(28px, 4.2vw, 76px) * -1);
+  overflow: hidden;
+}
+
+.game-rail {
+  display: flex;
+  gap: 21px;
+  padding: 14px clamp(28px, 4.2vw, 76px) 22px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.game-rail::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.game-rail.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.game-card {
+  position: relative;
+  flex: 0 0 142px;
+  width: 142px;
+  height: 142px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  background: #1b2130;
+  cursor: pointer;
+  isolation: isolate;
+  transition:
+    transform 0.35s var(--ease),
+    border-color 0.25s ease,
+    box-shadow 0.35s ease;
+}
+
+.game-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(145deg, transparent 20%, rgba(0, 0, 0, 0.72)),
+    var(--cover, linear-gradient(145deg, #273a76, #0b1020));
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s var(--ease);
+}
+
+.game-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 25% 22%, color-mix(in srgb, var(--accent) 65%, transparent), transparent 32%),
+    linear-gradient(145deg, transparent, color-mix(in srgb, var(--accent) 28%, transparent));
+  opacity: var(--generated-opacity, 0);
+}
+
+.game-card:hover::before {
+  transform: scale(1.06);
+}
+
+.game-card.selected {
+  transform: translateY(-3px) scale(1.025);
+  border-color: #fff;
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.55),
+    0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.game-card-copy {
+  position: absolute;
+  inset: auto 9px 10px;
+  text-align: left;
+}
+
+.game-card-title {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 9px #000;
+  white-space: nowrap;
+}
+
+.game-card-platform {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+}
+
+.game-card-start {
+  display: none;
+}
+
+.xbox-node {
+  display: none;
+}
+
+.hero {
+  position: relative;
+  height: clamp(340px, 38vh, 480px);
+  min-height: 340px;
+  margin-top: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  background: #111622;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+}
+
+.hero-art {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 35%, color-mix(in srgb, var(--hero-accent, #4f78ff) 62%, transparent), transparent 21%),
+    linear-gradient(95deg, #070a10 0%, color-mix(in srgb, var(--hero-accent, #4f78ff) 22%, #111722) 63%, #06080e 100%);
+  background-size: cover;
+  background-position: center 35%;
+  transform: scale(1.02);
+  transition: opacity 0.25s ease, transform 0.7s var(--ease);
+}
+
+.hero-art.has-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5, 8, 14, 0.97) 0%, rgba(5, 8, 14, 0.52) 47%, rgba(5, 8, 14, 0.08) 80%);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(4, 6, 10, 0.86) 0%, rgba(4, 6, 10, 0.2) 68%, rgba(4, 6, 10, 0.1)),
+    linear-gradient(0deg, rgba(3, 5, 9, 0.75), transparent 60%);
+}
+
+.hero-content {
+  position: absolute;
+  z-index: 2;
+  left: clamp(30px, 5vw, 78px);
+  top: 50%;
+  width: min(680px, 62%);
+  transform: translateY(-46%);
+}
+
+.hero-content.is-changing {
+  animation: hero-copy 0.36s var(--ease);
+}
+
+@keyframes hero-copy {
+  from { opacity: 0; transform: translateY(-42%); }
+  to { opacity: 1; transform: translateY(-46%); }
+}
+
+.platform-pill {
+  display: inline-flex;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.hero h2 {
+  margin: 13px 0 8px;
+  font-size: clamp(42px, 4.8vw, 78px);
+  font-weight: 720;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.65);
+}
+
+html[data-ui-size="tv"] .library-view {
+  margin-top: clamp(30px, 4vh, 50px);
+}
+
+html[data-ui-size="tv"] .hero {
+  height: clamp(280px, 32vh, 340px);
+  min-height: 280px;
+}
+
+.hero-content > p {
+  max-width: 470px;
+  margin: 0;
+  color: #b8bdc8;
+  font-size: clamp(14px, 1.1vw, 17px);
+  line-height: 1.55;
+}
+
+html[data-theme="ps5"] .hero-content {
+  width: min(600px, 56%);
+}
+
+html[data-theme="ps5"] .hero-content.is-changing {
+  animation: none;
+}
+
+html[data-theme="ps5"] .hero h2 {
+  max-width: 620px;
+  margin: 10px 0 10px;
+  font-size: clamp(34px, 4vw, 64px);
+  line-height: 0.96;
+}
+
+html[data-theme="ps5"] .hero h2.is-dense {
+  font-size: clamp(28px, 3.1vw, 46px);
+  line-height: 1;
+}
+
+html[data-theme="ps5"] .hero-content > p {
+  max-width: 540px;
+  font-size: clamp(13px, 1vw, 16px);
+  line-height: 1.48;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+html[data-theme="ps5"] .hero-actions {
+  margin-top: 20px;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 21px;
+  color: #808793;
+  font-size: 13px;
+}
+
+.hero-meta i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #6c737e;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.play-button,
+.more-button {
+  height: 49px;
+  border: 0;
+  cursor: pointer;
+}
+
+.play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 144px;
+  border-radius: 24px;
+  background: #f6f7fb;
+  color: #090b11;
+  font-size: 15px;
+  font-weight: 750;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.play-button:hover {
+  transform: scale(1.035);
+  box-shadow: 0 7px 24px rgba(255, 255, 255, 0.15);
+}
+
+.play-button svg {
+  width: 17px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-linejoin: round;
+}
+.play-button:disabled,
+.more-button:disabled {
+  opacity: 0.42;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.more-button {
+  width: 49px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.hero-index {
+  position: absolute;
+  right: 31px;
+  bottom: 24px;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+}
+
+.hero-index span:first-child {
+  color: #fff;
+}
+
+.controller-hints {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 18px;
+  color: #858b97;
+  font-size: 12px;
+}
+
+.controller-hints > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.controller-key {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.controller-key svg,
+.controller-key img {
+  width: 12px;
+  height: 12px;
+}
+
+.controller-key img {
+  display: block;
+  object-fit: contain;
+}
+
+.controller-key svg {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+#controllerOptionsKey {
+  font-size: 7px;
+  letter-spacing: 0.04em;
+}
+
+.key-a { background: rgba(42, 173, 104, 0.3); }
+.key-b { background: rgba(224, 69, 70, 0.25); }
+
+html[data-controller-prompts="playstation"] .key-a,
+html[data-controller-prompts="playstation"] .key-b {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html[data-controller-prompts="playstation"] .controller-key {
+  background: transparent !important;
+  border: 0 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-controller-prompts="playstation"] #controllerSelectKey {
+  background: transparent;
+  border-color: transparent;
+}
+
+html[data-controller-prompts="playstation"] #controllerBackKey {
+  background: transparent;
+  border-color: transparent;
+}
+
+html[data-controller-prompts="playstation"] #controllerOptionsKey {
+  background: transparent;
+  border-color: transparent;
+}
+
+html[data-controller-prompts="playstation"] #controllerSelectKey svg,
+html[data-controller-prompts="playstation"] #controllerSelectKey img {
+  width: 11px;
+  height: 11px;
+}
+
+html[data-controller-prompts="playstation"] #controllerBackKey svg,
+html[data-controller-prompts="playstation"] #controllerBackKey img {
+  width: 12px;
+  height: 12px;
+}
+
+html[data-controller-prompts="playstation"] #controllerOptionsKey svg,
+html[data-controller-prompts="playstation"] #controllerOptionsKey img {
+  width: 11px;
+  height: 11px;
+}
+
+.controller-hints .connection {
+  margin-left: auto;
+}
+
+.connection i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5c626c;
+}
+
+.connection.connected i {
+  background: #69d59a;
+  box-shadow: 0 0 9px rgba(105, 213, 154, 0.7);
+}
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #000;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0.25s ease;
+}
+
+.boot.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.boot-video {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.boot-video.ready {
+  opacity: 1;
+}
+
+.boot-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.boot-skip {
+  position: absolute;
+  z-index: 4;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(239, 243, 255, 0.72);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.boot-skip.visible {
+  opacity: 1;
+}
+
+.boot::before,
+.boot::after {
+  content: "";
+  position: absolute;
+  width: 140vmax;
+  height: 32vmax;
+  border: 1px solid rgba(105, 136, 255, 0.13);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+  animation: boot-wave 2.4s var(--ease) both;
+  opacity: 0;
+}
+
+.boot.visible.video-playing::before,
+.boot.visible.video-playing::after {
+  opacity: 1;
+}
+
+.boot::after {
+  width: 110vmax;
+  height: 21vmax;
+  border-color: rgba(255, 255, 255, 0.08);
+  animation-delay: 0.12s;
+}
+
+@keyframes boot-wave {
+  from { opacity: 0; transform: rotate(-18deg) scale(0.75); }
+  45% { opacity: 1; }
+  to { opacity: 0.28; transform: rotate(-12deg) scale(1.08); }
+}
+
+.boot-glow {
+  position: absolute;
+  width: 20vmax;
+  height: 20vmax;
+  border-radius: 50%;
+  background: rgba(81, 116, 255, 0.22);
+  filter: blur(80px);
+  animation: boot-glow 2s ease both;
+}
+
+@keyframes boot-glow {
+  from { opacity: 0; transform: scale(0.2); }
+  55% { opacity: 1; }
+  to { opacity: 0.35; transform: scale(1.3); }
+}
+
+.boot-mark {
+  position: relative;
+  z-index: 2;
+  width: 60px;
+  height: 54px;
+  gap: 6px;
+  transform: skew(-10deg) scale(1.2);
+  animation: boot-logo 1.4s 0.5s var(--ease) both;
+}
+
+.boot-mark span {
+  width: 14px;
+  box-shadow: 0 0 25px rgba(167, 188, 255, 0.6);
+}
+
+.boot-mark span:nth-child(1) { height: 36px; }
+.boot-mark span:nth-child(2) { height: 54px; }
+.boot-mark span:nth-child(3) { height: 26px; }
+
+.boot-fallback > p {
+  position: absolute;
+  top: calc(50% + 56px);
+  z-index: 2;
+  margin: 0;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.44em;
+  animation: boot-logo 1.4s 0.75s var(--ease) both;
+}
+
+@keyframes boot-logo {
+  from { opacity: 0; filter: blur(9px); transform: translateY(8px) skew(-10deg) scale(0.86); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0) skew(-10deg) scale(1.2); }
+}
+
+.boot.done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.search-panel {
+  position: fixed;
+  z-index: 15;
+  top: clamp(88px, 10vh, 124px);
+  left: 50%;
+  display: flex;
+  align-items: center;
+  width: min(590px, calc(100vw - 60px));
+  height: 57px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 17px;
+  background: rgba(22, 27, 39, 0.92);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -15px) scale(0.97);
+  transition: 0.25s var(--ease);
+  backdrop-filter: blur(20px);
+}
+
+.search-panel.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.search-panel input {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  height: 100%;
+  margin-top: 0;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+  color: #fff;
+}
+
+.search-panel input:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.search-panel input::-webkit-search-decoration,
+.search-panel input::-webkit-search-cancel-button,
+.search-panel input::-webkit-search-results-button,
+.search-panel input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-panel kbd {
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: #828894;
+  font-size: 8px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(1, 2, 5, 0.65);
+  backdrop-filter: blur(12px);
+}
+
+.modal {
+  position: fixed;
+  z-index: 25;
+  top: 50%;
+  left: 50%;
+  width: min(560px, calc(100vw - 40px));
+  max-height: calc(100vh - 48px);
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 25px;
+  background: rgba(17, 21, 31, 0.97);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+  transform: translate(-50%, -50%);
+}
+
+.modal-compact {
+  width: min(460px, calc(100vw - 40px));
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.modal-close {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.modal-copy {
+  margin: 0;
+  color: #c4cad4;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+form > label,
+.form-row label {
+  display: block;
+  margin-bottom: 17px;
+  color: #a5abb5;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.055);
+  color: #fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.07);
+}
+
+select option {
+  background: #171b25;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 14px;
+}
+
+.color-input {
+  height: 42px;
+  padding: 4px;
+}
+
+.path-field {
+  display: flex;
+  gap: 8px;
+}
+
+.path-field input {
+  min-width: 0;
+}
+
+.browse-button {
+  align-self: flex-end;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+label small {
+  display: block;
+  margin-top: 6px;
+  color: #737a86;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 26px;
+}
+
+.primary-button,
+.secondary-button {
+  padding: 11px 20px;
+  border-radius: 22px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.primary-button {
+  border: 0;
+  background: #f6f7fb;
+  color: #080a10;
+}
+
+.primary-button.danger {
+  background: linear-gradient(180deg, #a62834 0%, #7f1d27 100%);
+  color: #fff4f5;
+}
+
+.secondary-button {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.settings-panel {
+  position: fixed;
+  z-index: 25;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: min(490px, 100vw);
+  height: auto;
+  padding: 38px 34px;
+  overflow-y: auto;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 15, 23, 0.97);
+  box-shadow: -30px 0 90px rgba(0, 0, 0, 0.5);
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(102%);
+  transition: transform 0.42s var(--ease);
+  backdrop-filter: blur(28px);
+}
+
+.settings-panel.open {
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.profile-panel {
+  position: fixed;
+  z-index: 26;
+  top: 92px;
+  right: clamp(18px, 3.2vw, 46px);
+  width: min(360px, calc(100vw - 36px));
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  background: rgba(14, 18, 28, 0.96);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(14px) scale(0.985);
+  transition:
+    opacity 180ms var(--ease),
+    transform 220ms var(--ease),
+    visibility 0s linear 220ms;
+  backdrop-filter: blur(28px);
+}
+
+.profile-panel.open,
+.profile-panel.view-active {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0s;
+}
+
+.profile-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.profile-panel-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #6c8bff, #26335e);
+  box-shadow: inset 0 0 0 2px #101522;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 760;
+}
+
+.profile-panel-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.profile-panel-copy {
+  margin: 5px 0 0;
+  color: #7f8794;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.profile-panel-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.profile-name-editor {
+  display: grid;
+  gap: 8px;
+  padding: 2px 0 10px;
+}
+
+.profile-name-label {
+  color: #e8ecf7;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profile-action {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  text-align: left;
+}
+
+.profile-action:hover {
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.profile-action span {
+  font-size: 13px;
+  font-weight: 680;
+}
+
+.profile-action small {
+  color: #7f8794;
+  font-size: 9px;
+}
+
+.profile-action.danger {
+  border-color: rgba(255, 120, 120, 0.22);
+}
+
+.profile-action.danger span {
+  color: #ffd2d6;
+}
+
+.profile-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.settings-content section {
+  margin-bottom: 32px;
+}
+
+.settings-group {
+  margin-bottom: 32px;
+}
+
+.settings-group-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.settings-group-icon {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04) center / 22px 22px no-repeat;
+}
+
+.settings-group-theme .settings-group-icon,
+.settings-group-system .settings-group-icon {
+  background-image: url("assets/themes/ps3/settings.png");
+}
+
+.settings-group-display .settings-group-icon {
+  background-image: url("assets/themes/ps3/display.png");
+}
+
+.settings-group-startup .settings-group-icon {
+  background-image: url("assets/themes/ps3/update.png");
+}
+
+.settings-group-controller .settings-group-icon {
+  background-image: url("assets/themes/ps3/games.png");
+}
+
+.settings-group-sound .settings-group-icon {
+  background-image: url("assets/themes/ps3/music.png");
+}
+
+.settings-group-desktop .settings-group-icon {
+  background-image: url("assets/themes/ps3/user.png");
+}
+
+.settings-content h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.settings-content section > p {
+  margin: 0 0 16px;
+  color: #7e8591;
+  font-size: 11px;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.settings-field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.settings-text-input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 15px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f6f8ff;
+  outline: none;
+}
+
+.settings-text-input::placeholder {
+  color: #7c8491;
+}
+
+.settings-text-input:focus {
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+.theme-card {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  grid-template-rows: auto auto;
+  gap: 2px 12px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.035);
+  text-align: left;
+}
+
+.theme-card.active {
+  border-color: rgba(255, 255, 255, 0.75);
+}
+
+.theme-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.theme-preview {
+  grid-row: 1 / 3;
+  position: relative;
+  display: block;
+  width: 54px;
+  height: 42px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.theme-preview::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.theme-preview i {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 7px;
+  border: 3px solid;
+  border-radius: 50%;
+}
+
+.theme-ps5 { background: linear-gradient(135deg, #161d2f, #4f6cc9); }
+.theme-ps5 i { display: none; }
+.theme-ps5::after {
+  inset: 9px 6px;
+  background-image: url("assets/themes/ps5/logo-white.svg");
+}
+.theme-ps4 { background: linear-gradient(135deg, #0d5fdf, #0a1c45); }
+.theme-ps4 i { display: none; }
+.theme-ps4::after {
+  inset: 9px 6px;
+  background-image: url("assets/themes/ps4/logo.svg");
+}
+.theme-ps3 { background: linear-gradient(135deg, #6f6f77, #17181c); }
+.theme-ps3 i { display: none; }
+.theme-ps3::after {
+  inset: 9px 6px;
+  background-image: url("assets/themes/ps3/logo.svg");
+}
+.theme-ps2 {
+  background:
+    radial-gradient(ellipse at 50% 46%, rgba(125, 165, 214, 0.92), transparent 58%),
+    linear-gradient(135deg, #101b2d, #314a6c 52%, #070d18);
+}
+.theme-ps2 i { display: none; }
+.theme-ps2::after {
+  inset: 8px 6px;
+  background-image: url("assets/themes/ps2/logo.svg");
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9))
+    drop-shadow(0 0 3px rgba(129, 190, 255, 0.28));
+}
+.theme-ps1 {
+  background:
+    radial-gradient(circle at 50% 52%, #6963ef 0%, #302f80 42%, #07072d 100%);
+}
+.theme-ps1 i { display: none; }
+.theme-ps1::after {
+  inset: 8px 6px;
+  background-image: url("assets/themes/ps1/logo.svg");
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.7));
+}
+.theme-xbox { background: linear-gradient(135deg, #0a421f, #08130c); }
+.theme-xbox i { display: none; }
+.theme-xbox::after {
+  opacity: 1;
+  background-image: url("assets/themes/xbox-classic/logo.png");
+  background-size: 112px auto;
+}
+.theme-xbox360 {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.14), transparent 58%),
+    linear-gradient(135deg, #283031, #090c0c);
+}
+.theme-xbox360 i {
+  display: none;
+}
+.theme-xbox360::after {
+  content: "";
+  inset: 8px 6px;
+  background: url("assets/themes/xbox360/logo.svg") center / contain no-repeat;
+  filter:
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.86))
+    drop-shadow(0 0 4px rgba(146, 200, 62, 0.24));
+}
+
+.theme-card strong {
+  align-self: end;
+  font-size: 11px;
+}
+
+.theme-card small {
+  color: #777e89;
+  font-size: 9px;
+}
+
+.interface-size {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.interface-size > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.interface-size strong {
+  font-size: 12px;
+}
+
+.interface-size small {
+  color: #777e89;
+  font-size: 9px;
+}
+
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.size-options button {
+  padding: 9px 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #888f9b;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.size-options button.active {
+  background: #f4f6fb;
+  color: #090b11;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.setting-rows {
+  border-top: 1px solid var(--line);
+}
+
+.toggle-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 66px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.toggle-row.disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+
+.toggle-row span {
+  display: grid;
+  gap: 3px;
+}
+
+.toggle-row strong {
+  font-size: 12px;
+}
+
+.toggle-row small {
+  color: #777e89;
+  font-size: 9px;
+}
+
+.toggle-row input {
+  position: absolute;
+  opacity: 0;
+}
+
+.toggle-row > i {
+  position: relative;
+  width: 38px;
+  height: 21px;
+  border-radius: 15px;
+  background: #303540;
+  transition: background 0.2s;
+}
+
+.toggle-row > i::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #c4c8d0;
+  transition: transform 0.2s;
+}
+
+.toggle-row input:checked + i {
+  background: #607dea;
+}
+
+.toggle-row input:checked + i::after {
+  background: #fff;
+  transform: translateX(17px);
+}
+
+.desktop-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.status-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(89, 120, 235, 0.17);
+  color: #8099f4;
+}
+
+.desktop-status strong {
+  font-size: 12px;
+}
+
+.desktop-status p {
+  margin: 3px 0 0;
+  color: #7d8490;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.system-actions {
+  padding-top: 2px;
+}
+
+.library-backup-help {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.system-action-button {
+  width: 100%;
+  margin-top: 4px;
+  padding: 13px 18px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.system-action-button.danger {
+  border-color: rgba(255, 120, 120, 0.28);
+  color: #ffd2d6;
+}
+
+.context-menu {
+  position: fixed;
+  z-index: 40;
+  top: 50%;
+  left: 50%;
+  min-width: 180px;
+  max-width: min(320px, calc(100vw - 40px));
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: rgba(25, 29, 39, 0.98);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+.context-menu button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 11px;
+}
+
+.context-menu button:hover,
+.context-menu button:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.context-menu button:focus-visible {
+  outline: none;
+}
+
+.context-menu .danger {
+  color: #ff8c92;
+}
+
+.toast {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: 35px;
+  padding: 11px 17px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  background: rgba(25, 29, 39, 0.96);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  color: #e5e7ed;
+  font-size: 11px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: 0.3s var(--ease);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+html[data-theme="ps4"] .ambient {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(58, 125, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(96, 174, 255, 0.08), transparent 24%),
+    linear-gradient(180deg, #0a2455 0%, #071938 40%, #041128 72%, #030b18 100%);
+  background-image:
+    var(--theme-background-image),
+    radial-gradient(circle at 18% 16%, rgba(58, 125, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(96, 174, 255, 0.08), transparent 24%),
+    linear-gradient(180deg, #0a2455 0%, #071938 40%, #041128 72%, #030b18 100%);
+  background-blend-mode: screen, normal, normal, normal;
+}
+
+html[data-theme="ps4"] .ambient::before {
+  background:
+    radial-gradient(125% 84% at -18% 116%, transparent 59%, rgba(124, 198, 255, 0.18) 59.5%, rgba(124, 198, 255, 0.05) 61%, transparent 62%),
+    radial-gradient(136% 92% at -6% 120%, transparent 65%, rgba(124, 198, 255, 0.14) 65.5%, rgba(124, 198, 255, 0.04) 67%, transparent 68%),
+    linear-gradient(180deg, rgba(3, 9, 20, 0.04), rgba(3, 8, 18, 0.28));
+}
+
+html[data-theme="ps4"] .ambient::after {
+  opacity: 0.065;
+  mix-blend-mode: screen;
+}
+
+html[data-theme="ps4"] .ambient-orb,
+html[data-theme="ps4"] .mesh {
+  display: none;
+}
+
+html[data-theme="ps4"] .topbar {
+  height: 54px;
+  gap: clamp(24px, 3.2vw, 48px);
+}
+
+html[data-theme="ps4"] .top-actions {
+  gap: 6px;
+}
+
+html[data-theme="ps4"] .brand {
+  gap: 10px;
+}
+
+html[data-theme="ps4"] .brand-logo {
+  max-height: 26px;
+}
+
+html[data-theme="ps4"] .brand-text {
+  font-size: 16px;
+  letter-spacing: 0.14em;
+}
+
+html[data-theme="ps4"] .nav-item {
+  color: rgba(236, 242, 255, 0.68);
+}
+
+html[data-theme="ps4"] .nav-item.active::after {
+  bottom: -1px;
+  width: 26px;
+  height: 2px;
+  border-radius: 999px;
+  background: #69b7ff;
+  transform: translateX(-50%);
+}
+
+html[data-theme="ps4"] .profile {
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.68);
+  background: linear-gradient(145deg, #4c78e1, #193670);
+  box-shadow: inset 0 0 0 1px rgba(8, 15, 32, 0.9);
+}
+
+html[data-theme="ps4"] .icon-button {
+  width: 34px;
+  height: 34px;
+  color: rgba(240, 246, 255, 0.92);
+}
+
+html[data-theme="ps4"] .icon-button:hover,
+html[data-theme="ps4"] .icon-button.active {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(196, 225, 255, 0.12);
+}
+
+html[data-theme="ps4"] .icon-button svg {
+  width: 18px;
+  stroke-width: 1.55;
+}
+
+html[data-theme="ps4"] .clock {
+  margin: 0 8px 0 10px;
+  color: rgba(245, 249, 255, 0.96);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+html[data-theme="ps4"] .library-view {
+  margin-top: clamp(34px, 6vh, 62px);
+}
+
+html[data-theme="ps4"] .game-rail {
+  gap: 18px;
+  padding-top: 10px;
+}
+
+html[data-theme="ps4"] .game-card {
+  flex: 0 0 206px;
+  width: 206px;
+  height: 116px;
+  border-width: 1px;
+  border-radius: 8px;
+  background: rgba(14, 30, 63, 0.95);
+}
+
+html[data-theme="ps4"] .game-card::before {
+  background:
+    linear-gradient(180deg, rgba(3, 9, 22, 0.08) 8%, rgba(3, 9, 22, 0.72) 100%),
+    var(--cover, linear-gradient(135deg, #1e57b7, #09152d));
+  background-position: center 24%;
+}
+
+html[data-theme="ps4"] .game-card::after {
+  background:
+    radial-gradient(circle at 22% 18%, color-mix(in srgb, var(--accent) 54%, transparent), transparent 30%),
+    linear-gradient(160deg, transparent 30%, rgba(67, 145, 255, 0.14) 100%);
+  opacity: var(--generated-opacity, 0);
+}
+
+html[data-theme="ps4"] .game-card.selected {
+  transform: translateY(-1px);
+  border-color: rgba(247, 251, 255, 0.94);
+  box-shadow:
+    0 0 0 1px rgba(247, 251, 255, 0.88),
+    0 0 0 3px rgba(114, 184, 255, 0.18),
+    0 12px 28px rgba(0, 0, 0, 0.26);
+}
+
+html[data-theme="ps4"] .game-card-copy {
+  inset: auto 11px 10px;
+}
+
+html[data-theme="ps4"] .game-card-title {
+  font-size: 14px;
+  font-weight: 680;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.62);
+}
+
+html[data-theme="ps4"] .game-card-platform {
+  margin-top: 3px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.54);
+}
+
+html[data-theme="ps4"] .hero {
+  height: clamp(300px, 32vh, 360px);
+  min-height: 300px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-theme="ps4"] .hero-art {
+  border-radius: 16px;
+  transform: none;
+  background-position: center 24%;
+}
+
+html[data-theme="ps4"] .hero-art.has-cover::after {
+  background: linear-gradient(90deg, rgba(4, 10, 24, 0.94) 0%, rgba(4, 10, 24, 0.54) 46%, rgba(4, 10, 24, 0.12) 78%);
+}
+
+html[data-theme="ps4"] .hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(3, 8, 20, 0.24) 0%, rgba(3, 8, 20, 0.04) 56%, transparent 100%),
+    linear-gradient(180deg, rgba(2, 5, 12, 0.08), rgba(2, 5, 12, 0.46) 100%);
+}
+
+html[data-theme="ps4"] .hero-content {
+  left: 0;
+  top: 50%;
+  width: min(640px, 58%);
+  transform: translateY(-50%);
+}
+
+html[data-theme="ps4"] .hero-content.is-changing {
+  animation: none;
+}
+
+html[data-theme="ps4"] .platform-pill {
+  border-radius: 4px;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="ps4"] .hero h2 {
+  margin: 12px 0 10px;
+  font-size: clamp(34px, 4.1vw, 66px);
+  font-weight: 600;
+  line-height: 1.02;
+}
+
+html[data-theme="ps4"] .hero-content > p {
+  color: #d0daf0;
+}
+
+html[data-theme="ps4"] .hero-meta {
+  color: #9cabca;
+}
+
+html[data-theme="ps4"] .play-button {
+  min-width: 136px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+html[data-theme="ps4"] .play-button:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="ps4"] .more-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="ps4"] .hero-index {
+  right: 10px;
+  bottom: 10px;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+html[data-theme="ps4"] .search-panel,
+html[data-theme="ps4"] .modal,
+html[data-theme="ps4"] .settings-panel,
+html[data-theme="ps4"] .profile-panel,
+html[data-theme="ps4"] .context-menu,
+html[data-theme="ps4"] .toast {
+  border-color: rgba(133, 184, 255, 0.16);
+  border-radius: 14px;
+  background: rgba(8, 18, 40, 0.94);
+}
+
+html[data-theme="ps4"] .primary-button {
+  background: #f4f8ff;
+  color: #081328;
+}
+
+html[data-theme="ps4"] .secondary-button,
+html[data-theme="ps4"] .add-button,
+html[data-theme="ps4"] .sort-button,
+html[data-theme="ps4"] .browse-button,
+html[data-theme="ps4"] .profile-action,
+html[data-theme="ps4"] .modal-close {
+  border-color: rgba(147, 194, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+html[data-theme="ps4"] .theme-card.active {
+  border-color: rgba(194, 225, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(95, 169, 255, 0.26);
+}
+
+html[data-theme="ps4"] .settings-panel {
+  border-left-color: rgba(133, 184, 255, 0.16);
+  width: min(448px, 100vw);
+  padding: 32px 28px;
+  box-shadow: -26px 0 80px rgba(0, 0, 0, 0.42);
+}
+
+html[data-theme="ps4"] .profile-panel-avatar {
+  border-width: 1px;
+  background: linear-gradient(145deg, #4c78e1, #193670);
+  box-shadow: inset 0 0 0 1px rgba(8, 15, 32, 0.9);
+}
+
+html[data-theme="ps4"] .boot {
+  background:
+    radial-gradient(circle at center, #12316f 0%, #0a1d45 38%, #030a17 100%);
+}
+
+html[data-theme="ps4"] .boot::before,
+html[data-theme="ps4"] .boot::after {
+  border-color: rgba(94, 179, 255, 0.16);
+  transform: rotate(-13deg);
+}
+
+html[data-theme="ps4"] .boot-glow {
+  background: rgba(61, 140, 255, 0.2);
+}
+
+html[data-theme="ps4"] .boot-mark {
+  transform: skew(0deg) scale(1.08);
+}
+
+html[data-theme="ps4"] .boot-fallback > p {
+  top: calc(50% + 60px);
+  letter-spacing: 0.28em;
+  transform: none;
+}
+
+html[data-theme="ps4"] .library-view {
+  display: block;
+  margin-top: clamp(34px, 5.5vh, 66px);
+  min-height: 0;
+  flex: 1 0 auto;
+}
+
+html[data-theme="ps4"] .app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding-bottom: 18px;
+}
+
+html[data-theme="ps4"] .ps4-stage-backdrop {
+  position: absolute;
+  inset: 52px -8vw -6px -5vw;
+  display: block;
+  overflow: hidden;
+  z-index: 0;
+}
+
+html[data-theme="ps4"] .ps4-stage-backdrop::before,
+html[data-theme="ps4"] .ps4-stage-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+html[data-theme="ps4"] .ps4-stage-backdrop::before {
+  background:
+    radial-gradient(126% 90% at -12% 108%, transparent 59%, rgba(126, 198, 255, 0.16) 59.5%, rgba(126, 198, 255, 0.05) 61%, transparent 62%),
+    radial-gradient(138% 96% at -4% 112%, transparent 65%, rgba(126, 198, 255, 0.13) 65.5%, rgba(126, 198, 255, 0.04) 67%, transparent 68%);
+}
+
+html[data-theme="ps4"] .ps4-stage-backdrop::after {
+  inset: 80px 0 0 12%;
+  background: linear-gradient(90deg, rgba(56, 129, 255, 0.05), transparent 58%);
+  filter: blur(18px);
+}
+
+html[data-theme="ps4"] .ps4-stage-glow {
+  position: absolute;
+  inset: 52px 6% 24px 34%;
+  background:
+    radial-gradient(circle at 72% 30%, rgba(112, 178, 255, 0.16), transparent 14%),
+    radial-gradient(circle at 30% 62%, rgba(54, 116, 255, 0.08), transparent 20%);
+  filter: blur(24px);
+}
+
+html.ambient-video-active[data-theme="ps4"] .ps4-stage-backdrop,
+html.ambient-video-active[data-theme="ps4"] .ps4-stage-glow {
+  display: none;
+}
+
+html[data-theme="ps4"] .ps4-title-ghost {
+  display: none;
+}
+
+html[data-theme="ps4"] .library-heading {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 2px;
+  padding-top: 0;
+  z-index: 2;
+}
+
+html[data-theme="ps4"] .library-heading > div:first-child {
+  display: none;
+}
+
+html[data-theme="ps4"] .library-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  width: auto;
+}
+
+html[data-theme="ps4"] .ps4-side-card {
+  display: none !important;
+}
+
+html[data-theme="ps4"] .ps4-side-label {
+  color: rgba(214, 231, 255, 0.76);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+html[data-theme="ps4"] .ps4-side-art {
+  min-height: 260px;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(88, 136, 255, 0.34), transparent 30%),
+    linear-gradient(145deg, #17335f 0%, #081121 100%);
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="ps4"] .game-rail-wrap {
+  margin: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+html[data-theme="ps4"] .game-rail {
+  gap: 18px;
+  padding: 14px clamp(34px, 4vw, 68px) 28px;
+  scroll-padding-inline: clamp(34px, 4vw, 68px);
+}
+
+html[data-theme="ps4"] .sort-button,
+html[data-theme="ps4"] .add-button {
+  width: auto;
+  min-width: 154px;
+  min-height: 46px;
+  border-radius: 8px;
+  justify-content: flex-start;
+  padding: 10px 15px;
+}
+
+html[data-theme="ps4"] .sort-button {
+  min-width: 164px;
+}
+
+html[data-theme="ps4"] .sort-button-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+html[data-theme="ps4"] .sort-button strong,
+html[data-theme="ps4"] .add-button {
+  font-size: 13px;
+}
+
+html[data-theme="ps4"] .add-button span {
+  font-size: 18px;
+}
+
+html[data-theme="ps4"] .settings-content h3 {
+  color: #edf4ff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+html[data-theme="ps4"] .settings-content section > p,
+html[data-theme="ps4"] .profile-panel-copy,
+html[data-theme="ps4"] .theme-card small,
+html[data-theme="ps4"] .interface-size small,
+html[data-theme="ps4"] .toggle-row small,
+html[data-theme="ps4"] .desktop-status p {
+  color: #8ea3c5;
+}
+
+html[data-theme="ps4"] .desktop-status {
+  padding: 13px 14px;
+  border-color: rgba(133, 184, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+html[data-theme="ps4"] .status-icon {
+  background: rgba(94, 140, 255, 0.16);
+  color: #a9c9ff;
+}
+
+html[data-theme="ps4"] .system-actions {
+  padding-top: 0;
+}
+
+html[data-theme="ps4"] .system-action-button {
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+html[data-theme="ps4"] .hero {
+  height: auto;
+  min-height: 280px;
+  margin-top: 6px;
+  padding: 2px 0 26px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  z-index: 2;
+}
+
+html[data-theme="ps4"] .hero-art {
+  inset: -34px -6vw -56px 26%;
+  border-radius: 0;
+  transform: none;
+  background-position: center;
+  opacity: 0.52;
+  box-shadow: none;
+  filter: saturate(0.88) brightness(0.78);
+  -webkit-mask-image: radial-gradient(74% 78% at 78% 42%, #000 0%, rgba(0, 0, 0, 0.92) 20%, rgba(0, 0, 0, 0.58) 44%, transparent 74%);
+  mask-image: radial-gradient(74% 78% at 78% 42%, #000 0%, rgba(0, 0, 0, 0.92) 20%, rgba(0, 0, 0, 0.58) 44%, transparent 74%);
+}
+
+html[data-theme="ps4"] .hero-art.has-cover::after {
+  display: none;
+}
+
+html[data-theme="ps4"] .hero-overlay {
+  display: none;
+}
+
+html[data-theme="ps4"] .hero-content {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: min(580px, 50%);
+  transform: none;
+  padding: 12px 0 0;
+}
+
+html[data-theme="ps4"] .hero-content.is-changing {
+  animation: none;
+}
+
+html[data-theme="ps4"] .platform-pill {
+  border-radius: 4px;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="ps4"] .hero h2 {
+  margin: 10px 0 10px;
+  font-size: clamp(34px, 4vw, 62px);
+  font-weight: 620;
+  line-height: 1.02;
+}
+
+html[data-theme="ps4"] .hero-content > p {
+  max-width: 500px;
+  color: #d0daf0;
+  font-size: clamp(14px, 1.02vw, 17px);
+}
+
+html[data-theme="ps4"] .hero-meta {
+  margin: 16px 0 20px;
+  color: #9cabca;
+  font-size: 12px;
+}
+
+html[data-theme="ps4"] .play-button {
+  min-width: 132px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 14px;
+}
+
+html[data-theme="ps4"] .play-button:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="ps4"] .more-button {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="ps4"] .hero-index {
+  left: 0;
+  right: auto;
+  bottom: 0;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+html[data-theme="ps4"] .controller-hints {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding-top: 8px;
+  color: #8ea2c5;
+  font-size: 11px;
+  gap: 18px;
+}
+
+html[data-theme="ps4"] .controller-key {
+  width: 21px;
+  height: 21px;
+  border-color: rgba(219, 233, 255, 0.26);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+html[data-theme="ps4"][data-controller-prompts="playstation"] .controller-key {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(219, 233, 255, 0.26);
+}
+
+html[data-theme="ps4"][data-controller-prompts="playstation"] .controller-key svg,
+html[data-theme="ps4"][data-controller-prompts="playstation"] .controller-key img {
+  width: 10px;
+  height: 10px;
+  color: #eff6ff;
+}
+
+html[data-theme="ps4"][data-controller-prompts="playstation"] .controller-key svg {
+  stroke-width: 1.7;
+}
+
+html[data-theme="ps4"][data-controller-prompts="playstation"] #controllerSelectKey,
+html[data-theme="ps4"][data-controller-prompts="playstation"] #controllerBackKey,
+html[data-theme="ps4"][data-controller-prompts="playstation"] #controllerOptionsKey {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(219, 233, 255, 0.26);
+}
+
+html[data-theme="ps4"][data-controller-prompts="playstation"] #controllerOptionsKey svg,
+html[data-theme="ps4"][data-controller-prompts="playstation"] #controllerOptionsKey img {
+  width: auto;
+  height: 12px;
+}
+
+@media (max-width: 1280px) {
+  html[data-theme="ps4"] .library-view {
+    min-height: auto;
+  }
+
+  html[data-theme="ps4"] .library-heading {
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0 0 10px;
+  }
+
+  html[data-theme="ps4"] .hero-content {
+    width: min(720px, 66%);
+    padding-top: 14px;
+  }
+
+  html[data-theme="ps4"] .hero-art {
+    inset: -24px -8vw -46px 34%;
+  }
+
+  html[data-theme="ps4"] .ps4-stage-backdrop {
+    inset: 58px -10vw -6px -8vw;
+  }
+
+  html[data-theme="ps4"] .library-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 900px) {
+  html[data-theme="ps4"] .library-heading {
+    justify-content: stretch;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  html[data-theme="ps4"] .library-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  html[data-theme="ps4"] .sort-button,
+  html[data-theme="ps4"] .add-button {
+    width: 100%;
+  }
+
+  html[data-theme="ps4"] .hero-content {
+    width: min(100%, 560px);
+  }
+
+  html[data-theme="ps4"] .hero-art {
+    inset: 24px -18vw -26px 24%;
+    opacity: 0.44;
+  }
+}
+
+/* PlayStation 3 / XMB theme */
+html[data-theme="ps3"][data-ui-size="monitor"] {
+  --ui-scale: 0.92;
+}
+
+html[data-theme="ps3"][data-ui-size="large"] {
+  --ui-scale: 1;
+}
+
+html[data-theme="ps3"][data-ui-size="tv"] {
+  --ui-scale: 1.1;
+}
+
+html[data-theme="ps3"] body {
+  background:
+    radial-gradient(circle at 52% 110%, rgba(95, 76, 211, 0.42), transparent 44%),
+    linear-gradient(160deg, #29216f 0%, #15104d 48%, #090722 100%);
+}
+
+html[data-theme="ps3"] .ambient {
+  background:
+    radial-gradient(90% 56% at 50% 110%, rgba(126, 105, 255, 0.42), transparent 64%),
+    linear-gradient(160deg, #312579 0%, #17104f 48%, #090722 100%);
+}
+
+html[data-theme="ps3"] .ambient::before {
+  display: block !important;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(3, 2, 18, 0.04), rgba(3, 2, 18, 0.28)),
+    radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.07), transparent 24%);
+}
+
+html[data-theme="ps3"] .ambient::after {
+  display: block !important;
+  z-index: 2;
+  opacity: 0.035;
+  mix-blend-mode: screen;
+}
+
+html[data-theme="ps3"] .ambient-video {
+  filter: brightness(0.82) saturate(0.94);
+}
+
+html[data-theme="ps3"] .ambient-orb,
+html[data-theme="ps3"] .mesh {
+  display: none !important;
+}
+
+html[data-theme="ps3"] .ui-root {
+  overflow: hidden;
+}
+
+html[data-theme="ps3"] .app-shell {
+  --ps3-stage-max-width: 1760px;
+  --ps3-stage-gutter: clamp(32px, 4.8vw, 86px);
+  --ps3-nav-gap: clamp(24px, 3.5vw, 58px);
+  --ps3-action-gap: clamp(18px, 2.6vw, 42px);
+  --ps3-lane-width: 82px;
+  --ps3-games-lane-left: calc(var(--ps3-lane-width) + var(--ps3-nav-gap));
+  --ps3-search-lane-left: calc(var(--ps3-games-lane-left) + var(--ps3-lane-width) + var(--ps3-nav-gap));
+  --ps3-settings-lane-left: calc(var(--ps3-search-lane-left) + var(--ps3-lane-width) + var(--ps3-action-gap));
+  --ps3-games-column-width: clamp(330px, 26vw, 430px);
+  --ps3-stage-right-offset: max(
+    var(--ps3-stage-gutter),
+    calc((100vw - var(--ps3-stage-max-width)) / 2 + var(--ps3-stage-gutter))
+  );
+  min-height: 100%;
+  padding: 28px clamp(32px, 4.8vw, 86px) 22px;
+  max-width: var(--ps3-stage-max-width);
+  margin: 0 auto;
+}
+
+html[data-theme="ps3"] .topbar {
+  position: relative;
+  height: 104px;
+  margin-top: clamp(82px, 14vh, 158px);
+  gap: clamp(24px, 3.5vw, 58px);
+  align-items: flex-start;
+  z-index: 5;
+}
+
+html[data-theme="ps3"] .brand,
+html[data-theme="ps3"] .nav-item,
+html[data-theme="ps3"] .top-actions > .icon-button {
+  position: relative;
+  width: 82px;
+  min-width: 82px;
+  height: 98px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 0 6px;
+  color: rgba(245, 245, 250, 0.62);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+  text-shadow: 2px 2px 5px #000;
+  transition: color 180ms ease, transform 220ms ease, opacity 180ms ease;
+}
+
+html[data-theme="ps3"] .brand::before,
+html[data-theme="ps3"] .nav-item::before,
+html[data-theme="ps3"] .top-actions > .icon-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 68px;
+  height: 68px;
+  background: center / contain no-repeat;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72));
+  opacity: 0.7;
+  transform: translateX(-50%) scale(0.82);
+  transition: opacity 180ms ease, transform 220ms ease, filter 220ms ease;
+}
+
+html[data-theme="ps3"] .brand::before {
+  background-image: url("assets/themes/ps3/user.png");
+}
+
+html[data-theme="ps3"] .brand-logo {
+  display: none !important;
+}
+
+html[data-theme="ps3"] .brand-text {
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-theme="ps3"] .primary-nav {
+  gap: clamp(20px, 3.1vw, 50px);
+  align-items: flex-start;
+}
+
+html[data-theme="ps3"] .nav-item[data-view="games"]::before {
+  background-image: url("assets/themes/ps3/games.png");
+}
+
+html[data-theme="ps3"] .nav-item.active,
+html[data-theme="ps3"] .nav-item:hover,
+html[data-theme="ps3"] .nav-item:focus,
+html[data-theme="ps3"] .brand.active,
+html[data-theme="ps3"] .brand:hover,
+html[data-theme="ps3"] .brand:focus,
+html[data-theme="ps3"] .top-actions > .icon-button:hover,
+html[data-theme="ps3"] .top-actions > .icon-button:focus,
+html[data-theme="ps3"] .top-actions > .icon-button.active {
+  color: #fff;
+  background: transparent;
+  box-shadow: none;
+  transform: scale(1.04);
+}
+
+html[data-theme="ps3"] .brand.active::before,
+html[data-theme="ps3"] .brand:hover::before,
+html[data-theme="ps3"] .brand:focus::before,
+html[data-theme="ps3"] .nav-item.active::before,
+html[data-theme="ps3"] .nav-item:hover::before,
+html[data-theme="ps3"] .nav-item:focus::before,
+html[data-theme="ps3"] .top-actions > .icon-button:hover::before,
+html[data-theme="ps3"] .top-actions > .icon-button:focus::before,
+html[data-theme="ps3"] .top-actions > .icon-button.active::before {
+  opacity: 0.96;
+  filter:
+    drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.32));
+  transform: translateX(-50%) scale(1);
+}
+
+html[data-theme="ps3"] .nav-item.active::after {
+  display: none;
+}
+
+html[data-theme="ps3"] .focusable:focus-visible,
+html[data-theme="ps3"] .controller-focus {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+
+html[data-theme="ps3"] .top-actions {
+  margin-left: 0;
+  gap: clamp(18px, 2.6vw, 42px);
+  align-items: flex-start;
+}
+
+html[data-theme="ps3"] .top-actions > .icon-button svg {
+  position: absolute;
+  top: 12px;
+  z-index: 1;
+  width: 43px;
+  height: 43px;
+  stroke-width: 1.25;
+  opacity: 0.72;
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
+html[data-theme="ps3"] .top-actions > .icon-button:hover svg {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+html[data-theme="ps3"] #searchButton::before {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 66%);
+}
+
+html[data-theme="ps3"] #searchButton::after {
+  content: "Search";
+}
+
+html[data-theme="ps3"] #settingsButton::before {
+  background-image: url("assets/themes/ps3/settings.png");
+}
+
+html[data-theme="ps3"] #settingsButton svg {
+  display: none;
+}
+
+html[data-theme="ps3"] #settingsButton::after {
+  content: "Settings";
+}
+
+html[data-theme="ps3"] .clock {
+  position: fixed;
+  top: 32px;
+  right: var(--ps3-stage-right-offset);
+  min-width: 205px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0 16px 0 18px;
+  border: 1px solid rgba(236, 236, 244, 0.76);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(15, 12, 48, 0.22), rgba(7, 5, 25, 0.08));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 6px 14px rgba(0, 0, 0, 0.18);
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .profile {
+  display: none;
+}
+
+html[data-theme="ps3"] .library-view {
+  height: calc(100vh / var(--ui-scale) - 286px);
+  min-height: 365px;
+  margin-top: 0;
+}
+
+html[data-theme="ps3"] .library-heading {
+  position: absolute;
+  top: -9px;
+  right: 0;
+  z-index: 4;
+  margin: 0;
+}
+
+html[data-theme="ps3"] .library-heading > div:first-child {
+  display: none;
+}
+
+html[data-theme="ps3"] .library-actions {
+  gap: 8px;
+}
+
+html[data-theme="ps3"] .sort-button,
+html[data-theme="ps3"] .add-button {
+  min-height: 40px;
+  height: 40px;
+  border: 1px solid rgba(236, 236, 244, 0.34);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(18, 14, 59, 0.4), rgba(7, 6, 27, 0.16));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 8px 18px rgba(0, 0, 0, 0.16);
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .sort-button {
+  gap: 2px;
+  min-width: 154px;
+  padding: 7px 16px 8px;
+}
+
+html[data-theme="ps3"] .add-button {
+  padding: 0 13px;
+  font-size: 12px;
+}
+
+html[data-theme="ps3"] .sort-button-label {
+  color: rgba(221, 221, 232, 0.64);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+
+html[data-theme="ps3"] .sort-button strong {
+  font-size: 11px;
+  line-height: 1.1;
+}
+
+html[data-theme="ps3"] .game-rail-wrap {
+  position: absolute;
+  top: 18px;
+  left: calc(var(--ps3-games-lane-left) - 10px);
+  bottom: 24px;
+  width: var(--ps3-games-column-width);
+  margin: 0;
+  overflow: hidden;
+  z-index: 3;
+}
+
+html[data-theme="ps3"] .game-rail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 20px 64px 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  cursor: default;
+  scroll-padding-block: 20px;
+}
+
+html[data-theme="ps3"] .game-card {
+  flex: 0 0 82px;
+  width: 100%;
+  height: 82px;
+  display: block;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  isolation: auto;
+  transform-origin: left center;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+html[data-theme="ps3"] .game-card::before {
+  inset: 7px auto 7px 8px;
+  z-index: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 5px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.32)),
+    var(--cover, linear-gradient(145deg, color-mix(in srgb, var(--accent) 66%, #463e98), #0b092a));
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 3px 8px rgba(0, 0, 0, 0.58);
+  filter: saturate(0.84);
+}
+
+html[data-theme="ps3"] .game-card::after {
+  inset: 7px auto 7px 8px;
+  z-index: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 5px;
+  opacity: calc(var(--generated-opacity, 0) * 0.78);
+}
+
+html[data-theme="ps3"] .game-card:hover::before {
+  transform: none;
+}
+
+html[data-theme="ps3"] .game-card-copy {
+  position: absolute;
+  inset: 19px auto auto 94px;
+  width: calc(100% - 100px);
+  color: rgba(255, 255, 255, 0.56);
+  text-align: left;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .game-card-title {
+  overflow: visible;
+  color: inherit;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: clip;
+}
+
+html[data-theme="ps3"] .game-card-platform {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.44);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+}
+
+html[data-theme="ps3"] .game-card.selected {
+  border: 0;
+  box-shadow: none;
+  transform: scale(1.08);
+}
+
+html[data-theme="ps3"] .game-card:focus {
+  outline: none !important;
+}
+
+html[data-theme="ps3"] .game-card.selected::before {
+  filter:
+    saturate(0.95)
+    drop-shadow(0 0 6px rgba(255, 255, 255, 0.25));
+}
+
+html[data-theme="ps3"] .game-card.selected .game-card-copy {
+  color: #fff;
+}
+
+html[data-theme="ps3"] .game-card.selected .game-card-title {
+  animation: ps3-title-glow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes ps3-title-glow {
+  from { text-shadow: 1px 2px 4px #000, 0 0 1px #ddd; }
+  to { text-shadow: 1px 2px 4px #000, 0 0 10px rgba(255, 255, 255, 0.8); }
+}
+
+html[data-theme="ps3"] .hero {
+  position: absolute;
+  top: 58px;
+  right: 0;
+  bottom: 52px;
+  left: calc(var(--ps3-games-lane-left) + var(--ps3-games-column-width) + clamp(42px, 4vw, 72px));
+  height: auto;
+  min-height: 280px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  background: linear-gradient(155deg, rgba(19, 14, 77, 0.56), rgba(2, 2, 18, 0.46));
+  box-shadow: 0 14px 46px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(9px);
+}
+
+html[data-theme="ps3"] .hero-art {
+  inset: 0;
+  opacity: 0.52;
+  filter: saturate(0.88) brightness(0.82);
+  background-position: 76% center;
+  transform: none;
+}
+
+html[data-theme="ps3"] .hero-art.has-cover::after {
+  background:
+    linear-gradient(90deg, rgba(10, 8, 39, 0.84) 0%, rgba(10, 8, 39, 0.5) 42%, rgba(10, 8, 39, 0.14) 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(3, 3, 19, 0.62));
+}
+
+html[data-theme="ps3"] .hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(11, 8, 43, 0.68) 0%, rgba(11, 8, 43, 0.28) 44%, rgba(6, 5, 28, 0.1) 76%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(0, 0, 0, 0.24));
+}
+
+html[data-theme="ps3"] .hero-content {
+  left: 28px;
+  top: 50%;
+  width: calc(100% - 56px);
+  transform: translateY(-50%);
+}
+
+html[data-theme="ps3"] .hero-content.is-changing {
+  animation: ps3-copy 220ms ease-out;
+}
+
+@keyframes ps3-copy {
+  from { opacity: 0; transform: translateY(-46%); }
+  to { opacity: 1; transform: translateY(-50%); }
+}
+
+html[data-theme="ps3"] .platform-pill {
+  border-color: rgba(255, 255, 255, 0.42);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 9px;
+  font-weight: 400;
+}
+
+html[data-theme="ps3"] .hero h2 {
+  margin: 13px 0 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.58);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(30px, 3vw, 52px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+html[data-theme="ps3"] .hero-content > p {
+  color: rgba(244, 244, 249, 0.86);
+  font-size: 13px;
+}
+
+html[data-theme="ps3"] .hero-meta {
+  margin: 14px 0 18px;
+  color: rgba(236, 235, 245, 0.58);
+  font-size: 11px;
+}
+
+html[data-theme="ps3"] .play-button,
+html[data-theme="ps3"] .more-button {
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+html[data-theme="ps3"] .play-button {
+  min-width: 112px;
+  font-size: 12px;
+}
+
+html[data-theme="ps3"] .more-button {
+  width: 40px;
+}
+
+html[data-theme="ps3"] .hero-index {
+  right: 17px;
+  bottom: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 10px;
+}
+
+html[data-theme="ps3"] .controller-hints {
+  position: fixed;
+  right: var(--ps3-stage-right-offset);
+  bottom: 20px;
+  z-index: 5;
+  margin: 0;
+  gap: 17px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .controller-key {
+  width: 19px;
+  height: 19px;
+  background: rgba(7, 5, 31, 0.26);
+}
+
+html[data-theme="ps3"][data-controller-prompts="playstation"] .controller-key img {
+  width: 11px;
+  height: 11px;
+}
+
+html[data-theme="ps3"][data-controller-prompts="playstation"] #controllerOptionsKey img {
+  width: 16px;
+  height: auto;
+}
+
+html[data-theme="ps3"] .connection {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+html[data-theme="ps3"] .eyebrow {
+  color: rgba(255, 255, 255, 0.68);
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .primary-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: #171147;
+}
+
+html[data-theme="ps3"] .search-panel,
+html[data-theme="ps3"] .modal,
+html[data-theme="ps3"] .settings-panel,
+html[data-theme="ps3"] .profile-panel,
+html[data-theme="ps3"] .context-menu,
+html[data-theme="ps3"] .toast {
+  border-color: rgba(255, 255, 255, 0.4);
+  border-radius: 9px;
+  background: linear-gradient(155deg, rgba(24, 18, 84, 0.96), rgba(3, 3, 20, 0.96));
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.46);
+}
+
+html[data-theme="ps3"] .search-panel {
+  height: 54px;
+  border-color: rgba(255, 255, 255, 0.24);
+  border-radius: 7px;
+  background:
+    linear-gradient(180deg, rgba(24, 26, 36, 0.78), rgba(8, 9, 16, 0.62));
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+html[data-theme="ps3"] .search-panel svg {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html[data-theme="ps3"] .search-panel input {
+  color: rgba(255, 255, 255, 0.96);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .search-panel input::placeholder {
+  color: rgba(219, 223, 235, 0.42);
+}
+
+html[data-theme="ps3"] .search-panel kbd {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(218, 223, 236, 0.62);
+}
+
+html[data-theme="ps3"] .context-menu {
+  min-width: 260px;
+  padding: 8px 0;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(34, 28, 112, 0.97), rgba(8, 8, 30, 0.95));
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+html[data-theme="ps3"] .context-menu button {
+  position: relative;
+  padding: 12px 22px;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.94);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .context-menu button + button {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="ps3"] .context-menu button:hover,
+html[data-theme="ps3"] .context-menu button:focus-visible {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03) 56%, transparent 100%);
+}
+
+html[data-theme="ps3"] .context-menu .danger {
+  color: #ff9ca7;
+}
+
+html[data-theme="ps3"] .profile-panel {
+  width: min(400px, calc(100vw - 52px));
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+html[data-theme="ps3"] .profile-panel.view-active {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+html[data-theme="ps3"] .profile-panel-header {
+  display: none;
+}
+
+html[data-theme="ps3"] .profile-panel-avatar {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 7px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(9, 7, 35, 0.18)),
+    url("assets/themes/ps3/user.png") center / 26px 26px no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: transparent;
+  font-size: 0;
+}
+
+html[data-theme="ps3"] .profile-panel-header .eyebrow {
+  margin: 0 0 2px;
+  color: rgba(221, 221, 232, 0.62);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .profile-panel-header h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .profile-panel-copy {
+  display: none;
+}
+
+html[data-theme="ps3"] .profile-panel-actions {
+  gap: 0;
+}
+
+html[data-theme="ps3"] .profile-name-editor {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 10px 28px 10px 84px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .profile-name-editor::before {
+  content: "";
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  background: url("assets/themes/ps3/user.png") center / contain no-repeat;
+  opacity: 0.78;
+  transform: translateY(-50%) scale(0.88);
+  filter:
+    drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.18));
+}
+
+html[data-theme="ps3"] .profile-name-label {
+  color: rgba(221, 221, 232, 0.62);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .profile-name-editor .settings-field-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+html[data-theme="ps3"] .profile-name-editor .settings-text-input {
+  height: 30px;
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .profile-name-editor .settings-text-input::placeholder {
+  color: rgba(221, 221, 232, 0.44);
+}
+
+html[data-theme="ps3"] .profile-name-editor .settings-text-input:focus {
+  border-color: rgba(255, 255, 255, 0.82);
+  box-shadow: none;
+}
+
+html[data-theme="ps3"] .profile-name-editor .secondary-button {
+  height: 28px;
+  padding: 0 11px;
+  align-self: end;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .profile-action {
+  position: relative;
+  gap: 2px;
+  min-height: 52px;
+  padding: 10px 28px 10px 84px;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .profile-action::before {
+  content: "";
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  background: center / contain no-repeat;
+  opacity: 0.76;
+  transform: translateY(-50%) scale(0.88);
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72));
+  transition: opacity 160ms ease, transform 180ms ease, filter 180ms ease;
+}
+
+html[data-theme="ps3"] #profileSettingsButton::before {
+  background-image: url("assets/themes/ps3/settings.png");
+}
+
+html[data-theme="ps3"] #profileShortcutButton::before {
+  background-image: url("assets/themes/ps3/games.png");
+}
+
+html[data-theme="ps3"] #profileSoundButton::before {
+  background-image: url("assets/themes/ps3/music.png");
+}
+
+html[data-theme="ps3"] #profileCloseButton::before {
+  background-image: url("assets/themes/ps3/update.png");
+}
+
+html[data-theme="ps3"] .profile-action:hover,
+html[data-theme="ps3"] .profile-action:focus-visible,
+html[data-theme="ps3"] .profile-name-editor:focus-within {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 52%, transparent 100%);
+}
+
+html[data-theme="ps3"] .profile-action:hover::before,
+html[data-theme="ps3"] .profile-action:focus-visible::before {
+  opacity: 0.98;
+  transform: translateY(-50%) scale(1);
+  filter:
+    drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.22));
+}
+
+html[data-theme="ps3"] .profile-action span {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+html[data-theme="ps3"] .profile-action small {
+  color: rgba(221, 221, 232, 0.5);
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+html[data-theme="ps3"] .profile-action.danger {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="ps3"] .profile-action.danger span {
+  color: #fff;
+}
+
+html[data-theme="ps3"] .profile-panel .focusable:focus-visible,
+html[data-theme="ps3"] .profile-panel .settings-text-input:focus-visible {
+  outline: 0 !important;
+}
+
+html[data-theme="ps3"] .settings-panel {
+  top: 122px;
+  right: var(--ps3-stage-right-offset);
+  bottom: auto;
+  width: min(440px, calc(100vw - 72px));
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: translateY(14px) scale(0.985);
+  opacity: 0;
+  transition: opacity 180ms ease, transform 220ms ease;
+  backdrop-filter: none;
+}
+
+html[data-theme="ps3"] .settings-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+html[data-theme="ps3"] .settings-panel.view-active {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+html[data-theme="ps3"] .secondary-button,
+html[data-theme="ps3"] .browse-button,
+html[data-theme="ps3"] .profile-action,
+html[data-theme="ps3"] .modal-close,
+html[data-theme="ps3"] .system-action-button {
+  border-color: rgba(255, 255, 255, 0.28);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+html[data-theme="ps3"] .theme-card.active {
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.26);
+}
+
+html[data-theme="ps3"] .settings-panel .modal-header {
+  display: none;
+}
+
+html[data-theme="ps3"] .settings-panel .eyebrow {
+  margin: 0 0 2px;
+  color: rgba(221, 221, 232, 0.62);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .settings-panel .modal-header h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .settings-panel .modal-close {
+  display: none;
+}
+
+html[data-theme="ps3"] .settings-content {
+  padding: 22px 0 0;
+  overflow: hidden;
+}
+
+html[data-theme="ps3"] .settings-content section,
+html[data-theme="ps3"] .settings-group {
+  margin: 0;
+}
+
+html[data-theme="ps3"] .settings-group {
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+html[data-theme="ps3"] .settings-group:last-child {
+  border-bottom: 0;
+}
+
+html[data-theme="ps3"] .settings-group.active {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03) 56%, transparent 100%);
+}
+
+html[data-theme="ps3"] .settings-group:focus-within {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03) 52%, transparent 82%);
+}
+
+html[data-theme="ps3"] .settings-group > [hidden] {
+  display: none !important;
+}
+
+html[data-theme="ps3"] .settings-group-header {
+  position: relative;
+  gap: 0;
+  margin: 0;
+  padding: 12px 28px 12px 84px;
+  cursor: pointer;
+}
+
+html[data-theme="ps3"] .settings-group-icon {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.78;
+  transform: translateY(-50%) scale(0.88);
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72));
+}
+
+html[data-theme="ps3"] .settings-group-theme .settings-group-icon,
+html[data-theme="ps3"] .settings-group-system .settings-group-icon {
+  background-image: url("assets/themes/ps3/settings.png");
+}
+
+html[data-theme="ps3"] .settings-group-display .settings-group-icon {
+  background-image: url("assets/themes/ps3/display.png");
+}
+
+html[data-theme="ps3"] .settings-group-startup .settings-group-icon {
+  background-image: url("assets/themes/ps3/update.png");
+}
+
+html[data-theme="ps3"] .settings-group-controller .settings-group-icon {
+  background-image: url("assets/themes/ps3/games.png");
+}
+
+html[data-theme="ps3"] .settings-group-sound .settings-group-icon {
+  background-image: url("assets/themes/ps3/music.png");
+}
+
+html[data-theme="ps3"] .settings-group-desktop .settings-group-icon {
+  background-image: url("assets/themes/ps3/user.png");
+}
+
+html[data-theme="ps3"] .settings-group-header h3 {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .settings-group-header p {
+  margin: 2px 0 0;
+  color: rgba(221, 221, 232, 0.52);
+  font-size: 10px;
+  line-height: 1.25;
+  text-shadow: 1px 2px 4px #000;
+}
+
+html[data-theme="ps3"] .settings-group:not(.active) .settings-group-header p {
+  display: none;
+}
+
+html[data-theme="ps3"] .theme-grid {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+html[data-theme="ps3"] .theme-card {
+  gap: 0 14px;
+  padding: 10px 28px 10px 84px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .theme-card + .theme-card {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="ps3"] .theme-card.active,
+html[data-theme="ps3"] .theme-card:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 56%, transparent 100%);
+  box-shadow: none;
+}
+
+html[data-theme="ps3"] .settings-group-header:focus,
+html[data-theme="ps3"] .theme-card:focus,
+html[data-theme="ps3"] .size-options button:focus,
+html[data-theme="ps3"] .system-action-button:focus,
+html[data-theme="ps3"] .secondary-button:focus,
+html[data-theme="ps3"] .toggle-row:focus-within {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03) 52%, transparent 82%);
+  box-shadow: none;
+}
+
+html[data-theme="ps3"] .theme-preview {
+  width: 46px;
+  height: 36px;
+  border-radius: 6px;
+}
+
+html[data-theme="ps3"] .theme-card strong {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+html[data-theme="ps3"] .theme-card small {
+  color: rgba(221, 221, 232, 0.48);
+  font-size: 10px;
+}
+
+html[data-theme="ps3"] .interface-size,
+html[data-theme="ps3"] .desktop-status,
+html[data-theme="ps3"] .system-action-button {
+  margin-left: 84px;
+  margin-right: 28px;
+  width: calc(100% - 112px);
+  box-sizing: border-box;
+}
+
+html[data-theme="ps3"] .interface-size {
+  gap: 8px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+html[data-theme="ps3"] .interface-size strong,
+html[data-theme="ps3"] .toggle-row strong,
+html[data-theme="ps3"] .desktop-status strong {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .interface-size small,
+html[data-theme="ps3"] .toggle-row small,
+html[data-theme="ps3"] .desktop-status p {
+  color: rgba(221, 221, 232, 0.48);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+html[data-theme="ps3"] .size-options {
+  gap: 4px;
+  padding: 4px;
+  border-color: rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+html[data-theme="ps3"] .size-options button {
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+html[data-theme="ps3"] .size-options button.active {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: none;
+}
+
+html[data-theme="ps3"] .size-options button:focus {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.26);
+}
+
+html[data-theme="ps3"] .size-options button.active:focus {
+  color: #090b11;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+html[data-theme="ps3"] .setting-rows {
+  border-top: 0;
+}
+
+html[data-theme="ps3"] .toggle-row {
+  min-height: 56px;
+  padding: 8px 28px 8px 84px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="ps3"] .toggle-row:last-child {
+  border-bottom: 0;
+}
+
+html[data-theme="ps3"] .toggle-row > i {
+  width: 34px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+html[data-theme="ps3"] .toggle-row > i::after {
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+html[data-theme="ps3"] .toggle-row input:checked + i {
+  background: #5c78e8;
+}
+
+html[data-theme="ps3"] .toggle-row input:checked + i::after {
+  transform: translateX(16px);
+}
+
+html[data-theme="ps3"] .desktop-status {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 6px 0 14px;
+}
+
+html[data-theme="ps3"] .status-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(84, 102, 209, 0.22);
+  font-size: 16px;
+}
+
+html[data-theme="ps3"] .desktop-status p {
+  margin: 4px 0 0;
+}
+
+html[data-theme="ps3"] .system-actions {
+  padding-bottom: 2px;
+}
+
+html[data-theme="ps3"] .system-action-button {
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  text-shadow: 2px 2px 5px #000;
+}
+
+html[data-theme="ps3"] .system-action-button.danger {
+  color: #fff;
+}
+
+html[data-theme="ps3"] .settings-panel .focusable:focus-visible,
+html[data-theme="ps3"] .settings-panel .settings-text-input:focus-visible {
+  outline: 0 !important;
+}
+
+html[data-theme="ps3"] .profile-name-editor:focus-within,
+html[data-theme="ps3"] .profile-action:focus {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03) 52%, transparent 82%);
+}
+
+html[data-theme="ps3"] .profile-action:focus::before {
+  opacity: 0.98;
+  transform: translateY(-50%) scale(1);
+  filter:
+    drop-shadow(0 3px 5px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.22));
+}
+
+html[data-theme="ps3"] .boot.visible.video-playing {
+  background: #000;
+}
+
+html[data-theme="ps3"] .boot.visible.video-playing::before,
+html[data-theme="ps3"] .boot.visible.video-playing::after {
+  opacity: 0;
+}
+
+html[data-theme="ps3"] .boot-mark {
+  filter: drop-shadow(0 0 12px rgba(206, 201, 255, 0.48));
+}
+
+html[data-theme="ps3"] .boot-fallback > p {
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 1050px) {
+  html[data-theme="ps3"] .topbar {
+    gap: 14px;
+  }
+
+  html[data-theme="ps3"] .primary-nav,
+  html[data-theme="ps3"] .top-actions {
+    gap: 12px;
+  }
+
+  html[data-theme="ps3"] .hero {
+    left: 54vw;
+  }
+
+  html[data-theme="ps3"] .hero h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 760px) {
+  html[data-theme="ps3"] .app-shell {
+    padding-inline: 18px;
+  }
+
+  html[data-theme="ps3"] .topbar {
+    margin-top: 72px;
+    transform: scale(0.82);
+    transform-origin: top left;
+    width: 122%;
+  }
+
+  html[data-theme="ps3"] .brand,
+  html[data-theme="ps3"] .nav-item,
+  html[data-theme="ps3"] .top-actions > .icon-button {
+    min-width: 70px;
+    width: 70px;
+  }
+
+  html[data-theme="ps3"] .library-view {
+    height: calc(100vh / var(--ui-scale) - 232px);
+    min-height: 330px;
+  }
+
+  html[data-theme="ps3"] .game-rail-wrap {
+    left: 0;
+    width: 57%;
+  }
+
+  html[data-theme="ps3"] .hero {
+    top: 42px;
+    left: 58%;
+  }
+
+  html[data-theme="ps3"] .hero-content {
+    left: 18px;
+    width: calc(100% - 36px);
+  }
+
+  html[data-theme="ps3"] .hero-content > p,
+  html[data-theme="ps3"] .hero-meta {
+    display: none;
+  }
+
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.focusable:focus-visible,
+.controller-focus {
+  outline: 2px solid var(--focus) !important;
+  outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .primary-nav {
+    gap: 18px;
+  }
+
+  .clock {
+    display: none;
+  }
+
+  .hero-content {
+    width: 68%;
+  }
+
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    padding: 23px 18px 20px;
+  }
+
+  .brand span:last-child,
+  .primary-nav .nav-item:not(.active),
+  .controller-hints > div:nth-child(3) {
+    display: none;
+  }
+
+  .topbar {
+    gap: 18px;
+  }
+
+  .top-actions {
+    gap: 2px;
+  }
+
+  .library-view {
+    margin-top: 38px;
+  }
+
+  .library-heading,
+  .library-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .game-rail-wrap {
+    margin: 0 -18px;
+  }
+
+  .game-rail {
+    padding-inline: 18px;
+  }
+
+  .game-card {
+    flex-basis: 98px;
+    width: 98px;
+    height: 98px;
+    border-radius: 17px;
+  }
+
+  .hero {
+    height: 430px;
+    border-radius: 22px;
+  }
+
+  .hero-content {
+    top: auto;
+    right: 25px;
+    bottom: 32px;
+    left: 25px;
+    width: auto;
+    transform: none;
+  }
+
+  .hero h2 {
+    font-size: 42px;
+  }
+
+  .hero-index {
+    top: 23px;
+    right: 22px;
+    bottom: auto;
+  }
+
+  .controller-hints .connection {
+    margin-left: auto;
+  }
+
+  .connection {
+    font-size: 0;
+  }
+
+  .profile-panel {
+    top: 70px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

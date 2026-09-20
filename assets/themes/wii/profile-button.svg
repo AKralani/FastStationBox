@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Wii profile button">
+  <defs>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#71ddf6"/>
+      <stop offset="0.52" stop-color="#38c2e7"/>
+      <stop offset="1" stop-color="#149fcb"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#56b8d7"/>
+      <stop offset="1" stop-color="#7dc7da"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="#fff"/>
+  <circle cx="32" cy="32" r="27.5" fill="none" stroke="url(#ring)" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="22" fill="url(#fill)"/>
+  <circle cx="32" cy="32" r="18.8" fill="none" stroke="#ffffff" stroke-opacity="0.95" stroke-width="2.4"/>
+  <ellipse cx="32" cy="19" rx="13" ry="8.4" fill="#ffffff" fill-opacity="0.48"/>
+</svg>

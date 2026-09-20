@@ -1,0 +1,5 @@
+node_modules/
+dist/
+assets/game-covers/
+# Runtime logs
+*.log

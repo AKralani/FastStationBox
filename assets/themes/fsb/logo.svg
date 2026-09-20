@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 78" role="img" aria-labelledby="title">
+  <title id="title">FastStationBox</title>
+  <defs>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#09a7ff"/>
+      <stop offset=".5" stop-color="#1756ff"/>
+      <stop offset=".52" stop-color="#182330"/>
+      <stop offset="1" stop-color="#91f500"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f6fbff"/>
+      <stop offset=".68" stop-color="#d6e0e9"/>
+      <stop offset=".69" stop-color="#a5ff1f"/>
+      <stop offset="1" stop-color="#6edd00"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(3 3)">
+    <circle cx="36" cy="36" r="32" fill="#07101a" stroke="url(#ring)" stroke-width="5"/>
+    <path d="M18 47 29 20h29l-4 9H35l-3 7h17l-4 8H29l-5 12z" fill="#138bff"/>
+    <path d="m16 55 45-25-6 11-36 21z" fill="#8df000"/>
+    <text x="79" y="34" fill="url(#word)" font-family="Arial, sans-serif" font-size="25" font-weight="800" font-style="italic" letter-spacing="-.6">FASTSTATION</text>
+    <text x="270" y="34" fill="#82ed00" font-family="Arial, sans-serif" font-size="25" font-weight="900" font-style="italic">BOX</text>
+    <text x="80" y="55" fill="#7f96ab" font-family="Arial, sans-serif" font-size="8" font-weight="700" letter-spacing="4.2">GAME LAUNCHER</text>
+  </g>
+</svg>
