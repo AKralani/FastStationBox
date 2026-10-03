@@ -5,7 +5,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 const backup = require("../library-backup.js");
 
-function desktopHandlers(dialog, fileIO) {
+function desktopHandlers(dialog, fileIO, shell = {}, options = {}) {
   const handlers = new Map();
   class Window {
     static fromWebContents() { return null; }
@@ -17,18 +17,77 @@ function desktopHandlers(dialog, fileIO) {
     app: { commandLine: { appendSwitch() {} }, getPath: () => "test",
       setPath() {}, setName() {}, setAppUserModelId() {}, on() {},
       whenReady: () => ({ then: (fn) => fn() }) },
-    BrowserWindow: Window, dialog, ipcMain: { handle: (name, fn) => handlers.set(name, fn) }, shell: {},
+    BrowserWindow: Window, dialog, ipcMain: { handle: (name, fn) => handlers.set(name, fn) }, shell,
   };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../electron/main.cjs"), "utf8"), {
     require: (name) => name === "electron" ? electron : name === "fs" ? { promises: fileIO }
-      : name === "../library-backup.js" ? backup : require(name),
+      : name === "../library-backup.js" ? backup
+      : name === "./steam-discovery.cjs" ? require("../electron/steam-discovery.cjs")
+      : name === "./local-discovery.cjs" ? options.discovery || require("../electron/local-discovery.cjs")
+      : name === "child_process" && options.spawn ? { ...require(name), spawn: options.spawn } : require(name),
     __dirname: path.join(__dirname, "../electron"), process, Buffer,
   });
   return {
     save: (text) => handlers.get("launcher:save-library-backup")({ sender: {} }, text),
     load: () => handlers.get("launcher:load-library-backup")({ sender: {} }),
+    launch: (target) => handlers.get("launcher:launch")({ sender: {} }, target),
+    discover: (games) => handlers.get("launcher:discover-local")({ sender: {} }, games),
+    launchDiscovered: (source, id, game) => handlers.get("launcher:launch-discovered")({ sender: {} }, source, id, game),
   };
 }
+
+test("discovered launches use main-process scan data, preserve arguments and reject unknown games", async () => {
+  const commands = [];
+  const urls = [];
+  const entries = [
+    { source: "epic", externalId: "epic1", path: "com.epicgames.launcher://apps/a%3Ab%3Ac?action=launch&silent=true" },
+    { source: "ubisoft", externalId: "42", path: "uplay://launch/42" },
+    { source: "gog", externalId: "123", path: "C:/Games/game.exe", installDir: "C:/Games", workingDir: "C:/Games/bin", launchArguments: '["--profile","Player One"]' },
+    { source: "xbox", externalId: "Package_abcd!Game", path: "shell:AppsFolder\\Package_abcd!Game" },
+  ];
+  const reports = Object.fromEntries(entries.map((entry) => [entry.source, { ok: true, games: [entry] }]));
+  const handlers = desktopHandlers({}, {}, { openExternal: async (url) => urls.push(url),
+    readShortcutLink: () => ({ target: "C:/Games/game.exe" }) }, {
+    discovery: { discoverLocalGames: async () => reports },
+    spawn: (executable, args, options) => {
+      commands.push({ executable, args, options });
+      const child = new (require("node:events").EventEmitter)();
+      child.unref = () => {};
+      process.nextTick(() => child.emit("spawn"));
+      return child;
+    },
+  });
+  assert.equal((await handlers.launchDiscovered("gog", "123")).ok, false);
+  assert.equal((await handlers.launchDiscovered("gog", "123", entries[2])).ok, true);
+  assert.equal(commands[0].executable, entries[2].path);
+  commands.length = 0;
+  assert.equal((await handlers.launchDiscovered("gog", "123", { ...entries[2], path: "https://example.com" })).ok, false);
+  const result = await handlers.discover([{ id: "manual", path: "C:/Desktop/game.lnk" }]);
+  assert.equal(result.resolvedPaths.manual, "C:/Games/game.exe");
+  for (const entry of entries) assert.equal((await handlers.launchDiscovered(entry.source, entry.externalId)).ok, true);
+  assert.deepEqual(urls, entries.slice(0, 2).map((entry) => entry.path));
+  assert.equal(commands[0].executable, "C:/Games/game.exe");
+  assert.deepEqual([...commands[0].args], ["--profile", "Player One"]);
+  assert.equal(commands[0].options.cwd, "C:/Games/bin");
+  assert.equal(commands[0].options.shell, false);
+  assert.ok(commands[1].executable.endsWith("explorer.exe"));
+  assert.equal(commands[1].args[0], "shell:AppsFolder\\Package_abcd!Game");
+  assert.equal((await handlers.launchDiscovered("gog", "unknown")).ok, false);
+});
+
+test("Steam launches use the Steam protocol and normal games retain local launching", async () => {
+  const calls = [];
+  const handlers = desktopHandlers({}, {}, {
+    openExternal: async (target) => calls.push(["external", target]),
+    openPath: async (target) => { calls.push(["path", target]); return ""; },
+  });
+  assert.equal((await handlers.launch("steam://rungameid/123")).ok, true);
+  assert.equal((await handlers.launch("C:/Games/game.exe")).ok, true);
+  assert.deepEqual(calls, [["external", "steam://rungameid/123"], ["path", "C:/Games/game.exe"]]);
+  assert.equal((await handlers.launch("")).ok, false);
+  const failing = desktopHandlers({}, {}, { openExternal: async () => { throw new Error("Steam unavailable"); } });
+  assert.match((await failing.launch("steam://rungameid/123")).error, /Steam unavailable/);
+});
 
 test("desktop saves and reads the chosen backup file, including Unicode", async () => {
   const contents = backup.serialize([{ id: "1", title: "Game 🎮", platform: "Steam" }]);

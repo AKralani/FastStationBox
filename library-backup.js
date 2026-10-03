@@ -3,7 +3,8 @@
   const VERSION = 1;
   const stringFields = [
     "id", "title", "platform", "path", "description", "cover", "background",
-    "accent", "lastPlayed", "playtime",
+    "accent", "lastPlayed", "playtime", "source", "steamAppId", "steamLibrary", "installDir",
+    "externalId", "launchArguments", "workingDir",
   ];
 
   function validateGames(games) {

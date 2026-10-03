@@ -1053,6 +1053,17 @@ html[data-controller-prompts="playstation"] #controllerOptionsKey img {
   opacity: 1;
 }
 
+html[data-theme="ps1"] .boot-skip,
+html[data-theme="stadia"] .boot-skip,
+html[data-theme="xbox360"] .boot-skip {
+  color: #000;
+  text-shadow: none;
+}
+
+html[data-theme="wii"] .boot-skip {
+  display: none;
+}
+
 .boot::before,
 .boot::after {
   content: "";
@@ -1891,6 +1902,38 @@ label small {
 
 .system-actions {
   padding-top: 2px;
+}
+
+.import-launcher-field {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.import-launcher-field select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-solid);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.import-removed-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  font-size: 13px;
+}
+
+.import-removed-option input {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue);
 }
 
 .library-backup-help {

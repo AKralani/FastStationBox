@@ -2,6 +2,10 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("launcherDesktop", {
   isDesktop: true,
+  platform: process.platform,
+  discoverLocal: (games, sources) => ipcRenderer.invoke("launcher:discover-local", games, sources),
+  launchDiscovered: (source, externalId, game) => ipcRenderer.invoke("launcher:launch-discovered", source, externalId, game),
+  discoverSteam: () => ipcRenderer.invoke("launcher:discover-steam"),
   chooseExecutable: () => ipcRenderer.invoke("launcher:choose-executable"),
   chooseCover: () => ipcRenderer.invoke("launcher:choose-cover"),
   saveLibraryBackup: (contents) => ipcRenderer.invoke("launcher:save-library-backup", contents),

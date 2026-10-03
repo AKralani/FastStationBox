@@ -5,6 +5,10 @@ const { randomUUID } = require("crypto");
 const { pathToFileURL } = require("url");
 const { spawnSync } = require("child_process");
 const libraryBackup = require("../library-backup.js");
+const { discoverSteamGames } = require("./steam-discovery.cjs");
+const { discoverLocalGames } = require("./local-discovery.cjs");
+const { spawn } = require("child_process");
+let discoveredLaunches = new Map();
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 // Keep using the original profile folder so renaming the app does not reset the library.
@@ -381,6 +385,69 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle("launcher:discover-local", async (_event, manualGames = [], sources) => {
+    try {
+      const selected = Array.isArray(sources) ? sources.filter((source) => ["steam", "epic", "gog", "ubisoft", "ea", "battlenet", "xbox"].includes(source)) : undefined;
+      const reports = await discoverLocalGames({ sources: selected });
+      const resolvedPaths = {};
+      for (const game of Array.isArray(manualGames) ? manualGames.slice(0, 2000) : []) {
+        if (typeof game?.id !== "string" || typeof game?.path !== "string") continue;
+        try {
+          if (/\.lnk$/i.test(game.path)) resolvedPaths[game.id] = shell.readShortcutLink(game.path).target;
+          else if (/\.url$/i.test(game.path) && (await fs.promises.stat(game.path)).size < 65536) {
+            const contents = await fs.promises.readFile(game.path, "utf8");
+            resolvedPaths[game.id] = /^URL=(.+)$/im.exec(contents)?.[1]?.trim();
+          }
+        } catch { /* Manual shortcuts remain usable if their targets cannot be resolved. */ }
+      }
+      const nextLaunches = new Map(discoveredLaunches);
+      for (const [source, report] of Object.entries(reports)) {
+        if (report.ok && !report.unavailableLibraries?.length) {
+          for (const key of nextLaunches.keys()) if (key.startsWith(`${source}:`)) nextLaunches.delete(key);
+        }
+        for (const game of report.games || []) nextLaunches.set(`${source}:${game.externalId}`, game);
+      }
+      discoveredLaunches = nextLaunches;
+      return { ok: true, reports, resolvedPaths };
+    } catch (error) { return { ok: false, error: error.message || "Local discovery failed." }; }
+  });
+
+  ipcMain.handle("launcher:launch-discovered", async (_event, source, externalId, savedGame) => {
+    const savedMatches = savedGame && savedGame.source === source &&
+      (savedGame.externalId || savedGame.steamAppId) === externalId;
+    const game = discoveredLaunches.get(`${source}:${externalId}`) || (savedMatches ? savedGame : null);
+    if (!game) return { ok: false, error: "Refresh installed games before launching this entry." };
+    try {
+      if (/^(steam:\/\/rungameid\/\d+|uplay:\/\/launch\/\d+)$/.test(game.path) ||
+        /^com\.epicgames\.launcher:\/\/apps\/[^\s]+\?action=launch&silent=true$/.test(game.path)) {
+        await shell.openExternal(game.path);
+      } else {
+        const xbox = /^shell:AppsFolder\\[\w.-]+![\w.-]+$/.test(game.path);
+        if (!xbox && (!["gog", "ea", "battlenet"].includes(source) ||
+          typeof game.path !== "string" || !path.isAbsolute(game.path) || !/\.exe$/i.test(game.path))) {
+          return { ok: false, error: "The saved game launch target is invalid." };
+        }
+        const executable = xbox ? path.join(process.env.SystemRoot || "C:\\Windows", "explorer.exe") : game.path;
+        const args = xbox ? [game.path] : JSON.parse(game.launchArguments || "[]");
+        if (!Array.isArray(args) || args.some((argument) => typeof argument !== "string")) {
+          return { ok: false, error: "The saved game launch arguments are invalid." };
+        }
+        await new Promise((resolve, reject) => {
+          const child = spawn(executable, args, { cwd: xbox ? undefined : game.workingDir || game.installDir,
+            shell: false, windowsHide: true, detached: true, stdio: "ignore" });
+          child.once("error", reject);
+          child.once("spawn", () => { child.unref(); resolve(); });
+        });
+      }
+      return { ok: true };
+    } catch (error) { return { ok: false, error: error.message || "Could not launch this game." }; }
+  });
+
+  ipcMain.handle("launcher:discover-steam", async () => {
+    try { return await discoverSteamGames(); }
+    catch (error) { return { ok: false, error: error.message || "Steam discovery failed." }; }
+  });
+
   ipcMain.handle("launcher:save-library-backup", async (event, contents) => {
     try {
       if (typeof contents !== "string") {
@@ -449,8 +516,16 @@ app.whenReady().then(() => {
       return { ok: false, error: "No executable path was set." };
     }
 
-    const error = await shell.openPath(executablePath);
-    return error ? { ok: false, error } : { ok: true };
+    try {
+      if (/^steam:\/\/rungameid\/\d+$/.test(executablePath)) {
+        await shell.openExternal(executablePath);
+        return { ok: true };
+      }
+      const error = await shell.openPath(executablePath);
+      return error ? { ok: false, error } : { ok: true };
+    } catch (error) {
+      return { ok: false, error: error.message || "Could not launch this game." };
+    }
   });
 
   ipcMain.handle("launcher:set-fullscreen", (event, fullscreen) => {
