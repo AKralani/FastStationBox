@@ -26,6 +26,16 @@ npm start
 
 `npm start` opens the Electron desktop app in fullscreen. Use the in-app **Add game** action to choose an executable or shortcut and add its artwork.
 
+## Installed game discovery
+
+In Settings > System Settings, choose a launcher (or All supported launchers) and press Import installed games. To bring back entries you previously removed, enable Re-import previously removed games before importing. The launcher choice is remembered; imports leave entries from unselected launchers unchanged. Starting the app, returning to its window, and leaving it open do not scan or import games. Previously imported games remain available after restarting without another scan. No account login or Web API key is required.
+
+Steam uses local library folders and manifests. On Windows, Epic uses installation manifests, GOG uses uninstall entries and primary play tasks, Ubisoft uses installation registry entries, and EA uses EAInstaller uninstall entries with existing game executables. Battle.net supports recognized product IDs in uninstall records pointing to Battle.net.exe; product.db-only installations are not yet supported. Xbox detects registered game packages with MicrosoftGame.config or Xbox/Gaming Services markers; ordinary Store applications are excluded. These formats vary by launcher version, so unsupported installations may still need manual entries.
+
+Custom titles, descriptions and artwork survive imports. Manually added executables inside a discovered installation, matching launch URLs, and resolvable Windows .lnk/.url shortcuts are merged with discovered games. Titles alone are never used for duplicate matching. Multiple providers reporting the same installation directory produce one entry. Successful scans remove uninstalled discovered entries from the selected launchers; failed scans and unavailable drives preserve entries and report a warning. Remove hides a discovered game until you import with Re-import previously removed games enabled for its launcher.
+
+Steam artwork comes from its local cache when available; Xbox can use local package artwork. Other providers currently use the existing artwork fallback until customized. Descriptions are not downloaded automatically. Browser mode cannot scan local installations. Linux and macOS currently have Steam discovery only and have not been verified on those systems.
+
 ## Run in a browser
 
 ```powershell

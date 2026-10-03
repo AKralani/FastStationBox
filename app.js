@@ -290,7 +290,7 @@ const defaultGames = [
 ];
 
 const state = {
-  games: normalizeGames(loadJson(STORAGE_KEYS.games, defaultGames)),
+  games: normalizeGames(loadJson(STORAGE_KEYS.games, window.launcherDesktop ? [] : defaultGames)),
   settings: loadJson(STORAGE_KEYS.settings, {
     boot: true,
     gamepad: true,
@@ -430,6 +430,10 @@ const elements = {
   settingsFullscreenLabel: document.getElementById("settingsFullscreenLabel"),
   backupLibraryButton: document.getElementById("backupLibraryButton"),
   loadLibraryButton: document.getElementById("loadLibraryButton"),
+  refreshSteamButton: document.getElementById("refreshSteamButton"),
+  importLauncher: document.getElementById("importLauncher"),
+  restoreRemovedToggle: document.getElementById("restoreRemovedToggle"),
+  steamDiscoveryStatus: document.getElementById("steamDiscoveryStatus"),
   libraryBackupInput: document.getElementById("libraryBackupInput"),
   profileButton: document.getElementById("profileButton"),
   closeAppButton: document.getElementById("closeAppButton"),
@@ -745,6 +749,62 @@ function setControllerInputMode(active) {
     isControllerFocusable(document.activeElement)
   ) {
     document.activeElement.classList.add("controller-focus");
+  }
+}
+
+let steamDiscoveryBusy = false;
+async function refreshSteamGames(notify = false) {
+  if (!(desktop?.discoverLocal || desktop?.discoverSteam) || steamDiscoveryBusy) return;
+  steamDiscoveryBusy = true;
+  const sources = elements.importLauncher.value === "all"
+    ? [...elements.importLauncher.options].filter((option) => option.value !== "all" && !option.disabled).map((option) => option.value)
+    : [elements.importLauncher.value];
+  const restoreRemoved = elements.restoreRemovedToggle.checked;
+  elements.refreshSteamButton.disabled = true;
+  elements.importLauncher.disabled = true;
+  elements.restoreRemovedToggle.disabled = true;
+  elements.steamDiscoveryStatus.textContent = "Scanning installed games...";
+  try {
+    const result = desktop.discoverLocal
+      ? await desktop.discoverLocal(state.games.map(({ id, path }) => ({ id, path })), sources)
+      : await desktop.discoverSteam();
+    if (!result.ok) throw new Error(result.error || "Local discovery failed.");
+    const reports = result.reports || { steam: { ...result, games: result.games.map((game) => ({ ...game, externalId: game.steamAppId })) } };
+    const nextSettings = { ...state.settings };
+    if (restoreRemoved) {
+      nextSettings.hiddenImportedGames = (state.settings.hiddenImportedGames || []).filter((key) => !sources.includes(key.split(":")[0]));
+      if (sources.includes("steam")) nextSettings.hiddenSteamGames = [];
+    }
+    const games = normalizeGames(SteamLibrary.reconcileSources(state.games, reports, {
+      hidden: [...(nextSettings.hiddenImportedGames || []), ...(nextSettings.hiddenSteamGames || []).map((id) => `steam:${id}`)],
+      resolvedPaths: result.resolvedPaths,
+    }));
+    if (JSON.stringify(games) !== JSON.stringify(state.games)) {
+      localStorage.setItem(STORAGE_KEYS.games, JSON.stringify(games));
+      state.games = games;
+      if (!games.some((game) => game.id === state.selectedId)) state.selectedId = getSortedGames(games)[0]?.id || null;
+      renderCurrentView();
+    }
+    if (restoreRemoved) {
+      localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(nextSettings));
+      state.settings = nextSettings;
+      elements.restoreRemovedToggle.checked = false;
+    }
+    const detectedGames = SteamLibrary.reconcileSources([], reports);
+    const counts = [...new Set(detectedGames.map((game) => game.platform))]
+      .map((platform) => `${detectedGames.filter((game) => game.platform === platform).length} ${platform}`);
+    const warnings = Object.entries(reports).filter(([, report]) => !report.ok || report.warnings?.length).map(([source]) => source);
+    const message = `${counts.length ? counts.join(", ") : "No installed games found"}.${warnings.length ? ` Scan incomplete: ${warnings.join(", ")}.` : ""}`;
+    elements.steamDiscoveryStatus.textContent = message;
+    if (notify) showToast(message);
+  } catch (error) {
+    elements.steamDiscoveryStatus.textContent = error.message || "Local discovery failed.";
+    if (notify) showToast(elements.steamDiscoveryStatus.textContent);
+  } finally {
+    steamDiscoveryBusy = false;
+    elements.refreshSteamButton.disabled = false;
+    elements.importLauncher.disabled = false;
+    elements.restoreRemovedToggle.disabled = false;
   }
 }
 
@@ -2571,6 +2631,9 @@ function openGameModal(game = null) {
   elements.gamePlatform.value = game?.platform || "Steam";
   elements.gameAccent.value = game?.accent || "#4f78ff";
   elements.gamePath.value = game?.path || "";
+  elements.gamePath.readOnly = Boolean(game?.source);
+  elements.gamePlatform.disabled = Boolean(game?.source);
+  elements.browseExecutable.disabled = Boolean(game?.source);
   elements.gameDescription.value = game?.description || "";
   writeImageField(elements.gameCover, game?.cover || "");
   writeImageField(elements.gameBackground, game?.background || "");
@@ -2671,7 +2734,12 @@ async function launchSelectedGame() {
   elements.playButton.disabled = true;
   const originalLabel = elements.playButton.lastChild;
   if (originalLabel?.nodeType === Node.TEXT_NODE) originalLabel.textContent = " Launching";
-  const result = await desktop.launch(game.path);
+  let result;
+  try {
+    result = game.source && desktop.launchDiscovered
+      ? await desktop.launchDiscovered(game.source, game.externalId || game.steamAppId, game)
+      : await desktop.launch(game.path);
+  } catch (error) { result = { ok: false, error: error.message || "Could not launch this game." }; }
   elements.playButton.disabled = false;
   if (originalLabel?.nodeType === Node.TEXT_NODE) originalLabel.textContent = " Play";
   if (result.ok) muteForLaunchedGame();
@@ -2755,6 +2823,9 @@ function confirmDeleteGame() {
   if (!game) return;
 
   state.games = state.games.filter((item) => item.id !== game.id);
+  if (game.source) {
+    state.settings.hiddenImportedGames = [...new Set([...(state.settings.hiddenImportedGames || []), SteamLibrary.gameKey(game)])];
+  }
   state.selectedId = getSortedGames(state.games)[0]?.id || null;
   saveState();
   elements.deleteModal.hidden = true;
@@ -3647,6 +3718,22 @@ function activateFocused() {
   const target = document.activeElement;
   if (!(target instanceof HTMLElement)) return;
 
+  if (target === elements.importLauncher && !target.disabled) {
+    const options = [...target.options].filter((option) => !option.disabled);
+    const current = options.findIndex((option) => option.value === target.value);
+    target.value = options[(current + 1) % options.length].value;
+    target.dispatchEvent(new Event("change", { bubbles: true }));
+    return;
+  }
+
+  if (target === elements.importLauncher && !target.disabled) {
+    const options = [...target.options].filter((option) => !option.disabled);
+    const current = options.findIndex((option) => option.value === target.value);
+    target.value = options[(current + 1) % options.length].value;
+    target.dispatchEvent(new Event("change", { bubbles: true }));
+    return;
+  }
+
   if (target.classList.contains("toggle-row")) {
     const checkbox = target.querySelector('input[type="checkbox"]');
     if (checkbox instanceof HTMLInputElement && !checkbox.disabled) {
@@ -3828,6 +3915,7 @@ elements.gameForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const existing = state.games.find((game) => game.id === elements.gameId.value);
   const game = {
+    ...existing,
     id: existing?.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     title: elements.gameTitle.value.trim(),
     platform: elements.gamePlatform.value,
@@ -4078,6 +4166,11 @@ elements.settingsGroups.forEach((section) => {
 elements.settingsFullscreenButton.addEventListener("click", toggleFullscreen);
 elements.backupLibraryButton.addEventListener("click", backupLibrary);
 elements.loadLibraryButton.addEventListener("click", loadLibraryBackup);
+elements.refreshSteamButton.addEventListener("click", () => refreshSteamGames(true));
+elements.importLauncher.addEventListener("change", () => {
+  state.settings.importLauncher = elements.importLauncher.value;
+  saveState();
+});
 elements.libraryBackupInput.addEventListener("change", async () => {
   const file = elements.libraryBackupInput.files[0];
   if (!file) return;
@@ -4517,5 +4610,14 @@ if (desktop) {
   });
 }
 setupBoot();
+elements.refreshSteamButton.disabled = !(desktop?.discoverLocal || desktop?.discoverSteam);
+elements.importLauncher.disabled = !(desktop?.discoverLocal || desktop?.discoverSteam);
+elements.restoreRemovedToggle.disabled = !(desktop?.discoverLocal || desktop?.discoverSteam);
+for (const option of elements.importLauncher.options) {
+  if (option.value !== "all" && option.value !== "steam" && (desktop?.platform !== "win32" || !desktop?.discoverLocal)) option.disabled = true;
+}
+elements.importLauncher.value = [...elements.importLauncher.options].some((option) => option.value === state.settings.importLauncher && !option.disabled)
+  ? state.settings.importLauncher : "all";
+if (desktop?.discoverLocal || desktop?.discoverSteam) elements.steamDiscoveryStatus.textContent = "Installed games not scanned.";
 syncAppActivity();
 window.addEventListener("beforeunload", stopAllAudioPlayback);

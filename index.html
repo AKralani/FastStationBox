@@ -412,6 +412,7 @@
               <option>Ubisoft</option>
               <option>EA</option>
               <option>GOG</option>
+              <option>Battle.net</option>
               <option>Emulation</option>
               <option>Standalone</option>
             </select>
@@ -655,6 +656,24 @@
             </div>
           </div>
           <div class="setting-rows system-action-list">
+            <label class="import-launcher-field" for="importLauncher">Import games from
+              <select class="focusable" data-focus id="importLauncher">
+                <option value="all">All supported launchers</option>
+                <option value="steam">Steam</option>
+                <option value="epic">Epic Games</option>
+                <option value="ubisoft">Ubisoft Connect</option>
+                <option value="ea">EA app</option>
+                <option value="gog">GOG</option>
+                <option value="battlenet">Battle.net</option>
+                <option value="xbox">Xbox / Microsoft Store</option>
+              </select>
+            </label>
+            <label class="import-removed-option">
+              <input class="focusable" data-focus id="restoreRemovedToggle" type="checkbox" />
+              <span>Re-import previously removed games</span>
+            </label>
+            <button class="secondary-button system-action-button focusable" data-focus id="refreshSteamButton" type="button">Import installed games</button>
+            <p class="library-backup-help" id="steamDiscoveryStatus" role="status">Local discovery requires the desktop app.</p>
             <p class="library-backup-help" id="libraryBackupHelp">Save all game entries, details and artwork references. Loading adds missing games and updates matching entries, keeping other games. Game installations and local artwork files are not copied.</p>
             <button class="secondary-button system-action-button focusable" data-focus id="backupLibraryButton" type="button" aria-describedby="libraryBackupHelp">Back up library</button>
             <button class="secondary-button system-action-button focusable" data-focus id="loadLibraryButton" type="button" aria-describedby="libraryBackupHelp">Load backup</button>
@@ -756,6 +775,7 @@
 
     <input id="libraryBackupInput" type="file" accept=".json,application/json" hidden />
     <script src="library-backup.js"></script>
+    <script src="steam-library.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
