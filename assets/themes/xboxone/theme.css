@@ -1,6 +1,6 @@
 .xboxone-profile,
-.xboxone-nav,
 .xboxone-library-heading,
+.xboxone-library-tile,
 .xboxone-backdrop {
   display: none;
 }
@@ -62,7 +62,7 @@ html[data-theme="xboxone"] .app-shell {
 html[data-theme="xboxone"] .topbar {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(150px, 1fr) auto minmax(150px, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 18px;
   height: 64px;
 }
@@ -118,24 +118,6 @@ html[data-theme="xboxone"] .xboxone-profile small {
   white-space: nowrap;
 }
 
-html[data-theme="xboxone"] .xboxone-nav { display: flex; align-items: center; gap: 14px; }
-html[data-theme="xboxone"] .xboxone-nav button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 0;
-  border-bottom: 3px solid transparent;
-  border-radius: 4px 4px 0 0;
-  background: transparent;
-  color: #d4d7d4;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-html[data-theme="xboxone"] .xboxone-nav button.active { border-bottom-color: var(--focus); color: #fff; }
-html[data-theme="xboxone"] .xboxone-nav img { width: 27px; height: 27px; filter: brightness(0) invert(1); }
-html[data-theme="xboxone"] .xboxone-nav svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.6; }
 html[data-theme="xboxone"] .top-actions { justify-self: end; margin: 0; gap: 8px; }
 html[data-theme="xboxone"] .clock { display: block; font-size: 17px; font-weight: 400; }
 
@@ -164,8 +146,11 @@ html[data-theme="xboxone"] .add-button {
   border-radius: 4px;
   background: rgba(20, 26, 21, 0.85);
 }
-html[data-theme="xboxone"] .game-rail-wrap { order: 1; margin: 0 -8px; overflow: hidden; }
+html[data-theme="xboxone"] .game-rail-wrap { order: 0; margin: 0 -8px; overflow: hidden; }
 html[data-theme="xboxone"] .game-rail { gap: var(--xboxone-gap); padding: 10px 8px 18px; }
+html[data-theme="xboxone"][data-xboxone-screen="home"] .game-rail {
+  justify-content: safe center;
+}
 
 html[data-theme="xboxone"] .game-card {
   flex: 0 0 var(--xboxone-card);
@@ -197,10 +182,10 @@ html[data-theme="xboxone"] .game-card:hover .game-card-copy,
 html[data-theme="xboxone"] .game-card:focus-visible .game-card-copy { opacity: 1; }
 
 html[data-theme="xboxone"] .hero {
-  order: 0;
+  order: 1;
   height: auto;
   min-height: 0;
-  margin: 0 0 14px;
+  margin: 10px 0 0;
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -212,44 +197,71 @@ html[data-theme="xboxone"] .hero-art,
 html[data-theme="xboxone"] .hero-overlay,
 html[data-theme="xboxone"] .hero-index,
 html[data-theme="xboxone"] .hero-meta,
+html[data-theme="xboxone"] .platform-pill,
+html[data-theme="xboxone"] .hero h2,
+html[data-theme="xboxone"] .play-button,
 html[data-theme="xboxone"] .hero-content > p { display: none; }
 
 html[data-theme="xboxone"] .hero-content {
   position: static;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px 20px;
+  display: block;
   width: 100%;
   transform: none;
   animation: none;
 }
 
-html[data-theme="xboxone"] .platform-pill {
-  grid-column: 1;
-  padding: 0;
-  border: 0;
-  font-size: 10px;
-  letter-spacing: 0.12em;
+html[data-theme="xboxone"] .hero-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--xboxone-gap);
+  width: min(100%, 1080px);
+  margin: 0 auto;
 }
-
-html[data-theme="xboxone"] .hero h2 {
-  grid-column: 1;
-  margin: 0;
-  overflow: hidden;
-  font-size: clamp(23px, 2.5vw, 36px);
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+html[data-theme="xboxone"] .hero-actions .xboxone-library-tile,
+html[data-theme="xboxone"] .hero-actions .add-button,
+html[data-theme="xboxone"] .hero-actions .more-button {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 96px;
+  aspect-ratio: 16 / 9;
+  padding: 14px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background-color: #222;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 4px 18px #0006;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  text-shadow: 0 2px 5px #000;
+  cursor: pointer;
 }
+html[data-theme="xboxone"] .hero-actions .xboxone-library-tile {
+  background-image: linear-gradient(transparent 40%, #000d), url("my-games.jpg");
+}
+html[data-theme="xboxone"] .hero-actions .add-button {
+  background-image: linear-gradient(transparent 40%, #000d), url("add-game.jpg");
+  font-size: 0;
+}
+html[data-theme="xboxone"] .hero-actions .add-button span { display: none; }
+html[data-theme="xboxone"] .hero-actions .add-button::after { content: "Add game"; font-size: 14px; }
+html[data-theme="xboxone"] .hero-actions .more-button {
+  background-image: linear-gradient(transparent 40%, #000d), url("game-options.jpg");
+  font-size: 0;
+}
+html[data-theme="xboxone"] .hero-actions .more-button::after { content: "Game options"; font-size: 14px; }
+html[data-theme="xboxone"] .hero-actions button:hover { border-color: var(--focus); }
+html[data-theme="xboxone"] .hero-actions .more-button:disabled { opacity: .45; cursor: default; }
 
-html[data-theme="xboxone"] .hero-actions { grid-column: 2; grid-row: 1 / 3; align-self: end; margin: 0; }
-html[data-theme="xboxone"] .play-button { min-width: 100px; padding: 11px 18px; border-radius: 4px; background: #107c10; color: #fff; }
-html[data-theme="xboxone"] .more-button { width: 40px; height: 40px; border-radius: 4px; }
-
-html[data-theme="xboxone"] .xboxone-profile:hover,
-html[data-theme="xboxone"] .xboxone-nav button:hover { background-color: #ffffff15; border-color: var(--focus); }
+html[data-theme="xboxone"] .xboxone-profile:hover { background-color: #ffffff15; border-color: var(--focus); }
 html[data-theme="xboxone"] .controller-hints { margin-top: 18px; padding-top: 0; border: 0; color: #c6cbc7; }
 
 /* The library keeps every title reachable, including collections larger than Home. */
@@ -291,20 +303,23 @@ html[data-theme="xboxone"] .boot-glow { background: radial-gradient(circle, #107
 
 @media (max-width: 1050px) {
   html[data-theme="xboxone"] .xboxone-profile small { display: none; }
-  html[data-theme="xboxone"] .xboxone-nav { gap: 5px; }
-  html[data-theme="xboxone"] .xboxone-nav button { gap: 7px; padding: 10px 8px; font-size: 12px; }
 }
 
 @media (max-width: 760px) {
-  html[data-theme="xboxone"] .topbar { grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; }
+  html[data-theme="xboxone"] .topbar { gap: 8px; }
   html[data-theme="xboxone"] .xboxone-avatar { flex-basis: 36px; width: 36px; height: 36px; font-size: 18px; }
   html[data-theme="xboxone"] .xboxone-profile { gap: 7px; }
   html[data-theme="xboxone"] .xboxone-profile strong { max-width: 100px; font-size: 12px; }
-  html[data-theme="xboxone"] .xboxone-nav button span { display: none; }
   html[data-theme="xboxone"] .top-actions { gap: 0; }
   html[data-theme="xboxone"] .icon-button { width: 34px; height: 34px; }
   html[data-theme="xboxone"] .clock { margin: 0 4px; font-size: 13px; }
-  html[data-theme="xboxone"] .hero h2 { font-size: 23px; }
+  html[data-theme="xboxone"] .hero-actions .xboxone-library-tile,
+  html[data-theme="xboxone"] .hero-actions .add-button,
+  html[data-theme="xboxone"] .hero-actions .more-button { padding: 10px; font-size: 12px; }
+  html[data-theme="xboxone"] .hero-actions .add-button,
+  html[data-theme="xboxone"] .hero-actions .more-button { font-size: 0; }
+  html[data-theme="xboxone"] .hero-actions .add-button::after,
+  html[data-theme="xboxone"] .hero-actions .more-button::after { font-size: 12px; }
   html[data-theme="xboxone"] .xboxone-library-heading h1 { flex-wrap: wrap; gap: 6px 15px; font-size: 27px; }
   html[data-theme="xboxone"] .library-view { min-height: calc(100vh / var(--ui-scale) - 145px); }
 }
