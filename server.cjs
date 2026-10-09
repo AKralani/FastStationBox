@@ -14,12 +14,13 @@ const contentTypes = {
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
   ".mp3": "audio/mpeg",
+  ".m4a": "audio/mp4",
   ".mp4": "video/mp4",
   ".webm": "video/webm",
   ".wav": "audio/wav",
   ".json": "application/json; charset=utf-8",
 };
-const streamableExtensions = new Set([".mp3", ".mp4", ".wav", ".webm"]);
+const streamableExtensions = new Set([".mp3", ".m4a", ".mp4", ".wav", ".webm"]);
 
 http
   .createServer((req, res) => {

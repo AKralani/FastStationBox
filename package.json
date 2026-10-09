@@ -1,7 +1,7 @@
 {
   "name": "faststationbox",
   "productName": "FastStationBox",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "A controller-first desktop game library.",
   "main": "electron/main.cjs",
@@ -11,6 +11,7 @@
     "check": "node --check app.js && node --check library-backup.js && node --check steam-library.js && node --check electron/steam-discovery.cjs && node --check electron/local-discovery.cjs && node --check electron/main.cjs && node --check electron/preload.cjs && node --check server.cjs",
     "test": "node --test tests/*.test.cjs",
     "test:ui": "electron tests/library-backup-ui.cjs",
+    "test:xboxone": "electron tests/xboxone-ui.cjs",
     "pack": "electron-builder --dir",
     "dist": "node scripts/build-win.cjs nsis",
     "dist:portable": "node scripts/build-win.cjs portable"

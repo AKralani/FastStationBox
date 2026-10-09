@@ -19,7 +19,7 @@ app.whenReady().then(async () => {
   try {
     await win.loadFile(path.join(__dirname, "..", "index.html"));
     await run("skipBoot(); state.settings.boot = false; setSoundEnabled(false);");
-    for (const theme of ["fsb", "ps5", "ps4", "ps3", "ps2", "ps1", "xbox-classic", "xbox360", "wii", "stadia"]) {
+    for (const theme of await run("Object.keys(THEMES)")) {
       await run(`closeOverlays(); applyThemeNow(${JSON.stringify(theme)}); openSettingsPanel("system", { xbox360Detail: true });`);
       await new Promise((resolve) => setTimeout(resolve, 500));
       assert.equal(await run("document.documentElement.dataset.theme"), theme);
