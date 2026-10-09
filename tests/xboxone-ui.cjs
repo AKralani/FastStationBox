@@ -53,11 +53,59 @@ app.whenReady().then(async () => {
       await image.decode(); return image.naturalWidth > 0;
     })()`), true);
 
-    for (const control of ['[data-xboxone-screen="library"]', "#addGameButton", "#xboxOneProfileButton", "#searchButton", "#settingsButton", "#playButton", "#moreButton"]) {
+    assert.equal(await run("document.querySelector('.xboxone-nav')"), null, 'Redundant header navigation must be removed');
+    for (const control of ["#xboxOneLibraryTile", "#addGameButton", "#xboxOneProfileButton", "#searchButton", "#settingsButton", "#moreButton"]) {
       assert.equal(await reachable(control), true, `${control} cannot be reached on Home`);
     }
     assert.equal(await run("elements.addGameButton.parentElement.classList.contains('hero-actions')"), true);
+    assert.equal(await run(`(() => {
+      const tiles = [elements.xboxOneLibraryTile, elements.addGameButton, elements.moreButton];
+      const rail = elements.gameRail.getBoundingClientRect();
+      return tiles.every(tile => tile.getBoundingClientRect().top >= rail.bottom) &&
+        [...document.querySelector('.hero-actions').children].filter(button => button.checkVisibility()).length === 3;
+    })()`), true, 'Exactly three quick-action tiles must appear below the games');
+    assert.equal(await run(`(async () => {
+      for (const tile of [elements.xboxOneLibraryTile, elements.addGameButton, elements.moreButton]) {
+        const source = getComputedStyle(tile).backgroundImage.match(/url\\("?([^"\\)]+)/)[1];
+        const image = new Image(); image.src = source; await image.decode();
+        if (!image.naturalWidth) return false;
+      }
+      return true;
+    })()`), true, 'All three packaged tile images must load');
+    assert.equal(await run(`(() => {
+      const rail = elements.gameRail.getBoundingClientRect();
+      const cards = [...document.querySelectorAll('.game-card')];
+      const first = cards[0].getBoundingClientRect(), last = cards.at(-1).getBoundingClientRect();
+      return Math.abs((first.left + last.right) / 2 - (rail.left + rail.right) / 2) < 2;
+    })()`), true, 'A short game row must be centered');
     await capture("xboxone-home.png");
+    await run("document.querySelector('.game-card.selected').focus(); moveFocus('down');");
+    assert.equal(await run("document.activeElement.id"), 'xboxOneLibraryTile');
+    await run("moveFocus('right');");
+    assert.equal(await run("document.activeElement.id"), 'addGameButton');
+    await run("moveFocus('right'); activateFocused();");
+    assert.equal(await run("elements.contextMenu.hidden"), false, 'Game options tile must open the selected game menu');
+    await run("hideContextMenu(); elements.xboxOneLibraryTile.click();");
+    await settle();
+    assert.equal(await run("state.xboxOneScreen"), 'library');
+    assert.equal(await run("isControllerFocusable(elements.xboxOneLibraryTile)"), false);
+    await run("elements.xboxOneLibraryBack.click();");
+    await settle();
+    assert.equal(await run("state.xboxOneScreen"), 'home', 'Library Home button must return to the dashboard');
+    // Center a single game, then verify an overflowing Home row starts at its first tile.
+    await run("window.savedXboxOneGames = state.games; state.games = state.games.slice(0, 1); state.selectedId = null; renderCurrentView();");
+    assert.equal(await run(`(() => {
+      const rail = elements.gameRail.getBoundingClientRect(), card = document.querySelector('.game-card').getBoundingClientRect();
+      return Math.abs((card.left + card.right) / 2 - (rail.left + rail.right) / 2) < 1;
+    })()`), true, 'A single game must be centered');
+    await run(`state.games = normalizeGames(Array.from({ length: 24 }, (_, i) => ({ id: 'home-' + i, title: 'Game ' + i, platform: 'Xbox' })));
+      state.selectedId = null; renderCurrentView(); elements.gameRail.scrollLeft = 0;`);
+    assert.equal(await reachable('[data-game-id="home-0"]'), true, 'Overflow must not hide the first game to the left');
+    assert.equal(await run("elements.gameRail.scrollWidth > elements.gameRail.clientWidth"), true);
+    await run("selectGame('home-23', true);");
+    for (let attempt = 0; attempt < 4 && !(await reachable('[data-game-id="home-23"]')); attempt++) await settle();
+    assert.equal(await reachable('[data-game-id="home-23"]'), true, 'The last game must remain reachable in a scrolling Home row');
+    await run("state.games = window.savedXboxOneGames; state.selectedId = null; renderCurrentView(); elements.gameRail.scrollLeft = 0;");
     await run("elements.settingsButton.click();");
     await capture("xboxone-settings.png");
     assert.equal(await reachable('[data-theme="xboxone"]'), true);
@@ -103,7 +151,7 @@ app.whenReady().then(async () => {
     await run(`elements.gameTitle.value = 'Xbox One test game'; elements.gamePath.value = 'C:\\Games\\test.exe';
       elements.gameForm.requestSubmit();`);
     assert.equal(await run("state.games.some(game => game.title === 'Xbox One test game')"), true);
-    await run(`document.querySelector('[data-xboxone-screen="library"]').click();`);
+    await run("elements.xboxOneLibraryTile.click();");
     await settle();
     assert.equal(await run("state.xboxOneScreen"), "library");
     assert.equal(await run("getComputedStyle(elements.gameRail).display"), "grid");
@@ -165,7 +213,7 @@ app.whenReady().then(async () => {
     await settle();
     assert.equal(await run("elements.playButton.disabled"), true);
     assert.equal(await run("elements.xboxOneBackdrop.classList.contains('has-artwork')"), false);
-    assert.equal(await reachable('[data-xboxone-screen="library"]'), true);
+    assert.equal(await reachable('#xboxOneLibraryTile'), true);
     assert.equal(await reachable('#addGameButton'), true);
     await run("setXboxOneScreen('library');");
     await settle();
@@ -181,7 +229,7 @@ app.whenReady().then(async () => {
         `${width}/${size}: Home has unnecessary vertical scrolling`);
       assert.equal(await run("document.querySelector('.controller-hints').getBoundingClientRect().bottom <= innerHeight + 1"), true,
         `${width}/${size}: controller hints are clipped`);
-      for (const control of ["#xboxOneProfileButton", "#searchButton", "#settingsButton", "#addGameButton", '[data-xboxone-screen="library"]']) {
+      for (const control of ["#xboxOneProfileButton", "#searchButton", "#settingsButton", "#xboxOneLibraryTile", "#addGameButton", "#moreButton"]) {
         assert.equal(await reachable(control), true, `${width}/${size}: ${control} unreachable`);
       }
       await capture(`xboxone-${width}-${size}.png`);
@@ -190,8 +238,8 @@ app.whenReady().then(async () => {
     win.setSize(1440, 900);
     await run("applyInterfaceSize('large'); closeOverlays(); applyThemeNow('fsb'); renderCurrentView();");
     assert.equal(await run("document.documentElement.dataset.xboxoneScreen"), undefined);
-    assert.equal(await run(`isControllerFocusable(document.querySelector('[data-xboxone-screen="library"]'))`), false);
     assert.equal(await run("isControllerFocusable(elements.xboxOneProfileButton)"), false);
+    assert.equal(await run("isControllerFocusable(elements.xboxOneLibraryTile)"), false);
     await run("applyThemeNow('xboxone', { persist: true }); saveState();");
     const reloaded = new Promise((resolve) => win.webContents.once("did-finish-load", resolve));
     win.reload();
