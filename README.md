@@ -7,7 +7,7 @@ FastStationBox is a controller-first game library with a console-inspired interf
 - Build and manage a local game library with custom titles, cover art, backgrounds, descriptions, platforms, and accent colours.
 - Launch games and store shortcuts from the desktop app, including `.exe`, `.lnk`, `.bat`, `.cmd`, and `.url` files.
 - Navigate with mouse, keyboard, or a connected Xbox-compatible controller through the Gamepad API.
-- Switch among ten console-inspired themes: FastStationBox, PlayStation 5, PlayStation 4, PlayStation 3, PlayStation 2, PlayStation, Classic Xbox, Xbox 360, Nintendo Wii, and Google Stadia.
+- Switch among eleven console-inspired themes: FastStationBox, PlayStation 5, PlayStation 4, PlayStation 3, PlayStation 2, PlayStation, Classic Xbox, Xbox 360, Xbox One, Nintendo Wii, and Google Stadia.
 - Adjust interface scale, sound, controller prompts, sort order, fullscreen mode, startup animation, profile name, and desktop autostart from Settings.
 - Keep games and preferences in the browser's local storage—no account or cloud service required.
 - Back up and load your game library from System Settings in every theme.
@@ -67,6 +67,7 @@ npm run dist:portable
 | `npm start` | Run the Electron desktop app. |
 | `npm run web` | Start the local browser server on port 4173. |
 | `npm run check` | Syntax-check the application and Electron files. |
+| `npm run test:xboxone` | Verify Xbox One layouts and interactions in an isolated, hidden Electron window. |
 | `npm run pack` | Create an unpacked Electron build. |
 | `npm run dist` | Build the Windows NSIS installer. |
 | `npm run dist:portable` | Build a portable Windows executable. |
@@ -94,6 +95,7 @@ Choose a theme from **Settings → Theme**. Theme-specific media is stored in `a
 - **PS3** cycles through its bundled XMB-style background videos and uses its local startup media, sounds, and icons.
 - **PS2** uses separate root-menu and game-library background videos; its video backgrounds are muted while `background-audio.mp3` provides ambient audio.
 - **PlayStation, Classic Xbox, Xbox 360, Wii,** and **Stadia** use the media packaged in their respective theme folders.
+- **Xbox One** adapts the included `xboxone-dashboard-main` reference with green focus borders, a profile header, square game tiles, and game artwork that fills the background. It uses `background.png`, `startup.mp4`, `startup.m4a`, and `select.mp3` from its own theme folder. The startup audio accompanies the muted startup video and stops when startup ends or is skipped. Navigation and back are silent. The top **My games** button opens the full library grid, with **Add game**, search, sorting, game editing, and keyboard/controller navigation. Its packaged assets live in `assets/themes/xboxone/`; the reference project is not needed to run or build the launcher.
 
 Missing optional theme assets fall back to the theme's built-in styling where possible. Browser autoplay rules can defer background or ambient audio until the first interaction; the Electron app permits startup-video audio playback.
 

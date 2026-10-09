@@ -61,7 +61,7 @@ app.whenReady().then(async () => {
     assert.equal(launched, first.path);
     await run("(async () => { state.games[0].title = 'Custom Steam title'; state.games[0].cover = ''; await refreshSteamGames(true); })()");
     assert.equal(await run("state.games[0].title"), "Custom Steam title");
-    for (const theme of ["fsb", "ps5", "ps4", "ps3", "ps2", "ps1", "xbox-classic", "xbox360", "wii", "stadia"]) {
+    for (const theme of await run("Object.keys(THEMES)")) {
       await run(`closeOverlays(); applyThemeNow(${JSON.stringify(theme)}); openSettingsPanel('system', { xbox360Detail: true });
         elements.refreshSteamButton.scrollIntoView({ block: 'center', behavior: 'instant' }); elements.refreshSteamButton.focus();`);
       await new Promise((resolve) => setTimeout(resolve, 400));
@@ -91,7 +91,7 @@ app.whenReady().then(async () => {
     await run("refreshSteamGames(true)");
     assert.equal(await run("state.games.length"), 0);
     assert.equal(errors.length, 0, errors.join("\n"));
-    console.log(`PASS real discovery (${installedGames.length} games), launch bridge, edits, all ten themes, hidden games, scan failure and uninstall refresh. Screenshot: ${path.join(profile, "steam-settings.png")}`);
+    console.log(`PASS real discovery (${installedGames.length} games), launch bridge, edits, all themes, hidden games, scan failure and uninstall refresh. Screenshot: ${path.join(profile, "steam-settings.png")}`);
   } catch (error) {
     win.webContents.invalidate();
     await new Promise((resolve) => setTimeout(resolve, 200));

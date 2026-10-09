@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="assets/themes/xbox360/theme.css" />
     <link rel="stylesheet" href="assets/themes/wii/theme.css" />
     <link rel="stylesheet" href="assets/themes/stadia/theme.css" />
+    <link rel="stylesheet" href="assets/themes/xboxone/theme.css" />
   </head>
   <body>
     <div class="boot visible" id="boot" aria-hidden="true">
@@ -44,6 +45,7 @@
         playsinline
         preload="auto"
       ></video>
+      <div class="xboxone-backdrop" id="xboxOneBackdrop"></div>
       <div class="ambient-orb orb-one"></div>
       <div class="ambient-orb orb-two"></div>
       <div class="mesh"></div>
@@ -52,6 +54,19 @@
     <div class="ui-root" id="uiRoot">
     <main class="app-shell" id="appShell">
       <header class="topbar">
+        <button class="xboxone-profile focusable" data-focus id="xboxOneProfileButton" type="button" aria-label="Open profile menu">
+          <span class="xboxone-avatar" id="xboxOneAvatar" aria-hidden="true">P</span>
+          <span><strong id="xboxOneProfileName">Player</strong><small>Your console. Your games.</small></span>
+        </button>
+        <nav class="xboxone-nav" aria-label="Xbox One navigation">
+          <button class="focusable active" data-focus data-xboxone-screen="home" type="button" aria-label="Home" aria-current="page">
+            <img src="assets/themes/xboxone/logo.png" alt="" /> <span>Home</span>
+          </button>
+          <button class="focusable" data-focus data-xboxone-screen="library" type="button" aria-label="My games">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            <span>My games</span>
+          </button>
+        </nav>
         <a href="#" class="brand focusable" data-focus aria-label="FastStationBox home">
           <img class="brand-logo" id="brandLogo" alt="" hidden />
           <span class="brand-text" id="brandText">PS5</span>
@@ -151,6 +166,10 @@
       </section>
 
       <section class="library-view" id="libraryView">
+        <div class="xboxone-library-heading">
+          <button class="focusable" data-focus id="xboxOneLibraryBack" type="button"><span aria-hidden="true">‹</span> Home</button>
+          <h1>My games <span id="xboxOneLibraryCount">0 games</span></h1>
+        </div>
         <div class="xbox-stage" aria-hidden="true">
           <div class="xbox-orbit xbox-orbit-one"></div>
           <div class="xbox-orbit xbox-orbit-two"></div>
@@ -528,6 +547,11 @@
             <button class="theme-card focusable" data-focus data-theme="xbox360" type="button" aria-pressed="false">
               <span class="theme-preview theme-xbox360"><i></i></span>
               <strong>Xbox 360</strong>
+              <small>Available now</small>
+            </button>
+            <button class="theme-card focusable" data-focus data-theme="xboxone" type="button" aria-pressed="false">
+              <span class="theme-preview theme-xboxone"><i></i></span>
+              <strong>Xbox One</strong>
               <small>Available now</small>
             </button>
             <button class="theme-card focusable" data-focus data-theme="wii" type="button" aria-pressed="false">

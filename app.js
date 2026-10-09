@@ -173,6 +173,25 @@ const THEMES = {
       back: "assets/themes/xbox360/back.mp3",
     },
   },
+  xboxone: {
+    id: "xboxone",
+    name: "Xbox One",
+    brandText: "XBOX ONE",
+    bootWordmark: "XBOX ONE",
+    systemLabel: "XBOX ONE",
+    themeColor: "#107c10",
+    assets: {
+      logo: "assets/themes/xboxone/logo.png",
+      backgroundVideo: "",
+      backgroundImage: "assets/themes/xboxone/background.png",
+      backgroundAudio: "",
+      startupVideo: "assets/themes/xboxone/startup.mp4",
+      startupAudio: "assets/themes/xboxone/startup.m4a",
+      navigation: "",
+      select: "assets/themes/xboxone/select.mp3",
+      back: "",
+    },
+  },
   wii: {
     id: "wii",
     name: "Nintendo Wii",
@@ -322,6 +341,7 @@ const state = {
   xbox360LibraryOpen: false,
   xbox360LibraryPlatformFilter: "all",
   xbox360DashboardGameIds: [],
+  xboxOneScreen: "home",
 };
 
 const desktop = window.launcherDesktop || null;
@@ -362,6 +382,13 @@ const elements = {
   ps2RootItems: [...document.querySelectorAll("[data-ps2-action]")],
   xboxHome: document.getElementById("xboxHome"),
   xboxRootItems: [...document.querySelectorAll("[data-xbox-action]")],
+  xboxOneBackdrop: document.getElementById("xboxOneBackdrop"),
+  xboxOneProfileButton: document.getElementById("xboxOneProfileButton"),
+  xboxOneProfileName: document.getElementById("xboxOneProfileName"),
+  xboxOneAvatar: document.getElementById("xboxOneAvatar"),
+  xboxOneNavItems: [...document.querySelectorAll("[data-xboxone-screen]")],
+  xboxOneLibraryBack: document.getElementById("xboxOneLibraryBack"),
+  xboxOneLibraryCount: document.getElementById("xboxOneLibraryCount"),
   ps2SystemDate: document.getElementById("ps2SystemDate"),
   ps2SystemClock: document.getElementById("ps2SystemClock"),
   gameRailWrap: document.querySelector(".game-rail-wrap"),
@@ -993,6 +1020,8 @@ function applyThemeNow(themeId = state.settings.theme, { persist = false, announ
   }
   state.settings.theme = theme.id;
   document.documentElement.dataset.theme = theme.id;
+  if (themeChanged) state.xboxOneScreen = "home";
+  syncXboxOneScreenUi();
   if (theme.id === "ps2") {
     if (themeChanged) state.ps2Screen = "home";
     document.documentElement.dataset.ps2Screen = state.ps2Screen;
@@ -1171,6 +1200,56 @@ function syncThemeLandingVisibility() {
   } else if (state.currentView === "games") {
     elements.libraryView.hidden = false;
   }
+}
+
+function syncXboxOneScreenUi() {
+  const homeActions = document.querySelector(".hero-actions");
+  const libraryActions = document.querySelector(".library-actions");
+  if (state.settings.theme === "xboxone" && state.xboxOneScreen === "home") {
+    homeActions.insertBefore(elements.addGameButton, elements.moreButton);
+  } else {
+    libraryActions.insertBefore(elements.addGameButton, document.querySelector(".ps4-side-card"));
+  }
+  if (state.settings.theme !== "xboxone") {
+    delete document.documentElement.dataset.xboxoneScreen;
+    elements.xboxOneBackdrop.style.backgroundImage = "";
+    elements.xboxOneBackdrop.classList.remove("has-artwork");
+    return;
+  }
+  document.documentElement.dataset.xboxoneScreen = state.xboxOneScreen;
+  elements.xboxOneNavItems.forEach((button) => {
+    const active = button.dataset.xboxoneScreen === state.xboxOneScreen;
+    button.classList.toggle("active", active);
+    if (active) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+}
+
+function setXboxOneScreen(screen, { focus = true } = {}) {
+  if (state.settings.theme !== "xboxone") return;
+  closeOverlays();
+  closeSearchPanel({ clearQuery: true });
+  state.xboxOneScreen = screen === "library" ? "library" : "home";
+  syncXboxOneScreenUi();
+  renderCurrentView();
+  elements.uiRoot.scrollTo({ top: 0, behavior: "instant" });
+  elements.gameRail.scrollTo({ left: 0, top: 0, behavior: "instant" });
+  if (focus) {
+    requestAnimationFrame(() => focusWithoutScroll(
+      document.querySelector(".game-card.selected") ||
+      (state.xboxOneScreen === "library" ? elements.xboxOneLibraryBack
+        : elements.xboxOneNavItems.find((button) => button.dataset.xboxoneScreen === "library")),
+    ));
+  }
+}
+
+function updateXboxOneBackground(game) {
+  if (state.settings.theme !== "xboxone") return;
+  const artwork = game?.background || game?.cover || "";
+  elements.xboxOneBackdrop.style.backgroundImage = artwork ? safeCssUrl(artwork) : "";
+  elements.xboxOneBackdrop.classList.toggle("has-artwork", Boolean(artwork));
+  const count = state.visibleGameIds.length;
+  elements.xboxOneLibraryCount.textContent = `${count} game${count === 1 ? "" : "s"}`;
 }
 
 function setStadiaScreen(screen, { route = screen, focus = false } = {}) {
@@ -1643,6 +1722,8 @@ function updateProfileUi() {
     elements.brandText.textContent = profileName;
   }
   elements.profileButton.textContent = getProfileInitial(profileName);
+  elements.xboxOneProfileName.textContent = profileName;
+  elements.xboxOneAvatar.textContent = getProfileInitial(profileName);
   elements.profileTitle.textContent = profileName;
   if (elements.profileAvatar) {
     elements.profileAvatar.textContent = getProfileInitial(profileName);
@@ -1719,6 +1800,9 @@ function isContextMenuTrigger(target) {
 }
 
 function openSearchPanel(reason = "manual") {
+  if (state.settings.theme === "xboxone" && state.xboxOneScreen !== "library") {
+    setXboxOneScreen("library", { focus: false });
+  }
   if (elements.searchPanel.classList.contains("open")) {
     if (reason === "manual") {
       searchPanelOpenReason = "manual";
@@ -1818,7 +1902,7 @@ function focusWithoutScroll(target) {
 
 function setSettingsPanelGroup(group = state.settingsPanelGroup) {
   const useNestedSettingsLayout =
-    isFullPageMenuTheme() || state.settings.theme === "xbox360";
+    isFullPageMenuTheme() || ["xbox360", "xboxone"].includes(state.settings.theme);
   const nextGroup = elements.settingsGroups.some((section) => section.dataset.settingsGroup === group)
     ? group
     : elements.settingsGroups[0]?.dataset.settingsGroup || "theme";
@@ -1956,20 +2040,27 @@ function openSettingsPanel(group = state.settingsPanelGroup, { xbox360Detail = f
     return;
   }
   state.lastFocusBeforeModal = !elements.profilePanel.hidden
-    ? elements.profileButton
+    ? state.settings.theme === "xboxone" ? elements.xboxOneProfileButton : elements.profileButton
     : document.activeElement;
+  if (state.settings.theme === "xboxone") setSettingsPanelGroup(group);
   elements.profilePanel.hidden = true;
   elements.profilePanel.setAttribute("aria-hidden", "true");
   elements.modalBackdrop.hidden = state.settings.theme === "ps3";
   elements.settingsPanel.removeAttribute("inert");
   elements.settingsPanel.classList.add("open");
   elements.settingsPanel.setAttribute("aria-hidden", "false");
-  setTimeout(() => focusWithoutScroll(elements.closeSettings), 100);
+  setTimeout(() => {
+    const target = state.settings.theme === "xboxone"
+      ? elements.settingsGroups.find((section) => section.classList.contains("active"))?.querySelector("[data-focus]")
+      : elements.closeSettings;
+    focusWithoutScroll(target || elements.closeSettings);
+  }, 100);
 }
 
 function positionProfilePanel() {
   const { scale, rootRect, viewportWidth, viewportHeight, scrollTop } = getUiOverlayMetrics();
-  const anchor = state.settings.theme === "ps3" ? elements.brand : elements.profileButton;
+  const anchor = state.settings.theme === "ps3" ? elements.brand
+    : state.settings.theme === "xboxone" ? elements.xboxOneProfileButton : elements.profileButton;
   const buttonRect = anchor.getBoundingClientRect();
   const panelRect = elements.profilePanel.getBoundingClientRect();
   const panelWidth = panelRect.width / scale;
@@ -2179,6 +2270,7 @@ function renderGames(filter = "") {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `game-card focusable${game.id === state.selectedId ? " selected" : ""}`;
+    button.classList.toggle("has-cover", Boolean(game.cover));
     button.dataset.focus = "";
     button.dataset.gameId = game.id;
     button.setAttribute("role", "listitem");
@@ -2198,14 +2290,14 @@ function renderGames(filter = "") {
     button.querySelector(".game-card-title").textContent = game.title;
     button.querySelector(".game-card-platform").textContent = game.platform.toUpperCase();
     button.addEventListener("click", () => {
-      if (["xbox-classic", "xbox360"].includes(state.settings.theme) && state.selectedId === game.id) {
+      if (["xbox-classic", "xbox360", "xboxone"].includes(state.settings.theme) && state.selectedId === game.id) {
         launchSelectedGame();
         return;
       }
       selectGame(game.id, true);
     });
     button.addEventListener("dblclick", () => {
-      if (!["xbox-classic", "xbox360"].includes(state.settings.theme)) launchSelectedGame();
+      if (!["xbox-classic", "xbox360", "xboxone"].includes(state.settings.theme)) launchSelectedGame();
     });
     button.addEventListener("focus", () => selectGame(game.id));
     button.addEventListener("mouseenter", () => selectGame(game.id, false, false));
@@ -2245,7 +2337,12 @@ function renderGames(filter = "") {
   updateHero();
   requestAnimationFrame(syncStadiaCardOptionsButton);
 
-  if (query && visibleGames.length === 0) {
+  if (visibleGames.length === 0 && state.settings.theme === "xboxone") {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "library-empty-message";
+    emptyMessage.textContent = query ? "No games found." : "Your next adventure starts here. Add a game to begin.";
+    elements.gameRail.appendChild(emptyMessage);
+  } else if (query && visibleGames.length === 0) {
     elements.gameRail.innerHTML = `<p style="color:#7f8692;font-size:12px">No games found.</p>`;
   }
 }
@@ -2450,7 +2547,8 @@ function scrollCardIntoView(card) {
   if (!(card instanceof HTMLElement)) return;
 
   if (card.classList.contains("game-card") && elements.gameRail.contains(card)) {
-    if (state.settings.theme === "stadia" && state.stadiaScreen === "library") {
+    if ((state.settings.theme === "stadia" && state.stadiaScreen === "library") ||
+        (state.settings.theme === "xboxone" && state.xboxOneScreen === "library")) {
       card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
       return;
     }
@@ -2570,6 +2668,7 @@ function handleGameRailWheel(event) {
 
 function updateHero() {
   const game = getSelectedGame();
+  updateXboxOneBackground(game);
   if (!game) {
     elements.heroTitle.textContent = "Your library is empty";
     elements.heroTitle.classList.remove("is-dense");
@@ -2911,6 +3010,11 @@ function finishBoot() {
   if (!bootSequenceActive && elements.boot.classList.contains("done")) return;
   bootSequenceActive = false;
   clearBootTimers();
+  if (startupFallbackAudio) {
+    startupFallbackAudio.pause();
+    startupFallbackAudio.currentTime = 0;
+    startupFallbackAudio = null;
+  }
   elements.bootSkip.classList.remove("visible");
   elements.boot.classList.add("done");
   document.body.classList.remove("booting");
@@ -2960,7 +3064,8 @@ function setupBoot() {
   }
 
   const video = elements.bootVideo;
-  video.muted = false;
+  const separateStartupAudio = theme.id === "xboxone" && Boolean(theme.assets.startupAudio);
+  video.muted = separateStartupAudio;
   let completed = false;
   const completeOnce = () => {
     if (completed) return;
@@ -2975,6 +3080,11 @@ function setupBoot() {
   video.addEventListener("playing", () => {
     elements.bootVideo.hidden = false;
     elements.boot.classList.add("visible", "video-ready", "video-playing");
+    if (separateStartupAudio && bootSequenceActive && state.settings.sound) {
+      startupFallbackAudio = new Audio(getVersionedAudioAsset(theme.assets.startupAudio));
+      startupFallbackAudio.volume = 0.75;
+      startupFallbackAudio.play().catch(() => {});
+    }
   }, { once: true });
   video.addEventListener("ended", completeOnce, { once: true });
   video.addEventListener("error", playFallbackBoot, { once: true });
@@ -3718,6 +3828,12 @@ function activateFocused() {
   const target = document.activeElement;
   if (!(target instanceof HTMLElement)) return;
 
+  if (state.settings.theme === "xboxone" && target.classList.contains("game-card")) {
+    selectGame(target.dataset.gameId);
+    launchSelectedGame();
+    return;
+  }
+
   if (target === elements.importLauncher && !target.disabled) {
     const options = [...target.options].filter((option) => !option.disabled);
     const current = options.findIndex((option) => option.value === target.value);
@@ -3799,6 +3915,10 @@ function handleBackAction() {
   }
   if (state.settings.theme === "xbox360" && state.xbox360LibraryOpen) {
     setXbox360LibraryOpen(false);
+    return true;
+  }
+  if (state.settings.theme === "xboxone" && state.xboxOneScreen === "library") {
+    setXboxOneScreen("home");
     return true;
   }
   if (state.settings.theme === "ps2" && state.ps2Screen === "games") {
@@ -4056,6 +4176,15 @@ elements.browseBackground.addEventListener("click", async () => {
   } catch {
     showToast("Could not import the background image. Please choose another file.");
   }
+});
+
+elements.xboxOneNavItems.forEach((button) => {
+  button.addEventListener("click", () => setXboxOneScreen(button.dataset.xboxoneScreen));
+});
+elements.xboxOneLibraryBack.addEventListener("click", () => setXboxOneScreen("home"));
+elements.xboxOneProfileButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  toggleProfilePanel();
 });
 
 elements.playButton.addEventListener("click", launchSelectedGame);
@@ -4466,7 +4595,7 @@ document.addEventListener("keydown", (event) => {
     if (document.activeElement?.classList.contains("game-card")) {
       event.preventDefault();
       selectGame(document.activeElement.dataset.gameId);
-      if (state.settings.theme === "xbox360" && state.xbox360LibraryOpen) {
+      if ((state.settings.theme === "xbox360" && state.xbox360LibraryOpen) || state.settings.theme === "xboxone") {
         launchSelectedGame();
       }
       playUiSound("select");
@@ -4505,6 +4634,7 @@ document.addEventListener("click", (event) => {
     !elements.profilePanel.hidden &&
     !elements.profilePanel.contains(target) &&
     !elements.profileButton.contains(target) &&
+    !elements.xboxOneProfileButton.contains(target) &&
     !elements.brand.contains(target) &&
     !(state.settings.theme === "xbox-classic" && state.xboxScreen === "profile") &&
     !ps2ProfileLauncher &&
