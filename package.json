@@ -1,7 +1,7 @@
 {
   "name": "faststationbox",
   "productName": "FastStationBox",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "A controller-first desktop game library.",
   "main": "electron/main.cjs",
