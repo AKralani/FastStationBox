@@ -82,11 +82,79 @@ test("Steam launches use the Steam protocol and normal games retain local launch
     openPath: async (target) => { calls.push(["path", target]); return ""; },
   });
   assert.equal((await handlers.launch("steam://rungameid/123")).ok, true);
-  assert.equal((await handlers.launch("C:/Games/game.exe")).ok, true);
-  assert.deepEqual(calls, [["external", "steam://rungameid/123"], ["path", "C:/Games/game.exe"]]);
+  assert.equal((await handlers.launch(' "C:/Games/game.lnk" ')).ok, true);
+  assert.deepEqual(calls, [["external", "steam://rungameid/123"], ["path", "C:/Games/game.lnk"]]);
   assert.equal((await handlers.launch("")).ok, false);
   const failing = desktopHandlers({}, {}, { openExternal: async () => { throw new Error("Steam unavailable"); } });
   assert.match((await failing.launch("steam://rungameid/123")).error, /Steam unavailable/);
+});
+
+test("manual executables launch directly with their own working directory", async () => {
+  const commands = [];
+  let detached = false;
+  const target = path.resolve("Games/Player One/game.EXE");
+  const handlers = desktopHandlers({}, { stat: async (file) => {
+    assert.equal(file, target);
+    return { isFile: () => true };
+  } }, { openPath: () => { throw new Error("Failed to open path"); } }, {
+    spawn: (executable, args, options) => {
+      commands.push({ executable, args, options });
+      const child = new (require("node:events").EventEmitter)();
+      child.unref = () => { detached = true; };
+      process.nextTick(() => child.emit("spawn"));
+      return child;
+    },
+  });
+  assert.equal((await handlers.launch(` "${target}" `)).ok, true);
+  assert.equal(commands[0].executable, target);
+  assert.equal(commands[0].args.length, 0);
+  assert.equal(commands[0].options.cwd, path.dirname(target));
+  assert.equal(commands[0].options.shell, false);
+  assert.equal(detached, true);
+});
+
+test("manual executable failures are reported instead of claiming a successful launch", async () => {
+  const missing = desktopHandlers({}, { stat: async () => {
+    throw Object.assign(new Error("missing"), { code: "ENOENT" });
+  } });
+  assert.match((await missing.launch("missing.exe")).error, /Game file not found.*game options/);
+  const folder = desktopHandlers({}, { stat: async () => ({ isFile: () => false }) });
+  assert.match((await folder.launch("folder.exe")).error, /not a folder/);
+  const failing = desktopHandlers({}, { stat: async () => ({ isFile: () => true }) }, {}, {
+    spawn: () => {
+      const child = new (require("node:events").EventEmitter)();
+      process.nextTick(() => child.emit("error", new Error("Access denied")));
+      return child;
+    },
+  });
+  const result = await failing.launch("game.exe");
+  assert.equal(result.ok, false);
+  assert.match(result.error, /Access denied/);
+});
+
+test("emulator commands preserve quoted paths, switches and literal RPCS3 game IDs", async () => {
+  const commands = [];
+  const handlers = desktopHandlers({}, { stat: async () => ({ isFile: () => true }) }, {}, {
+    spawn: (executable, args, options) => {
+      commands.push({ executable, args: [...args], options });
+      const child = new (require("node:events").EventEmitter)();
+      child.unref = () => {};
+      process.nextTick(() => child.emit("spawn"));
+      return child;
+    },
+  });
+  const pcsx2 = String.raw`D:\Games\pcsx2-v2.9.116-windows-x64-Qt\pcsx2-qt.exe`;
+  const iso = String.raw`D:\Games\PS2 Games\Silent Hill - Shattered Memories (Europe) (En,Fr,De,Es,It).iso`;
+  const rpcs3 = String.raw`D:\Games\rpcs3-v0.0.39-18620-1bfd1154_win64_msvc\rpcs3.exe`;
+  assert.equal((await handlers.launch(`${pcsx2} -fullscreen -- "${iso}"`)).ok, true);
+  assert.equal((await handlers.launch(`${rpcs3} --no-gui "%RPCS3_GAMEID%:NPUB30467"`)).ok, true);
+  assert.equal((await handlers.launch('"C:/Emulators/PS2 Emulator/pcsx2.exe" -fullscreen -- "C:/PS2 Games/game.iso"')).ok, true);
+  assert.equal(commands[0].executable, path.resolve(pcsx2));
+  assert.deepEqual(commands[0].args, ["-fullscreen", "--", iso]);
+  assert.deepEqual(commands[1].args, ["--no-gui", "%RPCS3_GAMEID%:NPUB30467"]);
+  assert.equal(commands[2].executable, path.resolve("C:/Emulators/PS2 Emulator/pcsx2.exe"));
+  assert.deepEqual(commands[2].args, ["-fullscreen", "--", "C:/PS2 Games/game.iso"]);
+  assert.ok(commands.every(({ options }) => options.shell === false));
 });
 
 test("desktop saves and reads the chosen backup file, including Unicode", async () => {

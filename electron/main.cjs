@@ -10,6 +10,29 @@ const { discoverLocalGames } = require("./local-discovery.cjs");
 const { spawn } = require("child_process");
 let discoveredLaunches = new Map();
 
+// Windows command fields use double quotes to group arguments. Keep backslashes
+// and percent signs literal so file paths and emulator game IDs survive intact.
+function parseLaunchArguments(text) {
+  const args = [];
+  let token = "", quoted = false, started = false;
+  for (const character of text) {
+    if (character === '"') {
+      quoted = !quoted;
+      started = true;
+    } else if (/\s/.test(character) && !quoted) {
+      if (started) args.push(token);
+      token = "";
+      started = false;
+    } else {
+      token += character;
+      started = true;
+    }
+  }
+  if (quoted) throw new Error("Close the double quote in the game launch command.");
+  if (started) args.push(token);
+  return args;
+}
+
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 // Keep using the original profile folder so renaming the app does not reset the library.
 app.setPath("userData", path.join(app.getPath("appData"), "nexus-game-launcher"));
@@ -517,13 +540,36 @@ app.whenReady().then(() => {
     }
 
     try {
+      executablePath = executablePath.trim();
+      const command = /^(?:"([^"]+\.exe)"|([^"\r\n]+?\.exe))(?=\s|$)([\s\S]*)$/i.exec(executablePath);
       if (/^steam:\/\/rungameid\/\d+$/.test(executablePath)) {
         await shell.openExternal(executablePath);
         return { ok: true };
       }
+      if (command) {
+        executablePath = command[1] || command[2];
+        const args = parseLaunchArguments(command[3]);
+        const executable = path.resolve(executablePath);
+        const info = await fs.promises.stat(executable);
+        if (!info.isFile()) return { ok: false, error: "Choose a game executable file, not a folder." };
+        await new Promise((resolve, reject) => {
+          const child = spawn(executable, args, {
+            cwd: path.dirname(executable), shell: false, detached: true, stdio: "ignore",
+          });
+          child.once("error", reject);
+          child.once("spawn", () => { child.unref(); resolve(); });
+        });
+        return { ok: true };
+      }
+      if (executablePath.startsWith('"') && executablePath.endsWith('"')) {
+        executablePath = executablePath.slice(1, -1).trim();
+      }
       const error = await shell.openPath(executablePath);
       return error ? { ok: false, error } : { ok: true };
     } catch (error) {
+      if (error.code === "ENOENT") {
+        return { ok: false, error: `Game file not found: ${executablePath}. Choose its current location in game options.` };
+      }
       return { ok: false, error: error.message || "Could not launch this game." };
     }
   });
