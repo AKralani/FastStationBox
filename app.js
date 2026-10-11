@@ -2318,15 +2318,10 @@ function renderGames(filter = "") {
     `;
     button.querySelector(".game-card-title").textContent = game.title;
     button.querySelector(".game-card-platform").textContent = game.platform.toUpperCase();
-    button.addEventListener("click", () => {
-      if (["xbox-classic", "xbox360", "xboxone", "xboxseries"].includes(state.settings.theme) && state.selectedId === game.id) {
-        launchSelectedGame();
-        return;
-      }
+    button.addEventListener("click", (event) => {
+      if (event.detail > 1) return;
       selectGame(game.id, true);
-    });
-    button.addEventListener("dblclick", () => {
-      if (!["xbox-classic", "xbox360", "xboxone", "xboxseries"].includes(state.settings.theme)) launchSelectedGame();
+      launchSelectedGame();
     });
     button.addEventListener("focus", () => selectGame(game.id));
     button.addEventListener("mouseenter", () => selectGame(game.id, false, false));
@@ -2647,8 +2642,6 @@ function beginRailDrag(event) {
   railDrag.startY = event.clientY;
   railDrag.startScrollLeft = elements.gameRail.scrollLeft;
   railDrag.startScrollTop = elements.gameRail.scrollTop;
-  elements.gameRail.classList.add("dragging");
-  elements.gameRail.setPointerCapture?.(event.pointerId);
 }
 
 function moveRailDrag(event) {
@@ -2659,9 +2652,13 @@ function moveRailDrag(event) {
   const delta = isVerticalRail
     ? event.clientY - railDrag.startY
     : event.clientX - railDrag.startX;
-  if (Math.abs(delta) > 4) {
+  if (!railDrag.moved && Math.abs(delta) > 4) {
     railDrag.moved = true;
     railDrag.suppressClick = true;
+    // Capturing on pointerdown retargets ordinary cover clicks to the rail.
+    // Capture only after the pointer has actually started dragging.
+    elements.gameRail.classList.add("dragging");
+    elements.gameRail.setPointerCapture?.(event.pointerId);
   }
   if (!railDrag.moved) return;
   if (isVerticalRail) {
@@ -2676,7 +2673,9 @@ function endRailDrag(event) {
   railDrag.active = false;
   railDrag.pointerId = null;
   elements.gameRail.classList.remove("dragging");
-  elements.gameRail.releasePointerCapture?.(event.pointerId);
+  if (elements.gameRail.hasPointerCapture?.(event.pointerId)) {
+    elements.gameRail.releasePointerCapture(event.pointerId);
+  }
   if (railDrag.moved) {
     window.setTimeout(() => {
       railDrag.suppressClick = false;
@@ -3876,12 +3875,6 @@ function activateFocused() {
   const target = document.activeElement;
   if (!(target instanceof HTMLElement)) return;
 
-  if (isXboxDashboardTheme() && target.classList.contains("game-card")) {
-    selectGame(target.dataset.gameId);
-    launchSelectedGame();
-    return;
-  }
-
   if (target === elements.importLauncher && !target.disabled) {
     const options = [...target.options].filter((option) => !option.disabled);
     const current = options.findIndex((option) => option.value === target.value);
@@ -4441,8 +4434,8 @@ elements.searchInput.addEventListener("input", renderCurrentView);
 elements.closeAppButton.addEventListener("click", closeApplication);
 elements.gameRail.addEventListener("pointerdown", beginRailDrag);
 elements.gameRail.addEventListener("pointermove", moveRailDrag);
-elements.gameRail.addEventListener("pointerup", endRailDrag);
-elements.gameRail.addEventListener("pointercancel", endRailDrag);
+window.addEventListener("pointerup", endRailDrag);
+window.addEventListener("pointercancel", endRailDrag);
 elements.gameRail.addEventListener("lostpointercapture", () => {
   railDrag.active = false;
   railDrag.pointerId = null;
@@ -4641,11 +4634,7 @@ document.addEventListener("keydown", (event) => {
     }
     if (document.activeElement?.classList.contains("game-card")) {
       event.preventDefault();
-      selectGame(document.activeElement.dataset.gameId);
-      if ((state.settings.theme === "xbox360" && state.xbox360LibraryOpen) || isXboxDashboardTheme()) {
-        launchSelectedGame();
-      }
-      playUiSound("select");
+      if (!event.repeat) activateFocused();
     }
   }
 });
